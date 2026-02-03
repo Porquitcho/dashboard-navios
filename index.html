@@ -1,0 +1,3222 @@
+<!DOCTYPE html>
+<!-- Versão atualizada: 2025-12-09 14:45 - Modo compacto sem barra lateral + header com linhas verticais + filtro flutuante -->
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Monitoramento de Frota - Protótipo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 30px;
+        }
+
+        .header-logo {
+            flex-shrink: 0;
+        }
+
+        .header-logo img {
+            height: 90px;
+            width: auto;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            padding-right: 90px; /* Compensa a largura da logo para centralizar */
+        }
+
+        .header h1 {
+            font-size: 52px;
+            font-weight: 300;
+            letter-spacing: 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 0;
+            line-height: 1.15;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .header h1 img.logo-transpetro {
+            display: none;
+        }
+
+        .header h1 span {
+            display: inline;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 15px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        /* Botão Home no canto superior direito */
+        .home-button-container {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+        }
+
+        .btn-home {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-home:active {
+            transform: scale(0.95);
+        }
+
+        .btn-home svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover svg {
+            transform: scale(1.1);
+        }
+
+        .btn-home .tooltip-home {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home .tooltip-home::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-home:hover .tooltip-home {
+            opacity: 1;
+            visibility: visible;
+            bottom: -40px;
+        }
+
+        .filter-dropdown-container {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .filter-dropdown-container.compact-mode {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+        }
+
+        .filter-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(44, 62, 80, 0.98);
+            border: 2px solid rgba(52, 152, 219, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 2000;
+            display: none;
+            min-width: 300px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
+        .filter-popup.active {
+            display: block;
+        }
+
+        .filter-popup-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-popup-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-popup-item:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        .filter-popup-item.active {
+            background: rgba(52, 152, 219, 0.6);
+            font-weight: 600;
+        }
+
+        .filter-popup-close {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(192, 57, 43, 0.7);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-popup-close:hover {
+            background: rgba(192, 57, 43, 1);
+        }
+
+        .filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+            display: none;
+        }
+
+        .filter-overlay.active {
+            display: block;
+        }
+
+        .filter-dropdown-btn {
+            padding: 10px 15px;
+            background: rgba(108, 117, 125, 0.3);
+            border: 2px solid rgba(108, 117, 125, 0.5);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .filter-dropdown-btn.compact-mode {
+            padding: 6px 10px;
+            font-size: 11px;
+        }
+
+        .filter-dropdown-btn:hover {
+            background: rgba(108, 117, 125, 0.5);
+            transform: scale(1.02);
+        }
+
+        .filter-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0px;
+            background: rgba(44, 62, 80, 0.95);
+            border: 2px solid rgba(108, 117, 125, 0.5);
+            border-radius: 8px;
+            padding: 10px 0;
+            display: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .filter-dropdown-menu.active {
+            display: block;
+        }
+
+        .filter-dropdown-item {
+            padding: 10px 20px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-dropdown-item:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        .filter-dropdown-item.active {
+            background: rgba(52, 152, 219, 0.5);
+            font-weight: 600;
+        }
+
+        .filter-dropdown-item .count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: 10px;
+        }
+
+        .filter-dropdown-item.active::before {
+            content: "✓ ";
+            margin-right: 5px;
+        }
+
+        .status-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-message.success {
+            border: 2px solid #00B050;
+        }
+
+        .status-message.error {
+            border: 2px solid #FF0000;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .legend-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .legend-circle.green {
+            background: #00B050;
+        }
+
+        .legend-circle.yellow {
+            background: #FFC000;
+        }
+
+        .legend-circle.red {
+            background: #FF0000;
+        }
+
+        .legend-circle.gray {
+            background: #808080;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard.compact {
+            grid-template-columns: 1fr;
+        }
+
+        /* Novo layout para modo Lista de Navios */
+        .dashboard.list-mode {
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        .ship-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 950px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .ship-list.compact {
+            display: none;
+        }
+
+        .ship-list.list-mode {
+            display: block;
+            max-height: 750px;
+            padding: 15px;
+        }
+
+        /* Painel de detalhes do navio */
+        .ship-detail-panel {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            color: #333;
+            min-height: 750px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .ship-detail-panel.active {
+            display: block;
+        }
+
+        .ship-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .ship-detail-title {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 15px 30px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            border-radius: 5px;
+        }
+
+        .ship-detail-indicators {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .indicator-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .indicator-circle.green {
+            background: linear-gradient(135deg, #00B050 0%, #008040 100%);
+            border: 4px solid #006030;
+        }
+
+        .indicator-circle.yellow {
+            background: linear-gradient(135deg, #FFC000 0%, #E0A000 100%);
+            border: 4px solid #C08000;
+        }
+
+        .indicator-circle.red {
+            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+            border: 4px solid #990000;
+        }
+
+        .indicator-circle .indicator-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .indicator-circle .indicator-value {
+            font-size: 28px;
+        }
+
+        .indicator-box {
+            background: #fff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+
+        .indicator-box .box-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .indicator-box .box-value {
+            font-size: 14px;
+            color: #666;
+            margin-top: 0px;
+        }
+
+        .ship-detail-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .detail-section {
+            background: #f8f8f8;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 350px;
+        }
+
+        .section-title {
+            background: #fff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin: -35px auto 20px auto;
+            width: fit-content;
+            color: #333;
+        }
+
+        .section-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            color: white;
+            cursor: default;
+            transition: transform 0.2s ease;
+        }
+
+        .section-item:hover {
+            transform: scale(1.02);
+        }
+
+        .section-item.green {
+            background: #00B050;
+        }
+
+        .section-item.yellow {
+            background: #FFC000;
+            color: #333;
+        }
+
+        .section-item.red {
+            background: #FF0000;
+        }
+
+        .section-item.gray {
+            background: #808080;
+        }
+
+        /* Placeholder quando nenhum navio está selecionado */
+        .detail-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 500px;
+            color: #999;
+            text-align: center;
+        }
+
+        .detail-placeholder-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .detail-placeholder-text {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .detail-placeholder-subtext {
+            font-size: 14px;
+            margin-top: 0px;
+            opacity: 0.7;
+        }
+
+        .ship-item.selected {
+            background: rgba(52, 152, 219, 0.3);
+            border-left-color: #3498db;
+            border-left-width: 4px;
+        }
+
+        .ship-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .ship-item.compact-mode {
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .ship-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #95a5a6;
+            transform: translateX(5px);
+        }
+
+        .ship-item.active {
+            background: rgba(149, 165, 166, 0.2);
+            border-left-color: #95a5a6;
+        }
+
+        .systems-grid {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 950px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .systems-grid.compact {
+            max-height: none;
+            overflow-y: visible;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .column-container {
+            display: contents;
+        }
+
+        .systems-grid.compact .column-container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Remover linhas contínuas - agora todas serão tracejadas */
+
+        /* Wrapper para adicionar linhas tracejadas */
+        .systems-grid.compact .ship-row.compact-mode {
+            position: relative;
+        }
+
+        .systems-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .systems-grid.compact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .compact-column-header {
+            display: none;
+        }
+
+        .systems-grid.compact .compact-column-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 8px 8px 10px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            min-height: 40px;
+            position: relative;
+        }
+
+        .systems-grid.compact .compact-column-header .classe-filter-badge {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .compact-header-name {
+            width: 110px;
+            min-width: 110px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-right: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .compact-header-section {
+            flex: 0 0 auto;
+            width: 55px;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            position: relative;
+            cursor: help;
+            transition: all 0.3s ease;
+        }
+
+        .compact-header-section:hover {
+            color: #3498db;
+            transform: scale(1.05);
+        }
+
+        /* Tooltip customizado para headers */
+        .compact-header-section[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: tooltipFadeIn 0.3s ease;
+            letter-spacing: 0.3px;
+            text-transform: none;
+        }
+
+        /* Seta do tooltip */
+        .compact-header-section[title]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-2px);
+            border: 6px solid transparent;
+            border-top-color: #667eea;
+            z-index: 999;
+            animation: tooltipFadeIn 0.3s ease;
+        }
+
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-8px);
+            }
+        }
+
+        .compact-header-indicators {
+            flex: 1;
+            height: 100%;
+        }
+
+        /* Seções de texto para CMT, CFM, IMT */
+        .compact-ship-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .compact-text-section {
+            flex: 0 0 auto;
+            width: 55px;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 0 3px;
+            overflow: visible;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.2;
+        }
+        /* ===== DIVISÓRIAS DAS COLUNAS (CMT, CFM, IMT) ===== */
+        /* Borda direita no nome do navio */
+        .ship-row.compact-mode .ship-name.compact-mode {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding-right: 10px;
+            margin-right: 5px;
+        }
+        
+        /* Bordas nas seções de texto (CMT, CFM, IMT) */
+        .compact-text-section {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .compact-text-section:last-child {
+            border-right: none;
+        }
+        /* Estilo para células de tripulação (nome + chave) */
+        .crew-section {
+            line-height: 1.3;
+            padding: 2px 3px;
+        }
+        
+        .crew-section br + * {
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        
+        /* Bordas nos headers */
+        .compact-header-name {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* Ícone de filtro no header */
+        .compact-header-name {
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .compact-header-name:hover {
+            color: #3498db;
+        }
+        
+        .compact-header-name:hover .filter-icon-header {
+            opacity: 1 !important;
+        }
+        
+        .filter-icon-header {
+            transition: opacity 0.2s ease;
+        }
+
+        /* Estilo quando filtro de classe está ativo */
+        .compact-header-name.filter-active {
+            color: #3498db;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .compact-header-name.filter-active .filter-icon-header {
+            opacity: 1 !important;
+            fill: #3498db;
+        }
+
+        /* Badge de classe filtrada no header */
+        .classe-filter-badge {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+            display: none;
+            white-space: nowrap;
+        }
+
+        .classe-filter-badge.active {
+            display: inline-block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        
+        .compact-header-section {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .compact-header-section:nth-child(5) {
+            border-right: none;
+        }
+        /* Tooltip para a coluna IDADE */
+        .idade-section {
+            position: relative;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .idade-section:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.3px;
+            pointer-events: none;
+        }
+        
+        .idade-section:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-2px);
+            border: 6px solid transparent;
+            border-top-color: #667eea;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .ship-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: center;
+            padding: 15px 20px 15px 25px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ship-row.compact-mode {
+            padding: 3px 8px 3px 10px;
+            margin-bottom: 2px;
+            grid-template-columns: 110px 220px 1fr;
+            min-height: 50px;
+            align-items: center;
+            cursor: default;
+        }
+
+        .ship-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.01);
+        }
+
+        .ship-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .ship-name:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        .ship-name.compact-mode {
+            font-size: 11px;
+            gap: 1px;
+            line-height: 1.2;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            max-width: 110px;
+            min-width: 110px;
+            word-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 50px;
+        }
+
+        .ship-class {
+            font-size: 10px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+
+        .ship-name.compact-mode .ship-class {
+            font-size: 9px;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            max-width: 110px;
+            word-wrap: break-word;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 25px;
+            justify-content: flex-start;
+            padding-left: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicators.compact-mode {
+            gap: 10px;
+            padding-left: 0;
+            justify-content: flex-end;
+            padding-right: 15px;
+            position: relative;
+        }
+
+        .status-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .status-circle.compact-mode {
+            width: 22px;
+            height: 22px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .status-circle.compact-mode:hover {
+            transform: scale(1.15);
+        }
+
+        .status-circle.green {
+            background: #00B050;
+        }
+
+        .status-circle.yellow {
+            background: #FFC000;
+        }
+
+        .status-circle.red {
+            background: #FF0000;
+        }
+
+        .status-circle.gray {
+            background: #808080;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .status-circle:hover .tooltip {
+            display: block;
+        }
+
+        .status-circle.compact-mode .tooltip {
+            font-size: 10px;
+            padding: 5px 10px;
+            bottom: 30px;
+            white-space: nowrap;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            min-width: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .stat-card.active-filter {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ========== MODO LISTA DE NAVIOS ========== */
+        .lista-navios-container {
+            display: none;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            height: calc(100vh - 350px);
+            min-height: 600px;
+        }
+
+        .lista-navios-container.active {
+            display: grid;
+        }
+
+        .lista-lateral {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .lista-lateral-titulo {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .navio-item {
+            padding: 12px 15px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .navio-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #3498db;
+            transform: translateX(5px);
+        }
+
+        .navio-item.selected {
+            background: rgba(52, 152, 219, 0.3);
+            border-left-color: #3498db;
+        }
+
+        .navio-item-nome {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .navio-item-classe {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        /* Painel de detalhes */
+        .painel-detalhes {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%);
+            border-radius: 15px;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 100%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .painel-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+
+        .painel-placeholder-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .painel-placeholder-texto {
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        /* Cabeçalho do navio selecionado */
+        .detalhes-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 20px 0 30px 0;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+        }
+
+        .navio-titulo-box {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            padding: 18px 35px;
+            border-radius: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 22px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .ido-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c5f5f 0%, #3d7878 100%);
+            border: 5px solid #1a4040;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            color: white;
+        }
+
+        .ido-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .ido-valor {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        .info-cards-header {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            padding: 15px 25px;
+            border-radius: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-cards-header p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .info-cards-header strong {
+            font-weight: 700;
+        }
+
+        /* Seções de categorias */
+        .categorias-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 0px;
+        }
+
+        .categoria-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 25px 20px 20px 20px;
+            min-height: 300px;
+        }
+
+        .categoria-titulo {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: -35px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .categoria-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .categoria-item {
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .categoria-item.verde {
+            background: #27ae60;
+        }
+
+        .categoria-item.amarelo {
+            background: #f1c40f;
+            color: #1a1a2e;
+        }
+
+        .categoria-item.vermelho {
+            background: #e74c3c;
+        }
+
+        .categoria-item.cinza {
+            background: #7f8c8d;
+        }
+
+        .categoria-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .categoria-item-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .categoria-item.tem-obs {
+            cursor: pointer;
+            padding-right: 30px;
+        }
+
+        .categoria-item.tem-obs::after {
+            content: "ℹ️";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .tooltip-obs {
+            position: absolute;
+            left: calc(100% + 15px);
+            top: 50%;
+            transform: translateY(-50%);
+            min-width: 280px;
+            max-width: 320px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #ffffff;
+            line-height: 1.5;
+            z-index: 2000;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: none;
+        }
+
+        .tooltip-obs.visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .tooltip-obs.obs-amarelo {
+            background: linear-gradient(135deg, #a67c00 0%, #7a5c00 100%);
+            border: 2px solid #FFC000;
+        }
+
+        .tooltip-obs.obs-vermelho {
+            background: linear-gradient(135deg, #b02a2a 0%, #8a1f1f 100%);
+            border: 2px solid #FF4444;
+        }
+
+        .tooltip-obs-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .tooltip-obs-texto {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .tooltip-obs::before {
+            content: "";
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 10px solid transparent;
+        }
+
+        .tooltip-obs.obs-amarelo::before {
+            border-right-color: #a67c00;
+        }
+
+        .tooltip-obs.obs-vermelho::before {
+            border-right-color: #b02a2a;
+        }
+
+        .tooltip-obs.tooltip-esquerda {
+            left: auto;
+            right: calc(100% + 15px);
+        }
+
+        .tooltip-obs.tooltip-esquerda::before {
+            right: auto;
+            left: 100%;
+            border-right-color: transparent !important;
+        }
+
+        .tooltip-obs.tooltip-esquerda.obs-amarelo::before {
+            border-left-color: #a67c00;
+        }
+
+        .tooltip-obs.tooltip-esquerda.obs-vermelho::before {
+            border-left-color: #b02a2a;
+        }
+
+        @media (max-width: 1400px) {
+            .categorias-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .categorias-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-logo">
+                <img src="https://transpetro.sharepoint.com/sites/EstadoGeralDosNavios2/DashboardApp/logo-transpetro.png" alt="Transpetro">
+            </div>
+            <div class="header-text">
+                <h1>Estado Geral dos Navios</h1>
+                <div class="subtitle">Sistema de Monitoramento - 26 Embarcações</div>
+            </div>
+            <div class="home-button-container">
+                <button class="btn-home" id="btnHome" onclick="voltarParaHome()">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span class="tooltip-home">Home</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <!-- Overlay e Popup de filtro (acionado pelos headers) -->
+        <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPopup()"></div>
+        <div class="filter-popup" id="filterPopup">
+            <div class="filter-popup-header">Filtrar por Classe</div>
+            <div id="filterPopupItems"></div>
+            <button class="filter-popup-close" onclick="closeFilterPopup()">Fechar</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card" id="filterGreen" onclick="filterByColor('green')" title="Filtrar embarcações com pelo menos 1 categoria OK">
+                <div class="stat-number" style="color: #00B050;" id="greenCount">0</div>
+                <div class="stat-label">Sistemas OK</div>
+            </div>
+            <div class="stat-card" id="filterYellow" onclick="filterByColor('yellow')" title="Filtrar embarcações com pelo menos 1 categoria em atenção">
+                <div class="stat-number" style="color: #FFC000;" id="yellowCount">0</div>
+                <div class="stat-label">Atenção</div>
+            </div>
+            <div class="stat-card" id="filterRed" onclick="filterByColor('red')" title="Filtrar embarcações com pelo menos 1 categoria crítica">
+                <div class="stat-number" style="color: #FF0000;" id="redCount">0</div>
+                <div class="stat-label">Críticos</div>
+            </div>
+            <div class="stat-card" id="filterGray" onclick="filterByColor('gray')" title="Filtrar embarcações com erro de dados">
+                <div class="stat-number" style="color: #808080;" id="grayCount">0</div>
+                <div class="stat-label">Erro de dados</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="ship-list" id="shipList">
+                <div class="filter-dropdown-container">
+                    <button class="filter-dropdown-btn" onclick="toggleFilterDropdown()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 5px;">
+                            <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+                        </svg>
+                        Filtrar: <span id="filterLabel">Todas</span>
+                    </button>
+                    <div class="filter-dropdown-menu" id="filterDropdown">
+                        <div id="filterDropdownItems"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="systems-grid" id="systemsGrid"></div>
+        </div>
+
+        <!-- Container para modo Lista de Navios -->
+        <div class="lista-navios-container" id="listaNaviosContainer">
+            <div class="lista-lateral">
+                <div class="lista-lateral-titulo">🚢 Embarcações</div>
+                <div id="listaNaviosItems"></div>
+            </div>
+            <div class="painel-detalhes" id="painelDetalhes">
+                <div class="painel-placeholder">
+                    <div class="painel-placeholder-icon">🚢</div>
+                    <div class="painel-placeholder-texto">Selecione um navio na lista<br>para ver os detalhes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let navioSelecionado = null;
+        
+        const sistemas = [
+            'Equipamentos',
+            'Pessoal',
+            'Certificação'
+        ];
+
+        const shipBirthDates = {
+            "CELSO FURTADO": "07/11/2011",
+            "JOAO CANDIDO": "14/05/2012",
+            "SERGIO BUARQUE DE HOLANDA": "18/06/2012",
+            "ANGRA DOS REIS": "01/07/2012",
+            "MADRE DE DEUS": "01/08/2012",
+            "RIO GRANDE": "25/09/2012",
+            "SAO SEBASTIAO": "25/09/2012",
+            "ROMULO ALMEIDA": "17/12/2012",
+            "SAO LUIZ": "01/01/2013",
+            "ZUMBI DOS PALMARES": "22/04/2013",
+            "JOSE ALENCAR": "10/10/2013",
+            "DRAGAO DO MAR": "16/12/2013",
+            "HENRIQUE DIAS": "19/11/2014",
+            "ANITA GARIBALDI": "30/12/2014",
+            "ANDRE REBOUCAS": "08/04/2015",
+            "OSCAR NIEMEYER": "09/07/2015",
+            "MARCILIO DIAS": "02/09/2015",
+            "JOSE DO PATROCINIO": "08/12/2015",
+            "BARBOSA LIMA SOBRINHO": "08/01/2016",
+            "DARCY RIBEIRO": "20/06/2016",
+            "LUCIO COSTA": "20/09/2016",
+            "MACHADO DE ASSIS": "21/09/2016",
+            "MILTON SANTOS": "10/05/2017",
+            "ABDIAS NASCIMENTO": "04/09/2017",
+            "GILBERTO FREYRE": "18/10/2017",
+            "CASTRO ALVES": "11/05/2018",
+            "CARLOS DRUMMOND DE ANDRADE": "12/09/2018",
+            "JORGE AMADO": "30/10/2018",
+            "OLAVO BILAC": "28/11/2018",
+            "GARRINCHA": "19/03/2019",
+            "PORTINARI": "24/06/2019"
+        };
+        const tripulacaoNavios = {
+            "ANITA GARIBALDI": { CMT: "Ricardo\n(G6FR)", CFM: "Marcos\n(AUFL)", IMT: "Felipe\n(T4H2)" },
+            "CASTRO ALVES": { CMT: "André\n(BKMP)", CFM: "Carlos\n(W3NJ)", IMT: "Bruno\n(QLVR)" },
+            "CARLOS DRUMMOND DE ANDRADE": { CMT: "Eduardo\n(H7TK)", CFM: "Roberto\n(MSCZ)", IMT: "Thiago\n(P2LF)" },
+            "OLAVO BILAC": { CMT: "Fernando\n(DRYQ)", CFM: "Gustavo\n(J4XB)", IMT: "Lucas\n(NHGT)" },
+            "GARRINCHA": { CMT: "Rodrigo\n(KVWP)", CFM: "Paulo\n(S1MC)", IMT: "Diego\n(UFLA)" },
+            "PORTINARI": { CMT: "Marcelo\n(ZCNR)", CFM: "Jorge\n(B5QT)", IMT: "Rafael\n(EHJD)" },
+            "JOAO CANDIDO": { CMT: "Antonio\n(LMPK)", CFM: "Sergio\n(R2GV)", IMT: "Leandro\n(WFNX)" },
+            "DRAGAO DO MAR": { CMT: "Claudio\n(YTBH)", CFM: "Wilson\n(C4PJ)", IMT: "Fabio\n(QKMS)" },
+            "HENRIQUE DIAS": { CMT: "Alexandre\n(GDLR)", CFM: "Leonardo\n(V1ZN)", IMT: "Daniel\n(HTCW)" },
+            "ANDRE REBOUCAS": { CMT: "Renato\n(JPFB)", CFM: "Vinicius\n(M6KQ)", IMT: "Gabriel\n(SXVL)" },
+            "MARCILIO DIAS": { CMT: "Luciano\n(NRHT)", CFM: "Adriano\n(D3WP)", IMT: "Caio\n(BGMZ)" },
+            "JOSE DO PATROCINIO": { CMT: "Mauricio\n(FKCL)", CFM: "Henrique\n(Q7NR)", IMT: "Pedro\n(VJDS)" },
+            "LUCIO COSTA": { CMT: "Julio\n(TWPF)", CFM: "Cesar\n(L2HB)", IMT: "Igor\n(CKNY)" },
+            "MACHADO DE ASSIS": { CMT: "Flavio\n(XGMR)", CFM: "Rogerio\n(P5TL)", IMT: "Hugo\n(BQWK)" },
+            "MILTON SANTOS": { CMT: "Nelson\n(DJFV)", CFM: "Gilberto\n(H8NC)", IMT: "Tiago\n(MRPL)" },
+            "ABDIAS NASCIMENTO": { CMT: "Alberto\n(SLKQ)", CFM: "Emanuel\n(W4BG)", IMT: "Samuel\n(FNTX)" },
+            "DARCY RIBEIRO": { CMT: "Cristiano\n(QHVP)", CFM: "Danilo\n(J6MR)", IMT: "Matheus\n(LDWC)" },
+            "CELSO FURTADO": { CMT: "Evandro\n(CKBF)", CFM: "Giovanni\n(N3QT)", IMT: "Vitor\n(RHPJ)" },
+            "SERGIO BUARQUE DE HOLANDA": { CMT: "Otavio\n(GTNL)", CFM: "Bernardo\n(S2FK)", IMT: "Arthur\n(WDMQ)" },
+            "ROMULO ALMEIDA": { CMT: "Raimundo\n(PVBH)", CFM: "Valter\n(K7LR)", IMT: "Nicolas\n(CJXN)" },
+            "ZUMBI DOS PALMARES": { CMT: "Geraldo\n(MFQW)", CFM: "Josue\n(T4PC)", IMT: "Lorenzo\n(BKNV)" },
+            "JOSE ALENCAR": { CMT: "Silvio\n(HLDG)", CFM: "Renan\n(Q1WF)", IMT: "Enzo\n(VRTJ)" },
+            "BARBOSA LIMA SOBRINHO": { CMT: "Laercio\n(NDKT)", CFM: "Vagner\n(F5MB)", IMT: "Bryan\n(PLHC)" },
+            "OSCAR NIEMEYER": { CMT: "Elias\n(WQRN)", CFM: "Jonas\n(C8GT)", IMT: "Kevin\n(JFXP)" },
+            "GILBERTO FREYRE": { CMT: "Moises\n(TKVM)", CFM: "Saulo\n(B2HL)", IMT: "Davi\n(NGRS)" },
+            "JORGE AMADO": { CMT: "Isaac\n(LPCF)", CFM: "Nathan\n(R6KW)", IMT: "Luan\n(QVTD)" }
+        };
+        
+        const statusDetalhesNavios = {
+            "ANITA GARIBALDI": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "amarelo", obs: "Produção reduzida" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "vermelho", obs: "Vazamento na válvula" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "amarelo", obs: "Centrifugação irregular" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "amarelo", obs: "Trifix em 72%" },
+                    "Tripulantes vencidos": { cor: "vermelho", obs: "12 certificados vencendo" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "vermelho", obs: "3 condições pendentes" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
+                }
+            },
+            "CASTRO ALVES": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "amarelo", obs: "Vibração acima do normal" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "amarelo", obs: "Corrosão no manifold" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "vermelho", obs: "Falta 1 Oficial" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "amarelo", obs: "8 observações" }
+                }
+            },
+            "CARLOS DRUMMOND DE ANDRADE": {
+                equipamentos: {
+                    "Motor principal": { cor: "vermelho", obs: "Cilindro 3 baixa compressão" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: "Certificado vencendo" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "amarelo", obs: "Falha no ECDIS" },
+                    "Estado geral PM": { cor: "amarelo", obs: "Limpeza pendente" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "5 certificados vencendo" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "ISPS pendente" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
+                }
+            },
+            "OLAVO BILAC": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "amarelo", obs: "Eficiência reduzida" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "amarelo", obs: "Filtros próximos da troca" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "amarelo", obs: "2 cursos vencendo" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "amarelo", obs: "Prazo em 30 dias" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
+                }
+            },
+            "GARRINCHA": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "amarelo", obs: "Teste pendente" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "4 certificados vencendo" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "amarelo", obs: "9 observações" }
+                }
+            },
+            "PORTINARI": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "vermelho", obs: "Inoperante" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "amarelo", obs: "Repintura necessária" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "vermelho", obs: "Trifix em 45%" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Certificado pendente" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
+                }
+            },
+            "MACHADO DE ASSIS": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "amarelo", obs: "Ajuste necessário" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
+                }
+            },
+            "OSCAR NIEMEYER": {
+                equipamentos: {
+                    "Motor principal": { cor: "amarelo", obs: "Temperatura alta" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "amarelo", obs: "Folga no sistema" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "6 documentos vencendo" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "amarelo", obs: "2 condições" },
+                    "Obs Vetting": { cor: "vermelho", obs: "15 observações" }
+                }
+            }
+        };
+
+        function gerarStatusAleatorio() {
+            const cores = ["verde", "verde", "verde", "verde", "verde", "amarelo", "amarelo", "vermelho"];
+            
+            const obsEquipamentos = {
+                amarelo: [
+                    "Manutenção programada",
+                    "Em monitoramento",
+                    "Inspeção agendada",
+                    "Desgaste no limite",
+                    "Ajuste necessário"
+                ],
+                vermelho: [
+                    "Inoperante",
+                    "Reparo urgente",
+                    "Fora dos parâmetros",
+                    "Em manutenção",
+                    "Substituição pendente"
+                ]
+            };
+            
+            const obsPessoal = {
+                amarelo: [
+                    "Trifix entre 50% e 79%",
+                    "4-10 vencendo",
+                    "Vencendo",
+                    "Treinamentos pendentes"
+                ],
+                vermelho: [
+                    "Trifix abaixo de 50% - crítico",
+                    ">10 vencidos",
+                    "Crew incompleto",
+                    "Vencidas"
+                ]
+            };
+            
+            const obsCertificacao = {
+                amarelo: [
+                    "Renovação pendente",
+                    "7-12 observações",
+                    "Prazo próximo",
+                    "Aguardando emissão"
+                ],
+                vermelho: [
+                    "Vencida",
+                    ">12 observações",
+                    "Prazo vencido",
+                    "Pendência crítica"
+                ]
+            };
+
+            return function(item, categoria) {
+                const cor = cores[Math.floor(Math.random() * cores.length)];
+                let obs = "";
+                
+                if (cor !== "verde") {
+                    let obsLista;
+                    if (categoria === "equipamentos") {
+                        obsLista = obsEquipamentos[cor];
+                    } else if (categoria === "pessoal") {
+                        obsLista = obsPessoal[cor];
+                    } else {
+                        obsLista = obsCertificacao[cor];
+                    }
+                    obs = obsLista[Math.floor(Math.random() * obsLista.length)];
+                }
+                
+                return { cor, obs };
+            };
+        }
+
+        // Cache para armazenar status gerados aleatoriamente (persiste até F5)
+        const statusCache = {};
+
+        function getStatusNavio(nomeNavio) {
+            // Se tem dados específicos, usa eles
+            if (statusDetalhesNavios[nomeNavio]) {
+                return statusDetalhesNavios[nomeNavio];
+            }
+            
+            // Se já gerou aleatório para este navio, retorna do cache
+            if (statusCache[nomeNavio]) {
+                return statusCache[nomeNavio];
+            }
+            
+            // Gera aleatório e salva no cache
+            const gerador = gerarStatusAleatorio();
+            const equipamentosItems = [
+                "Motor principal", "MCAs", "Grupo destilatório", 
+                "Equip. fundeio, amarração e guindastes", "Caldeira auxiliar",
+                "DGE E BBA incêndio emergência", "Sistema de carga e descarga", 
+                "Máquina do leme", "Purificadores", "Sistemas de navegação",
+                "Estado geral convés", "Estado geral PM"
+            ];
+            const pessoalItems = ["Trifix %", "Tripulantes vencidos", "Crew Matrix", "Certificação de Tripulante"];
+            const certificacaoItems = ["Pendência de Documentação Navio", "Condição de classe", "Obs Vetting"];
+
+            const status = { equipamentos: {}, pessoal: {}, certificacao: {} };
+            
+            equipamentosItems.forEach(item => { status.equipamentos[item] = gerador(item, "equipamentos"); });
+            pessoalItems.forEach(item => { status.pessoal[item] = gerador(item, "pessoal"); });
+            certificacaoItems.forEach(item => { status.certificacao[item] = gerador(item, "certificacao"); });
+
+            // Salva no cache
+            statusCache[nomeNavio] = status;
+
+            return status;
+        }
+
+        // Calcula status resumido por categoria (Equipamentos, Pessoal, Certificação)
+        function calcularStatusResumo(nomeNavio) {
+            const status = getStatusNavio(nomeNavio);
+            
+            function calcularCorCategoria(categoria) {
+                const itens = Object.values(categoria);
+                let temVermelho = false;
+                let temAmarelo = false;
+                
+                for (const item of itens) {
+                    if (item.cor === 'vermelho') temVermelho = true;
+                    if (item.cor === 'amarelo') temAmarelo = true;
+                }
+                
+                if (temVermelho) return 'red';
+                if (temAmarelo) return 'yellow';
+                return 'green';
+            }
+            
+            return [
+                calcularCorCategoria(status.equipamentos),
+                calcularCorCategoria(status.pessoal),
+                calcularCorCategoria(status.certificacao)
+            ];
+        }
+
+        function gerarItemCategoria(nome, status) {
+            const { cor, obs } = status;
+            const temObs = (cor === "amarelo" || cor === "vermelho") && obs;
+            const obsClass = temObs ? "tem-obs" : "";
+            
+            let html = `<div class="categoria-item-wrapper">`;
+            html += `<div class="categoria-item ${cor} ${obsClass}" 
+                         data-obs="${temObs ? obs.replace(/"/g, '&quot;') : ''}"
+                         data-cor="${cor}">
+                         ${nome}
+                     </div>`;
+            
+            if (temObs) {
+                const tipoObs = cor === "amarelo" ? "obs-amarelo" : "obs-vermelho";
+                const icone = cor === "amarelo" ? "📝" : "⚠️";
+                const titulo = cor === "amarelo" ? "Observação" : "Atenção";
+                html += `<div class="tooltip-obs ${tipoObs}">
+                    <div class="tooltip-obs-header">${icone} ${titulo}</div>
+                    <div class="tooltip-obs-texto">${obs}</div>
+                </div>`;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+
+        let tooltipFixoAtual = null;
+
+        function configurarTooltips() {
+            document.querySelectorAll('.categoria-item.tem-obs').forEach(item => {
+                const wrapper = item.parentElement;
+                const tooltip = wrapper.querySelector('.tooltip-obs');
+                
+                if (!tooltip) return;
+
+                function ajustarPosicaoTooltip() {
+                    tooltip.classList.remove('tooltip-esquerda');
+                    
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                    tooltip.style.display = 'block';
+                    
+                    const tooltipRect = tooltip.getBoundingClientRect();
+                    const windowWidth = window.innerWidth;
+                    
+                    if (tooltipRect.right > windowWidth - 20) {
+                        tooltip.classList.add('tooltip-esquerda');
+                    }
+                    
+                    tooltip.style.visibility = '';
+                    tooltip.style.opacity = '';
+                    tooltip.style.display = '';
+                }
+
+                item.addEventListener('mouseenter', function() {
+                    if (!tooltip.classList.contains('fixo')) {
+                        ajustarPosicaoTooltip();
+                        tooltip.classList.add('visible');
+                    }
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    if (!tooltip.classList.contains('fixo')) {
+                        tooltip.classList.remove('visible');
+                    }
+                });
+
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    if (tooltipFixoAtual && tooltipFixoAtual !== tooltip) {
+                        tooltipFixoAtual.classList.remove('fixo');
+                        tooltipFixoAtual.classList.remove('visible');
+                    }
+
+                    if (tooltip.classList.contains('fixo')) {
+                        tooltip.classList.remove('fixo');
+                        tooltip.classList.remove('visible');
+                        tooltipFixoAtual = null;
+                    } else {
+                        ajustarPosicaoTooltip();
+                        tooltip.classList.add('fixo');
+                        tooltip.classList.add('visible');
+                        tooltipFixoAtual = tooltip;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (tooltipFixoAtual && !e.target.closest('.categoria-item-wrapper')) {
+                tooltipFixoAtual.classList.remove('fixo');
+                tooltipFixoAtual.classList.remove('visible');
+                tooltipFixoAtual = null;
+            }
+        });
+
+        function calculateShipAge(shipName) {
+            const birthDateStr = shipBirthDates[shipName.toUpperCase()];
+            if (!birthDateStr) return { years: '-', days: '-' };
+            
+            const parts = birthDateStr.split('/');
+            const birthDate = new Date(parts[2], parts[1] - 1, parts[0]);
+            const today = new Date();
+            
+            const diffTime = today - birthDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const diffYears = Math.floor(diffDays / 365.25);
+            
+            return { years: diffYears, days: diffDays };
+        }
+
+        const naviosReais = [
+            { nome: "ANITA GARIBALDI", classe: "Panamax" },
+
+            { nome: "CASTRO ALVES", classe: "Aframax" },
+            { nome: "CARLOS DRUMMOND DE ANDRADE", classe: "Aframax" },
+            { nome: "OLAVO BILAC", classe: "Aframax" },
+            { nome: "GARRINCHA", classe: "Aframax" },
+            { nome: "PORTINARI", classe: "Aframax" },
+
+            { nome: "JOAO CANDIDO", classe: "Suezmax" },
+            { nome: "DRAGAO DO MAR", classe: "Suezmax" },
+            { nome: "HENRIQUE DIAS", classe: "Suezmax" },
+            { nome: "ANDRE REBOUCAS", classe: "Suezmax" },
+            { nome: "MARCILIO DIAS", classe: "Suezmax" },
+            { nome: "JOSE DO PATROCINIO", classe: "Suezmax" },
+            { nome: "LUCIO COSTA", classe: "Gaseiro 7k" },
+            { nome: "MACHADO DE ASSIS", classe: "Suezmax" },
+            { nome: "MILTON SANTOS", classe: "Suezmax" },
+            { nome: "ABDIAS NASCIMENTO", classe: "Suezmax" },
+            { nome: "DARCY RIBEIRO", classe: "Gaseiro 7k" },
+
+            { nome: "CELSO FURTADO", classe: "Produtos" },
+            { nome: "SERGIO BUARQUE DE HOLANDA", classe: "Produtos" },
+            { nome: "ROMULO ALMEIDA", classe: "Produtos" },
+            { nome: "ZUMBI DOS PALMARES", classe: "Suezmax" },
+            { nome: "JOSE ALENCAR", classe: "Produtos" },
+            { nome: "BARBOSA LIMA SOBRINHO", classe: "Gaseiro 7k" },
+
+            { nome: "OSCAR NIEMEYER", classe: "Gaseiro 7k" },
+
+            { nome: "GILBERTO FREYRE", classe: "Gaseiro 4k" },
+            { nome: "JORGE AMADO", classe: "Gaseiro 4k" }
+        ];
+
+        const statusExemplos = [
+            ['green', 'red', 'green', 'green', 'green'],
+
+            ['green', 'green', 'green', 'green', 'green'],      // CASTRO ALVES
+            ['red', 'green', 'green', 'yellow', 'green'],       // CARLOS DRUMMOND
+            ['green', 'yellow', 'yellow', 'green', 'green'],    // OLAVO BILAC
+            ['green', 'green', 'green', 'green', 'red'],        // GARRINCHA
+            ['green', 'green', 'green', 'green', 'green'],      // PORTINARI
+
+            ['green', 'yellow', 'green', 'green', 'red'],       // JOAO CANDIDO
+            ['green', 'green', 'green', 'green', 'gray'],       // DRAGAO DO MAR
+            ['yellow', 'green', 'green', 'green', 'green'],     // HENRIQUE DIAS
+            ['green', 'green', 'green', 'green', 'green'],      // ANDRE REBOUCAS
+            ['green', 'yellow', 'green', 'green', 'green'],     // MARCILIO DIAS
+            ['red', 'yellow', 'green', 'green', 'green'],       // JOSE DO PATROCINIO
+            ['green', 'green', 'green', 'yellow', 'green'],     // LUCIO COSTA
+            ['yellow', 'green', 'green', 'green', 'green'],     // MACHADO DE ASSIS
+            ['green', 'red', 'green', 'green', 'green'],        // MILTON SANTOS
+            ['green', 'green', 'green', 'green', 'gray'],       // ABDIAS NASCIMENTO
+            ['green', 'green', 'gray', 'green', 'green'],       // DARCY RIBEIRO
+
+            ['green', 'green', 'yellow', 'green', 'green'],     // CELSO FURTADO
+            ['green', 'green', 'green', 'yellow', 'green'],     // SERGIO BUARQUE
+            ['red', 'green', 'green', 'green', 'green'],        // ROMULO ALMEIDA
+            ['green', 'green', 'gray', 'green', 'green'],       // ZUMBI DOS PALMARES
+            ['green', 'yellow', 'yellow', 'green', 'green'],    // JOSE ALENCAR
+            ['green', 'green', 'green', 'green', 'yellow'],     // BARBOSA LIMA
+
+            ['green', 'green', 'yellow', 'gray', 'green'],      // OSCAR NIEMEYER
+
+            ['green', 'yellow', 'yellow', 'green', 'green'],    // GILBERTO FREYRE
+            ['green', 'green', 'gray', 'green', 'green']        // JORGE AMADO
+        ];
+
+        const statusNames = {
+            'green': 'Operacional',
+            'yellow': 'Atenção',
+            'red': 'Crítico',
+            'gray': 'Sem dados'
+        };
+
+        const statusMapping = {
+            'Verde': 'green',
+            'Amarelo': 'yellow',
+            'Vermelho': 'red',
+            'Cinza': 'gray',
+            'Green': 'green',
+            'Yellow': 'yellow',
+            'Red': 'red',
+            'Gray': 'gray'
+        };
+
+        let dadosNavios = [];
+
+        function initDadosCompletos() {
+            dadosNaviosCompletos = naviosReais.map(navio => ({
+                nome: navio.nome,
+                classe: navio.classe,
+                CMT: '',
+                CFM: '',
+                IMT: ''
+            }));
+        }
+
+        function loadDadosNaviosJSON() {
+            fetch('dados_navios_atualizado.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('📊 JSON carregado:', data.length, 'navios');
+
+                    dadosNaviosCompletos = data.map(navio => ({
+                        nome: navio.navio,
+                        classe: navio.classe,
+                        CMT: navio.CMT || '',
+                        CFM: navio.CFM || '',
+                        IMT: navio.IMT || ''
+                    }));
+
+                    dadosNavios = data.map(navio =>
+                        navio.sistemas.map(sistema => sistema.status)
+                    );
+
+                    console.log('✅ Dados processados:', dadosNaviosCompletos.length);
+
+                    if (currentMode === 'compact') {
+                        toggleViewMode('compact');
+                    }
+                })
+                .catch(error => {
+                    console.log('⚠️ JSON não encontrado, usando dados de exemplo');
+                    initDadosCompletos();
+                });
+        }
+        let currentClassFilter = 'Todas';
+
+        function loadJSONFile(event) {
+            const file = event.target.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            document.getElementById('fileName').textContent = file.name;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    processJSONData(jsonData);
+                    showMessage('✅ Dados carregados com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Erro ao processar JSON:', error);
+                    showMessage('❌ Erro ao carregar arquivo JSON: ' + error.message, 'error');
+                }
+            };
+
+            reader.onerror = function () {
+                showMessage('❌ Erro ao ler arquivo', 'error');
+            };
+
+            reader.readAsText(file);
+        }
+
+        function processJSONData(jsonData) {
+            dadosNavios = [];
+
+            // Estrutura esperada: Array de objetos com { Navio, Sistema, Status }
+            if (!Array.isArray(jsonData)) {
+                throw new Error('JSON deve ser um array de objetos');
+            }
+
+            // Agrupar dados por navio
+            const naviosMap = {};
+
+            jsonData.forEach(item => {
+                const navio = item.Navio || item.navio;
+                const sistema = item.Sistema || item.sistema;
+                const status = item.Status || item.status;
+
+                if (!navio || !sistema || !status) {
+                    console.warn('Item com dados incompletos:', item);
+                    return;
+                }
+
+                if (!naviosMap[navio]) {
+                    naviosMap[navio] = [];
+                }
+
+                // Mapear status para cor
+                const statusColor = statusMapping[status] || 'gray';
+                naviosMap[navio].push(statusColor);
+            });
+
+            // Converter para array e garantir 10 sistemas por navio
+            Object.keys(naviosMap).forEach(navio => {
+                const sistemas = naviosMap[navio];
+
+                // Completar com cinza se faltar sistemas
+                while (sistemas.length < 10) {
+                    sistemas.push('gray');
+                }
+
+                // Limitar a 10 sistemas
+                dadosNavios.push(sistemas.slice(0, 10));
+            });
+
+            // Reconstruir dashboard com novos dados
+            rebuildDashboard();
+        }
+
+        // Função para reconstruir o dashboard
+        function rebuildDashboard() {
+            // Limpar grids existentes
+            document.getElementById('shipList').innerHTML = '';
+            document.getElementById('systemsGrid').innerHTML = '';
+
+            // Reconstruir com novos dados
+            renderShipList();
+            renderSystemsGrid();
+
+            // Reaplicar modo atual
+            if (currentMode === 'compact') {
+                setViewMode('compact');
+            }
+        }
+
+        // Função para mostrar mensagens
+        function showMessage(text, type) {
+            const msg = document.getElementById('statusMessage');
+            msg.textContent = text;
+            msg.className = `status-message ${type}`;
+            msg.style.display = 'block';
+
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        function renderShipList() {
+            const shipList = document.getElementById('shipList');
+
+            // Salvar o filtro antes de limpar
+            const filterContainer = shipList.querySelector('.filter-dropdown-container');
+
+            const shipItems = shipList.querySelectorAll('.ship-item');
+            shipItems.forEach(item => item.remove());
+
+            // Usar dados carregados ou dados de exemplo
+            const numShips = dadosNavios.length > 0 ? dadosNavios.length : 26;
+
+            for (let i = 1; i <= numShips; i++) {
+                const shipItem = document.createElement('div');
+                shipItem.className = 'ship-item';
+                shipItem.setAttribute('data-ship-number', i); // Adicionar atributo para filtro
+
+                const navio = naviosReais[i - 1];
+                shipItem.innerHTML = `
+                    <div>${navio.nome}</div>
+                    <div style="font-size: 9px; color: rgba(255,255,255,0.5); font-style: italic;">${navio.classe}</div>
+                `;
+
+                shipItem.onclick = () => scrollToShip(i);
+                shipList.appendChild(shipItem);
+            }
+        }
+
+        // Ordem de exibição das classes (da esquerda pra direita, de cima pra baixo)
+        const ordemClasses = ['Panamax', 'Aframax', 'Suezmax', 'Produtos', 'Gaseiro 7k', 'Gaseiro 4k'];
+
+        function renderSystemsGrid() {
+            const grid = document.getElementById('systemsGrid');
+            let greenTotal = 0, yellowTotal = 0, redTotal = 0, grayTotal = 0;
+
+            grid.innerHTML = '';
+
+            // Criar array com índices originais e ordenar por classe
+            const naviosOrdenados = naviosReais.map((navio, index) => ({ ...navio, originalIndex: index }))
+                .sort((a, b) => {
+                    const ordemA = ordemClasses.indexOf(a.classe);
+                    const ordemB = ordemClasses.indexOf(b.classe);
+                    // Se a classe não estiver na lista, vai pro final
+                    const posA = ordemA === -1 ? 999 : ordemA;
+                    const posB = ordemB === -1 ? 999 : ordemB;
+                    return posA - posB;
+                });
+
+            naviosOrdenados.forEach((navio, displayIndex) => {
+                const row = document.createElement('div');
+                row.className = 'ship-row';
+                row.id = `ship-${displayIndex + 1}`;
+                row.setAttribute('data-ship-number', navio.originalIndex + 1);
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'ship-name';
+                nameDiv.style.cursor = 'pointer';
+
+                nameDiv.innerHTML = `
+                    <div>${navio.nome}</div>
+                    <div class="ship-class">${navio.classe}</div>
+                `;
+                
+                const shipIndex = navio.originalIndex;
+                nameDiv.onclick = (e) => {
+                    e.stopPropagation();
+                    irParaPerfilNavio(shipIndex);
+                };
+
+                row.appendChild(nameDiv);
+
+                const indicatorsDiv = document.createElement('div');
+                indicatorsDiv.className = 'status-indicators';
+
+                // Usar status resumido por categoria (3 bolinhas)
+                const shipStatus = calcularStatusResumo(navio.nome);
+                shipStatus.forEach((status, idx) => {
+                    const circle = document.createElement('div');
+                    circle.className = `status-circle ${status}`;
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = sistemas[idx];
+                    circle.appendChild(tooltip);
+
+                    indicatorsDiv.appendChild(circle);
+
+                    if (status === 'green') greenTotal++;
+                    else if (status === 'yellow') yellowTotal++;
+                    else if (status === 'red') redTotal++;
+                    else if (status === 'gray') grayTotal++;
+                });
+
+                row.appendChild(indicatorsDiv);
+                grid.appendChild(row);
+            });
+
+            document.getElementById('greenCount').textContent = greenTotal;
+            document.getElementById('yellowCount').textContent = yellowTotal;
+            document.getElementById('redCount').textContent = redTotal;
+            document.getElementById('grayCount').textContent = grayTotal;
+        }
+
+        function scrollToShip(shipNumber) {
+            const shipRow = document.getElementById(`ship-${shipNumber}`);
+            shipRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Highlight temporário
+            shipRow.style.background = 'rgba(149, 165, 166, 0.3)';
+            setTimeout(() => {
+                shipRow.style.background = 'rgba(255, 255, 255, 0.05)';
+            }, 2000);
+        }
+
+        // Função para calcular e atualizar contadores de classes dinamicamente
+        function atualizarContadoresClasses() {
+            // Contar navios por classe
+            const contadores = {};
+            naviosReais.forEach(navio => {
+                contadores[navio.classe] = (contadores[navio.classe] || 0) + 1;
+            });
+            
+            // Criar array ordenado do maior para o menor
+            const classesOrdenadas = Object.entries(contadores)
+                .sort((a, b) => b[1] - a[1])
+                .map(([classe, count]) => ({ classe, count }));
+            
+            // Gerar HTML do popup principal
+            const popupContainer = document.getElementById('filterPopupItems');
+            if (popupContainer) {
+                let html = `<div class="filter-popup-item${currentClassFilter === 'Todas' ? ' active' : ''}" onclick="filterByClassPopup('Todas')">
+                    Todas <span class="count">(${naviosReais.length})</span>
+                </div>`;
+                classesOrdenadas.forEach(({ classe, count }) => {
+                    const isActive = currentClassFilter === classe ? ' active' : '';
+                    html += `<div class="filter-popup-item${isActive}" onclick="filterByClassPopup('${classe}')">
+                        ${classe} <span class="count">(${count})</span>
+                    </div>`;
+                });
+                popupContainer.innerHTML = html;
+            }
+            
+            // Gerar HTML do dropdown secundário
+            const dropdownContainer = document.getElementById('filterDropdownItems');
+            if (dropdownContainer) {
+                let html = `<div class="filter-dropdown-item${currentClassFilter === 'Todas' ? ' active' : ''}" onclick="filterByClass('Todas')">
+                    Todas <span class="count">(${naviosReais.length})</span>
+                </div>`;
+                classesOrdenadas.forEach(({ classe, count }) => {
+                    const isActive = currentClassFilter === classe ? ' active' : '';
+                    html += `<div class="filter-dropdown-item${isActive}" onclick="filterByClass('${classe}')">
+                        ${classe} <span class="count">(${count})</span>
+                    </div>`;
+                });
+                dropdownContainer.innerHTML = html;
+            }
+        }
+
+        // Inicializar
+        initDadosCompletos();
+        loadDadosNaviosJSON();
+        renderShipList();
+        renderSystemsGrid();
+        atualizarContadoresClasses();
+        
+        // Iniciar no modo compacto
+        setTimeout(() => {
+            setViewMode('compact');
+        }, 100);
+
+        // Modo de visualização
+        let currentMode = 'compact';
+
+        // Função para toggle do dropdown de filtro
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Funções para filtro popup (modo compacto)
+        function toggleFilterPopup() {
+            const popup = document.getElementById('filterPopup');
+            const overlay = document.getElementById('filterOverlay');
+            popup.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeFilterPopup() {
+            const popup = document.getElementById('filterPopup');
+            const overlay = document.getElementById('filterOverlay');
+            popup.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+
+        // Variável para controlar filtro de cor ativo
+        let currentColorFilter = null;
+
+        // Função para filtrar embarcações por cor
+        function filterByColor(color) {
+            // Se clicar no mesmo filtro, desativa
+            if (currentColorFilter === color) {
+                currentColorFilter = null;
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.classList.remove('active-filter');
+                });
+            } else {
+                currentColorFilter = color;
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.classList.remove('active-filter');
+                });
+                document.getElementById('filter' + color.charAt(0).toUpperCase() + color.slice(1)).classList.add('active-filter');
+            }
+
+            applyAllFilters();
+        }
+
+        // Função para aplicar todos os filtros (classe + cor)
+        function applyAllFilters() {
+            const allShipRows = document.querySelectorAll('.ship-row');
+            const visibleShipNumbers = [];
+
+            allShipRows.forEach((row) => {
+                const shipNumber = parseInt(row.getAttribute('data-ship-number'));
+                const navio = naviosReais[shipNumber - 1];
+                
+                if (!navio) return;
+
+                // Verificar filtro de classe
+                const passaFiltroClasse = currentClassFilter === 'Todas' || navio.classe === currentClassFilter;
+
+                // Verificar filtro de cor
+                let passaFiltroCor = true;
+                if (currentColorFilter) {
+                    const shipStatus = calcularStatusResumo(navio.nome);
+                    passaFiltroCor = shipStatus.includes(currentColorFilter);
+                }
+
+                if (passaFiltroClasse && passaFiltroCor) {
+                    row.style.display = 'grid';
+                    visibleShipNumbers.push(shipNumber);
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            redistributeVisibleRows(visibleShipNumbers);
+            updateFilteredStats();
+
+            if (currentMode === 'compact') {
+                addThirdAndFourthVerticalLines();
+            }
+        }
+
+        function filterByClassPopup(classe) {
+            currentClassFilter = classe;
+
+            closeFilterPopup();
+            
+            atualizarContadoresClasses();
+            atualizarVisualFiltroClasse();
+
+            applyClassFilter(classe);
+        }
+
+        // Função para atualizar visual quando filtro de classe está ativo
+        function atualizarVisualFiltroClasse() {
+            const headerNames = document.querySelectorAll('.compact-header-name');
+            const badges = document.querySelectorAll('.classe-filter-badge');
+            
+            if (currentClassFilter !== 'Todas') {
+                // Mudar cor do "Navio" para indicar filtro ativo
+                headerNames.forEach(header => {
+                    header.classList.add('filter-active');
+                });
+                // Mostrar badges nos headers
+                badges.forEach(badge => {
+                    badge.textContent = currentClassFilter;
+                    badge.classList.add('active');
+                });
+            } else {
+                // Voltar cor normal
+                headerNames.forEach(header => {
+                    header.classList.remove('filter-active');
+                });
+                // Esconder badges
+                badges.forEach(badge => {
+                    badge.classList.remove('active');
+                });
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('filterDropdown');
+            const button = document.querySelector('.filter-dropdown-btn');
+
+            if (dropdown && button) {
+                if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+
+        function filterByClass(classe) {
+            currentClassFilter = classe;
+
+            document.getElementById('filterLabel').textContent = classe;
+
+            document.getElementById('filterDropdown').classList.remove('active');
+
+            atualizarContadoresClasses();
+
+            applyClassFilter(classe);
+        }
+
+        function applyClassFilter(classe) {
+            const allShipRows = document.querySelectorAll('.ship-row');
+            const allShipItems = document.querySelectorAll('.ship-item');
+
+            const visibleShipNumbers = [];
+            allShipRows.forEach((row) => {
+                const shipNumber = parseInt(row.getAttribute('data-ship-number'));
+                const navio = naviosReais[shipNumber - 1];
+                
+                // Verificar filtro de classe
+                const passaFiltroClasse = navio && (classe === 'Todas' || navio.classe === classe);
+                
+                // Verificar filtro de cor (se ativo)
+                let passaFiltroCor = true;
+                if (currentColorFilter && navio) {
+                    const shipStatus = calcularStatusResumo(navio.nome);
+                    passaFiltroCor = shipStatus.includes(currentColorFilter);
+                }
+                
+                if (passaFiltroClasse && passaFiltroCor) {
+                    row.style.display = 'grid';
+                    visibleShipNumbers.push(shipNumber);
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            allShipItems.forEach((item) => {
+                const shipNumber = parseInt(item.getAttribute('data-ship-number'));
+                const navio = naviosReais[shipNumber - 1];
+                if (navio && (classe === 'Todas' || navio.classe === classe)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            redistributeVisibleRows(visibleShipNumbers);
+
+            updateFilteredStats();
+
+            if (currentMode === 'compact') {
+                addThirdAndFourthVerticalLines();
+            }
+        }
+
+        function redistributeVisibleRows(visibleShipNumbers) {
+            const systemsGrid = document.getElementById('systemsGrid');
+            if (!systemsGrid) return;
+
+            const columns = systemsGrid.querySelectorAll('.column-container');
+            if (columns.length !== 2) return;
+
+            const leftColumn = columns[0];
+            const rightColumn = columns[1];
+
+            const visibleRows = [];
+            visibleShipNumbers.sort((a, b) => a - b).forEach(shipNumber => {
+                const row = document.querySelector(`.ship-row[data-ship-number="${shipNumber}"]`);
+                if (row) {
+                    visibleRows.push(row);
+                }
+            });
+
+            const halfCount = Math.ceil(visibleRows.length / 2);
+
+            visibleRows.forEach((row, index) => {
+                if (index < halfCount) {
+                        leftColumn.appendChild(row);
+                } else {
+                        rightColumn.appendChild(row);
+                }
+            });
+        }
+
+        function updateFilteredStats() {
+            let greenTotal = 0, yellowTotal = 0, redTotal = 0, grayTotal = 0;
+
+            document.querySelectorAll('.ship-row').forEach((row) => {
+                if (row.style.display !== 'none') {
+                    const shipNumber = parseInt(row.getAttribute('data-ship-number'));
+                    const navio = naviosReais[shipNumber - 1];
+
+                    if (navio) {
+                        const shipStatus = calcularStatusResumo(navio.nome);
+                        shipStatus.forEach(status => {
+                            if (status === 'green') greenTotal++;
+                            else if (status === 'yellow') yellowTotal++;
+                            else if (status === 'red') redTotal++;
+                            else if (status === 'gray') grayTotal++;
+                        });
+                    }
+                }
+            });
+
+            document.getElementById('greenCount').textContent = greenTotal;
+            document.getElementById('yellowCount').textContent = yellowTotal;
+            document.getElementById('redCount').textContent = redTotal;
+            document.getElementById('grayCount').textContent = grayTotal;
+        }
+
+        function setViewMode(mode) {
+            currentMode = mode;
+
+            const dashboard = document.querySelector('.dashboard');
+            const shipList = document.getElementById('shipList');
+            const systemsGrid = document.getElementById('systemsGrid');
+            const listaNaviosContainer = document.getElementById('listaNaviosContainer');
+            const stats = document.querySelector('.stats');
+            const btnHome = document.getElementById('btnHome');
+
+            if (mode === 'normal') {
+                dashboard.style.display = 'none';
+                listaNaviosContainer.classList.add('active');
+                if (stats) stats.style.display = 'none';
+                if (btnHome) btnHome.style.display = 'flex';
+                renderListaNavios();
+                
+            } else {
+                dashboard.style.display = 'grid';
+                listaNaviosContainer.classList.remove('active');
+                if (stats) stats.style.display = 'flex';
+                if (btnHome) btnHome.style.display = 'flex';
+                
+                dashboard.classList.add('compact');
+                shipList.classList.add('compact');
+                systemsGrid.classList.add('compact');
+
+                reorganizeCompactLayout();
+            }
+
+            if (mode === 'compact') {
+                const shipItems = document.querySelectorAll('.ship-item');
+                const shipRows = document.querySelectorAll('.ship-row');
+                const shipNames = document.querySelectorAll('.ship-name');
+                const statusIndicators = document.querySelectorAll('.status-indicators');
+                const statusCircles = document.querySelectorAll('.status-circle');
+
+                shipItems.forEach(item => item.classList.add('compact-mode'));
+                shipRows.forEach(row => row.classList.add('compact-mode'));
+                shipNames.forEach(name => name.classList.add('compact-mode'));
+                statusIndicators.forEach(indicator => indicator.classList.add('compact-mode'));
+                statusCircles.forEach(circle => circle.classList.add('compact-mode'));
+
+                const filterContainer = document.querySelector('.filter-dropdown-container');
+                const filterBtn = document.querySelector('.filter-dropdown-btn');
+                if (filterContainer) filterContainer.classList.add('compact-mode');
+                if (filterBtn) filterBtn.classList.add('compact-mode');
+            }
+        }
+
+        // Função para voltar para a tela de monitoramento (Home)
+        function voltarParaHome() {
+            // Limpar filtro de cor
+            currentColorFilter = null;
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active-filter');
+            });
+            
+            // Limpar filtro de classe
+            currentClassFilter = 'Todas';
+            
+            // Atualizar contadores e estados visuais
+            atualizarContadoresClasses();
+            atualizarVisualFiltroClasse();
+            
+            // Voltar para monitoramento
+            setViewMode('compact');
+            
+            // Reaplicar para mostrar todos
+            applyAllFilters();
+        }
+
+        function irParaPerfilNavio(index) {
+            setViewMode('normal');
+            
+            setTimeout(() => {
+                selecionarNavio(index);
+            }, 100);
+        }
+
+        function renderListaNavios() {
+            const container = document.getElementById('listaNaviosItems');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < naviosReais.length; i++) {
+                const navio = naviosReais[i];
+                const item = document.createElement('div');
+                item.className = 'navio-item';
+                item.setAttribute('data-index', i);
+                
+                const nomeDiv = document.createElement('div');
+                nomeDiv.className = 'navio-item-nome';
+                nomeDiv.textContent = navio.nome;
+                
+                const classeDiv = document.createElement('div');
+                classeDiv.className = 'navio-item-classe';
+                classeDiv.textContent = navio.classe;
+                
+                item.appendChild(nomeDiv);
+                item.appendChild(classeDiv);
+                
+                (function(index) {
+                    item.onclick = function() {
+                        selecionarNavio(index);
+                    };
+                })(i);
+                
+                container.appendChild(item);
+            }
+        }
+
+        function selecionarNavio(index) {
+            navioSelecionado = index;
+            
+            document.querySelectorAll('.navio-item').forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            mostrarDetalhesNavio(index);
+        }
+
+        function mostrarDetalhesNavio(index) {
+            const navio = naviosReais[index];
+            const navioData = dadosNaviosCompletos[index];
+            const statusNavio = dadosNavios.length > 0 ? dadosNavios[index] : statusExemplos[index];
+            
+            const painel = document.getElementById('painelDetalhes');
+            
+            const dadosDemo = {
+                idoSD: Math.floor(Math.random() * 20) + 80,
+                reqsOutstanding: Math.floor(Math.random() * 50) + 10,
+                srsOutstanding: Math.floor(Math.random() * 80) + 20
+            };
+
+            const statusDetalhado = getStatusNavio(navio.nome);
+
+            const equipamentosItems = [
+                "Motor principal", "MCAs", "Grupo destilatório", 
+                "Equip. fundeio, amarração e guindastes", "Caldeira auxiliar",
+                "DGE E BBA incêndio emergência", "Sistema de carga e descarga", 
+                "Máquina do leme", "Purificadores", "Sistemas de navegação",
+                "Estado geral convés", "Estado geral PM"
+            ];
+            const equipamentosHTML = equipamentosItems.map(item => 
+                gerarItemCategoria(item, statusDetalhado.equipamentos[item])
+            ).join('');
+
+            const pessoalItems = ["Trifix %", "Tripulantes vencidos", "Crew Matrix", "Certificação de Tripulante"];
+            const pessoalHTML = pessoalItems.map(item => 
+                gerarItemCategoria(item, statusDetalhado.pessoal[item])
+            ).join('');
+
+            const certificacaoItems = ["Pendência de Documentação Navio", "Condição de classe", "Obs Vetting"];
+            const certificacaoHTML = certificacaoItems.map(item => 
+                gerarItemCategoria(item, statusDetalhado.certificacao[item])
+            ).join('');
+
+            painel.innerHTML = `
+                <div class="detalhes-header">
+                    <div class="navio-titulo-box">${navio.nome}</div>
+                    <div class="ido-circle">
+                        <div class="ido-label">IDO-SD</div>
+                        <div class="ido-valor">${dadosDemo.idoSD}%</div>
+                    </div>
+                    <div class="info-cards-header">
+                        <p><strong>Reqs outstanding:</strong> ${dadosDemo.reqsOutstanding}</p>
+                        <p><strong>SRs outstanding:</strong> ${dadosDemo.srsOutstanding}</p>
+                    </div>
+                </div>
+
+                <div class="categorias-container">
+                    <!-- Equipamentos -->
+                    <div class="categoria-box">
+                        <div class="categoria-titulo">Equipamentos</div>
+                        <div class="categoria-items">
+                            ${equipamentosHTML}
+                        </div>
+                    </div>
+
+                    <!-- Pessoal -->
+                    <div class="categoria-box">
+                        <div class="categoria-titulo">Pessoal</div>
+                        <div class="categoria-items">
+                            ${pessoalHTML}
+                        </div>
+                    </div>
+
+                    <!-- Certificação -->
+                    <div class="categoria-box">
+                        <div class="categoria-titulo">Certificação</div>
+                        <div class="categoria-items">
+                            ${certificacaoHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(configurarTooltips, 50);
+        }
+
+        function reorganizeNormalLayout() {
+            const systemsGrid = document.getElementById('systemsGrid');
+            const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row'));
+
+                systemsGrid.innerHTML = '';
+
+            // Ordenar por classe (mesma ordem do renderSystemsGrid)
+            allRows.sort((a, b) => {
+                const numA = parseInt(a.getAttribute('data-ship-number'));
+                const numB = parseInt(b.getAttribute('data-ship-number'));
+                const navioA = naviosReais[numA - 1];
+                const navioB = naviosReais[numB - 1];
+                const ordemA = ordemClasses.indexOf(navioA.classe);
+                const ordemB = ordemClasses.indexOf(navioB.classe);
+                const posA = ordemA === -1 ? 999 : ordemA;
+                const posB = ordemB === -1 ? 999 : ordemB;
+                return posA - posB;
+            });
+
+            // Remover compact-ship-info de cada row e ESCONDER bolinhas no modo normal
+            allRows.forEach(row => {
+                const compactInfo = row.querySelector('.compact-ship-info');
+                if (compactInfo) {
+                    compactInfo.remove();
+                }
+                
+                // Esconder bolinhas no modo normal
+                const indicators = row.querySelector('.status-indicators');
+                if (indicators) {
+                    indicators.style.display = 'none';
+                }
+                
+                systemsGrid.appendChild(row);
+            });
+
+            const verticalLines = document.querySelectorAll('.vertical-line-3, .vertical-line-4');
+            verticalLines.forEach(line => line.remove());
+        }
+
+        function reorganizeCompactLayout() {
+            const systemsGrid = document.getElementById('systemsGrid');
+            const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row'));
+
+            // Ordenar por classe (mesma ordem do renderSystemsGrid)
+            allRows.sort((a, b) => {
+                const numA = parseInt(a.getAttribute('data-ship-number'));
+                const numB = parseInt(b.getAttribute('data-ship-number'));
+                const navioA = naviosReais[numA - 1];
+                const navioB = naviosReais[numB - 1];
+                const ordemA = ordemClasses.indexOf(navioA.classe);
+                const ordemB = ordemClasses.indexOf(navioB.classe);
+                const posA = ordemA === -1 ? 999 : ordemA;
+                const posB = ordemB === -1 ? 999 : ordemB;
+                return posA - posB;
+            });
+
+                systemsGrid.innerHTML = '';
+
+            // Criar duas colunas
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'column-container';
+
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'column-container';
+
+            // Criar header para coluna esquerda
+            const leftHeader = document.createElement('div');
+            leftHeader.className = 'compact-column-header';
+            leftHeader.innerHTML = `
+                <div class="compact-header-name" onclick="toggleFilterPopup()" style="cursor: pointer;" title="Clique para filtrar">
+                    <svg class="filter-icon-header" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px; opacity: 0.6;">
+                        <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+                    </svg>
+                    Navio
+                </div>
+                <div class="compact-header-section" title="Comandante">CMT</div>
+                <div class="compact-header-section" title="Chefe de Máquinas">CFM</div>
+                <div class="compact-header-section" title="Imediato">IMT</div>
+                <div class="compact-header-section" title="Idade da Embarcação">IDADE</div>
+                <span class="classe-filter-badge"></span>
+            `;
+            leftColumn.appendChild(leftHeader);
+
+            // Criar header para coluna direita
+            const rightHeader = document.createElement('div');
+            rightHeader.className = 'compact-column-header';
+            rightHeader.innerHTML = `
+                <div class="compact-header-name" onclick="toggleFilterPopup()" style="cursor: pointer;" title="Clique para filtrar">
+                    <svg class="filter-icon-header" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px; opacity: 0.6;">
+                        <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+                    </svg>
+                    Navio
+                </div>
+                <div class="compact-header-section" title="Comandante">CMT</div>
+                <div class="compact-header-section" title="Chefe de Máquinas">CFM</div>
+                <div class="compact-header-section" title="Imediato">IMT</div>
+                <div class="compact-header-section" title="Idade da Embarcação">IDADE</div>
+                <span class="classe-filter-badge"></span>
+            `;
+            rightColumn.appendChild(rightHeader);
+
+            allRows.forEach((row, index) => {
+                const shipNumber = parseInt(row.getAttribute('data-ship-number'));
+                const navioData = dadosNaviosCompletos[shipNumber - 1];
+
+                    const oldInfo = row.querySelector('.compact-ship-info');
+                if (oldInfo) {
+                    oldInfo.remove();
+                }
+                
+                    const indicators = row.querySelector('.status-indicators');
+                if (indicators) {
+                    indicators.style.display = 'flex';
+                }
+
+                    const textDiv = document.createElement('div');
+                textDiv.className = 'compact-ship-info';
+
+                    const shipNameText = navioData?.nome || naviosReais[shipNumber - 1]?.nome || '';
+                
+                    const tripulacao = tripulacaoNavios[shipNameText] || {};
+                
+                const cmtDiv = document.createElement('div');
+                cmtDiv.className = 'compact-text-section crew-section';
+                const cmtData = tripulacao.CMT || '-';
+                cmtDiv.innerHTML = cmtData.replace(/\n/g, '<br>');
+
+                const cfmDiv = document.createElement('div');
+                cfmDiv.className = 'compact-text-section crew-section';
+                const cfmData = tripulacao.CFM || '-';
+                cfmDiv.innerHTML = cfmData.replace(/\n/g, '<br>');
+
+                const imtDiv = document.createElement('div');
+                imtDiv.className = 'compact-text-section crew-section';
+                const imtData = tripulacao.IMT || '-';
+                imtDiv.innerHTML = imtData.replace(/\n/g, '<br>');
+
+                // Criar seção de IDADE
+                const idadeDiv = document.createElement('div');
+                idadeDiv.className = 'compact-text-section idade-section';
+                const ageData = calculateShipAge(shipNameText);
+                idadeDiv.textContent = ageData.years !== '-' ? ageData.years + ' anos' : '-';
+                idadeDiv.title = ageData.days !== '-' ? ageData.days.toLocaleString() + ' dias de operação' : 'Data não disponível';
+                idadeDiv.style.cursor = 'help';
+
+                textDiv.appendChild(cmtDiv);
+                textDiv.appendChild(cfmDiv);
+                textDiv.appendChild(imtDiv);
+                textDiv.appendChild(idadeDiv);
+
+                // Inserir após ship-name (segundo elemento do row)
+                const shipName = row.children[0]; // Primeiro filho é ship-name
+                shipName.after(textDiv);
+
+                console.log(`✅ Adicionado texto para ${navioData?.nome}: CMT="${navioData?.CMT}" CFM="${navioData?.CFM}" IMT="${navioData?.IMT}"`);
+
+                if (index < 13) {
+                    leftColumn.appendChild(row);
+                } else {
+                    rightColumn.appendChild(row);
+                }
+            });
+
+            systemsGrid.appendChild(leftColumn);
+            systemsGrid.appendChild(rightColumn);
+
+            // Adicionar linhas 3 e 4 (após CFM e IMT) via JavaScript com delay
+            setTimeout(() => {
+                addThirdAndFourthVerticalLines();
+            }, 100);
+        }
+
+        function addThirdAndFourthVerticalLines() {
+            console.log('🔵 Iniciando addThirdAndFourthVerticalLines');
+
+            // Linhas divisórias agora são feitas via CSS borders
+
+            console.log('✅ addThirdAndFourthVerticalLines concluído!');
+        }
+    </script>
+</body>
+
+</html>
