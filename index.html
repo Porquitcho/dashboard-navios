@@ -1717,6 +1717,43 @@
             "GARRINCHA": "19/03/2019",
             "PORTINARI": "24/06/2019"
         };
+
+        // Dados de IDO-SD, Reqs Outstanding e SRs Outstanding por navio
+        const dadosIndicadores = {
+            // PANAMAX
+            "ANITA GARIBALDI": { idoSD: 96, reqsOutstanding: 31, srsOutstanding: 27 },
+            // AFRAMAX
+            "CASTRO ALVES": { idoSD: 92, reqsOutstanding: 18, srsOutstanding: 42 },
+            "CARLOS DRUMMOND DE ANDRADE": { idoSD: 78, reqsOutstanding: 45, srsOutstanding: 68 },
+            "OLAVO BILAC": { idoSD: 94, reqsOutstanding: 22, srsOutstanding: 35 },
+            "GARRINCHA": { idoSD: 88, reqsOutstanding: 28, srsOutstanding: 51 },
+            "PORTINARI": { idoSD: 91, reqsOutstanding: 19, srsOutstanding: 33 },
+            // SUEZMAX
+            "JOAO CANDIDO": { idoSD: 85, reqsOutstanding: 38, srsOutstanding: 55 },
+            "DRAGAO DO MAR": { idoSD: 89, reqsOutstanding: 25, srsOutstanding: 49 },
+            "HENRIQUE DIAS": { idoSD: 93, reqsOutstanding: 21, srsOutstanding: 38 },
+            "ANDRE REBOUCAS": { idoSD: 97, reqsOutstanding: 12, srsOutstanding: 24 },
+            "MARCILIO DIAS": { idoSD: 90, reqsOutstanding: 29, srsOutstanding: 44 },
+            "JOSE DO PATROCINIO": { idoSD: 82, reqsOutstanding: 41, srsOutstanding: 62 },
+            "MACHADO DE ASSIS": { idoSD: 95, reqsOutstanding: 16, srsOutstanding: 31 },
+            "MILTON SANTOS": { idoSD: 87, reqsOutstanding: 33, srsOutstanding: 52 },
+            "ABDIAS NASCIMENTO": { idoSD: 84, reqsOutstanding: 36, srsOutstanding: 58 },
+            "ZUMBI DOS PALMARES": { idoSD: 91, reqsOutstanding: 24, srsOutstanding: 41 },
+            // PRODUTOS
+            "CELSO FURTADO": { idoSD: 93, reqsOutstanding: 20, srsOutstanding: 36 },
+            "SERGIO BUARQUE DE HOLANDA": { idoSD: 89, reqsOutstanding: 27, srsOutstanding: 45 },
+            "ROMULO ALMEIDA": { idoSD: 81, reqsOutstanding: 39, srsOutstanding: 59 },
+            "JOSE ALENCAR": { idoSD: 86, reqsOutstanding: 32, srsOutstanding: 48 },
+            // GASEIRO 7K
+            "LUCIO COSTA": { idoSD: 94, reqsOutstanding: 17, srsOutstanding: 29 },
+            "DARCY RIBEIRO": { idoSD: 88, reqsOutstanding: 26, srsOutstanding: 43 },
+            "BARBOSA LIMA SOBRINHO": { idoSD: 92, reqsOutstanding: 23, srsOutstanding: 37 },
+            "OSCAR NIEMEYER": { idoSD: 85, reqsOutstanding: 35, srsOutstanding: 54 },
+            // GASEIRO 4K
+            "GILBERTO FREYRE": { idoSD: 90, reqsOutstanding: 28, srsOutstanding: 46 },
+            "JORGE AMADO": { idoSD: 87, reqsOutstanding: 31, srsOutstanding: 50 }
+        };
+
         const tripulacaoNavios = {
             // PANAMAX
             "ANITA GARIBALDI": {
@@ -3418,10 +3455,11 @@
 
             const painel = document.getElementById('painelDetalhes');
 
-            const dadosDemo = {
-                idoSD: Math.floor(Math.random() * 20) + 80,
-                reqsOutstanding: Math.floor(Math.random() * 50) + 10,
-                srsOutstanding: Math.floor(Math.random() * 80) + 20
+            // Buscar dados de indicadores do navio (IDO-SD, Reqs, SRs)
+            const dadosDemo = dadosIndicadores[navio.nome] || {
+                idoSD: 0,
+                reqsOutstanding: 0,
+                srsOutstanding: 0
             };
 
             const statusDetalhado = getStatusNavio(navio.nome);
