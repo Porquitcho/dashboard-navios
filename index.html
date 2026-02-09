@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, initial-scale=1.0">
-    <title>Estado Geral dos Navios</title>
+    <title>Estado Geral Dos Navios</title>
     <style>
         * {
             margin: 0;
@@ -1224,8 +1224,8 @@
             display: none;
             grid-template-columns: 280px 1fr;
             gap: 30px;
-            height: calc(100vh - 350px);
-            min-height: 600px;
+            height: calc(100vh - 180px);
+            min-height: 800px;
         }
 
         .lista-navios-container.active {
@@ -1396,7 +1396,15 @@
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             padding: 25px 20px 20px 20px;
-            min-height: 300px;
+            min-height: 550px;
+            transition: all 0.3s ease;
+        }
+
+        .categoria-box.categoria-destacada {
+            border: 3px solid #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            background: rgba(52, 152, 219, 0.15);
+            transform: scale(1.02);
         }
 
         .categoria-titulo {
@@ -1583,7 +1591,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="header-logo">
+            <div class="header-logo" onclick="voltarParaHome()" style="cursor: pointer;" title="Voltar para Home">
                 <img src="https://transpetro.sharepoint.com/sites/EstadoGeralDosNavios2/DashboardApp/logo-transpetro.png"
                     alt="Transpetro">
             </div>
@@ -1979,14 +1987,14 @@
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
-                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
+                    "Condição de classe": { cor: "vermelho", obs: "3 condições vencidas" },
                     "Obs Vetting": { cor: "amarelo", obs: "9 observações" }
                 }
             },
             "PORTINARI": {
                 equipamentos: {
-                    "Motor principal": { cor: "verde", obs: "" },
+                    "Motor principal": { cor: "cinza", obs: "" },
                     "MCAs": { cor: "verde", obs: "" },
                     "Grupo destilatório": { cor: "vermelho", obs: "Inoperante" },
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
@@ -2063,6 +2071,60 @@
                     "Pendência de Documentação Navio": { cor: "verde", obs: "" },
                     "Condição de classe": { cor: "amarelo", obs: "2 condições" },
                     "Obs Vetting": { cor: "vermelho", obs: "15 observações" }
+                }
+            },
+            "DRAGAO DO MAR": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
+                    "Condição de classe": { cor: "vermelho", obs: "2 condições vencidas" },
+                    "Obs Vetting": { cor: "amarelo", obs: "5 observações" }
+                }
+            },
+            "DARCY RIBEIRO": {
+                equipamentos: {
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
+                },
+                pessoal: {
+                    "Trifix %": { cor: "cinza", obs: "" },
+                    "Tripulantes vencidos": { cor: "vermelho", obs: "8 vencidos" },
+                    "Crew Matrix": { cor: "amarelo", obs: "Falta 1" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                },
+                certificacao: {
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
                 }
             }
         };
@@ -2182,9 +2244,39 @@
                 return processarDadosNavioSharePoint(dadosSharePoint[nomeNavio]);
             }
 
-            // Senão, usar dados fixos de exemplo para apresentação
-            if (statusExemplosFixos && statusExemplosFixos[nomeNavio]) {
-                return statusExemplosFixos[nomeNavio];
+            // Usar os mesmos dados detalhados que aparecem no perfil do navio
+            const statusDetalhado = getStatusNavio(nomeNavio);
+
+            if (statusDetalhado) {
+                // Função para calcular pior cor de uma categoria
+                const calcularPiorCategoria = (categoria) => {
+                    if (!categoria || Object.keys(categoria).length === 0) {
+                        return 'gray';
+                    }
+
+                    let temVermelho = false;
+                    let temAmarelo = false;
+                    let temCinza = false;
+
+                    Object.values(categoria).forEach(item => {
+                        const cor = item.cor || item;
+                        if (cor === 'vermelho' || cor === 'red') temVermelho = true;
+                        else if (cor === 'amarelo' || cor === 'yellow') temAmarelo = true;
+                        else if (cor === 'cinza' || cor === 'gray') temCinza = true;
+                    });
+
+                    // Prioridade: cinza > vermelho > amarelo > verde
+                    if (temCinza) return 'gray';
+                    if (temVermelho) return 'red';
+                    if (temAmarelo) return 'yellow';
+                    return 'green';
+                };
+
+                const corEquipamentos = calcularPiorCategoria(statusDetalhado.equipamentos);
+                const corPessoal = calcularPiorCategoria(statusDetalhado.pessoal);
+                const corCertificacao = calcularPiorCategoria(statusDetalhado.certificacao);
+
+                return [corEquipamentos, corPessoal, corCertificacao];
             }
 
             // Fallback: retorna cinza se não tiver dados
@@ -2621,6 +2713,13 @@
                 shipStatus.forEach((status, idx) => {
                     const circle = document.createElement('div');
                     circle.className = `status-circle ${status}`;
+                    circle.style.cursor = 'pointer';
+
+                    // Adicionar clique para ir ao perfil do navio com destaque na categoria
+                    circle.onclick = (e) => {
+                        e.stopPropagation();
+                        irParaPerfilNavio(index, idx);
+                    };
 
                     const tooltip = document.createElement('div');
                     tooltip.className = 'tooltip';
@@ -2775,13 +2874,21 @@
 
         // Função para calcular pior status de um array de cores
         function calcularPiorStatus(cores) {
-            let pior = 'green';
+            // Prioridade: cinza > vermelho > amarelo > verde
+            let temVermelho = false;
+            let temAmarelo = false;
+            let temCinza = false;
+
             cores.forEach(cor => {
-                if (cor === 'red') pior = 'red';
-                else if (cor === 'yellow' && pior !== 'red') pior = 'yellow';
-                else if (cor === 'gray' && pior === 'green') pior = 'gray';
+                if (cor === 'red' || cor === 'vermelho') temVermelho = true;
+                else if (cor === 'yellow' || cor === 'amarelo') temAmarelo = true;
+                else if (cor === 'gray' || cor === 'cinza') temCinza = true;
             });
-            return pior;
+
+            if (temCinza) return 'gray';
+            if (temVermelho) return 'red';
+            if (temAmarelo) return 'yellow';
+            return 'green';
         }
 
         // Função para processar dados de um navio do SharePoint
@@ -3219,12 +3326,43 @@
             applyAllFilters();
         }
 
-        function irParaPerfilNavio(index) {
+        // Variável para armazenar qual categoria destacar
+        let categoriaDestaque = null;
+
+        function irParaPerfilNavio(index, categoriaIdx = null) {
+            categoriaDestaque = categoriaIdx;
             setViewMode('normal');
 
             setTimeout(() => {
                 selecionarNavio(index);
+
+                // Se clicou em uma bolinha específica, destacar a categoria
+                if (categoriaDestaque !== null) {
+                    destacarCategoria(categoriaDestaque);
+                }
             }, 100);
+        }
+
+        function destacarCategoria(categoriaIdx) {
+            // Remover destaques anteriores
+            document.querySelectorAll('.categoria-box').forEach(el => {
+                el.classList.remove('categoria-destacada');
+            });
+
+            // Categorias: 0=Equipamentos, 1=Pessoal, 2=Certificação
+            const categorias = document.querySelectorAll('.categoria-box');
+            if (categorias[categoriaIdx]) {
+                categorias[categoriaIdx].classList.add('categoria-destacada');
+
+                // Scroll suave para a categoria
+                categorias[categoriaIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Remover destaque após 3 segundos
+                setTimeout(() => {
+                    categorias[categoriaIdx].classList.remove('categoria-destacada');
+                    categoriaDestaque = null;
+                }, 3000);
+            }
         }
 
         function renderListaNavios() {
