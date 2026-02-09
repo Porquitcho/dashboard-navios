@@ -96,6 +96,9 @@
             position: absolute;
             right: 25px;
             top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .btn-home {
@@ -120,6 +123,15 @@
 
         .btn-home:active {
             transform: scale(0.95);
+        }
+
+        .btn-privacy.active {
+            background: rgba(231, 76, 60, 0.6);
+        }
+
+        .btn-privacy.active:hover {
+            background: rgba(231, 76, 60, 0.8);
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
         }
 
         .btn-home svg {
@@ -164,6 +176,24 @@
             opacity: 1;
             visibility: visible;
             bottom: -40px;
+        }
+
+        /* Tooltip do botão Home aparece em CIMA */
+        #btnHome .tooltip-home {
+            bottom: auto;
+            top: -35px;
+        }
+
+        #btnHome .tooltip-home::before {
+            top: auto;
+            bottom: -6px;
+            border-bottom-color: transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #btnHome:hover .tooltip-home {
+            bottom: auto;
+            top: -40px;
         }
 
         .filter-dropdown-container {
@@ -227,6 +257,89 @@
         .filter-popup-item.active {
             background: rgba(52, 152, 219, 0.6);
             font-weight: 600;
+        }
+
+        /* Chips de filtro múltiplo */
+        .filter-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-chip:hover {
+            background: rgba(52, 152, 219, 0.3);
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+
+        .filter-chip.active {
+            background: rgba(52, 152, 219, 0.6);
+            border-color: #3498db;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .filter-chip .chip-count {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .filter-chip.active .chip-count {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .filter-btn-apply {
+            flex: 1;
+            padding: 10px;
+            background: rgba(39, 174, 96, 0.7);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn-apply:hover {
+            background: rgba(39, 174, 96, 1);
+        }
+
+        .filter-btn-clear {
+            padding: 10px 15px;
+            background: rgba(127, 140, 141, 0.5);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn-clear:hover {
+            background: rgba(127, 140, 141, 0.8);
         }
 
         .filter-popup-close {
@@ -681,6 +794,120 @@
             gap: 30px;
         }
 
+        /* Modo ultra compacto - 3 colunas */
+        .systems-grid.compact.ultra-compact {
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .systems-grid.compact.ultra-compact .compact-column-header {
+            padding: 6px 8px;
+            min-height: 30px;
+        }
+
+        .systems-grid.compact.ultra-compact .ship-row.compact-mode {
+            padding: 4px 6px;
+            min-height: 40px;
+            grid-template-columns: 1fr auto auto;
+        }
+
+        .systems-grid.compact.ultra-compact .ship-name.compact-mode {
+            font-size: 10px;
+            width: auto;
+            min-width: 80px;
+        }
+
+        .systems-grid.compact.ultra-compact .ship-class {
+            font-size: 7px;
+        }
+
+        .systems-grid.compact.ultra-compact .idade-section {
+            width: 45px !important;
+            font-size: 8px;
+            padding: 2px 4px;
+        }
+
+        .systems-grid.compact.ultra-compact .status-indicators {
+            gap: 3px;
+        }
+
+        .systems-grid.compact.ultra-compact .status-indicator {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Modo privacy - ocultar tripulação e ajustar layout */
+        .systems-grid.privacy-compact .crew-section {
+            display: none !important;
+        }
+
+        .systems-grid.privacy-compact .crew-header-section {
+            display: none !important;
+        }
+
+        .systems-grid.privacy-compact .compact-ship-info {
+            width: 55px !important;
+            justify-content: center;
+        }
+
+        .systems-grid.privacy-compact .idade-section {
+            display: flex !important;
+            width: 55px !important;
+        }
+
+        .systems-grid.privacy-compact .ship-row.compact-mode {
+            grid-template-columns: 1fr 55px auto !important;
+        }
+
+        .systems-grid.privacy-compact .ship-name.compact-mode {
+            width: auto !important;
+            min-width: 100px;
+        }
+
+        .systems-grid.privacy-compact .compact-column-header {
+            display: grid !important;
+            grid-template-columns: 1fr 55px 105px !important;
+            align-items: center;
+        }
+
+        .systems-grid.privacy-compact .compact-header-name {
+            width: auto !important;
+        }
+
+        .systems-grid.privacy-compact .compact-header-idade {
+            width: 55px !important;
+            text-align: center;
+        }
+
+        .systems-grid.privacy-compact .classe-filter-badge {
+            position: static !important;
+            transform: none !important;
+            justify-self: end;
+            margin-right: 10px;
+        }
+
+        /* Modo ultra-compact (3 colunas) ajustes adicionais */
+        .systems-grid.compact.ultra-compact.privacy-compact .ship-row.compact-mode {
+            grid-template-columns: 1fr 45px auto !important;
+        }
+
+        .systems-grid.compact.ultra-compact.privacy-compact .compact-ship-info {
+            width: 45px !important;
+        }
+
+        .systems-grid.compact.ultra-compact.privacy-compact .idade-section {
+            width: 45px !important;
+            font-size: 8px;
+        }
+
+        .systems-grid.compact.ultra-compact.privacy-compact .compact-column-header {
+            grid-template-columns: 1fr 45px 75px !important;
+        }
+
+        .systems-grid.compact.ultra-compact.privacy-compact .compact-header-idade {
+            width: 45px !important;
+        }
+
         .column-container {
             display: contents;
         }
@@ -745,6 +972,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Efeito blur para nomes censurados */
+        .censored {
+            filter: blur(5px);
+            user-select: none;
+            transition: filter 0.3s ease;
+        }
+
+        .censored:hover {
+            filter: blur(3px);
+        }
+
+        /* Modo privacidade completa - ocultar colunas de tripulação */
+        .privacy-hidden {
+            display: none !important;
         }
 
         .compact-header-section {
@@ -1606,6 +1849,13 @@
                     </svg>
                     <span class="tooltip-home">Home</span>
                 </button>
+                <button class="btn-home btn-privacy" id="btnPrivacy" onclick="togglePrivacyMode()">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                    </svg>
+                    <span class="tooltip-home">Ocultar nomes</span>
+                </button>
             </div>
         </div>
 
@@ -1615,8 +1865,11 @@
         <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPopup()"></div>
         <div class="filter-popup" id="filterPopup">
             <div class="filter-popup-header">Filtrar por Classe</div>
-            <div id="filterPopupItems"></div>
-            <button class="filter-popup-close" onclick="closeFilterPopup()">Fechar</button>
+            <div class="filter-chips-container" id="filterChipsContainer"></div>
+            <div class="filter-actions">
+                <button class="filter-btn-clear" onclick="limparFiltrosClasse()">Limpar</button>
+                <button class="filter-btn-apply" onclick="aplicarFiltrosClasse()">Aplicar Filtros</button>
+            </div>
         </div>
 
         <div class="stats">
@@ -2575,7 +2828,63 @@
                     initDadosCompletos();
                 });
         }
-        let currentClassFilter = 'Todas';
+        // Filtro de classes - agora suporta múltipla seleção
+        let currentClassFilter = []; // Array vazio = todas as classes
+        let selectedClassesTemp = []; // Seleção temporária no popup
+
+        // Função para renderizar chips no popup
+        function renderizarChipsFiltro() {
+            const container = document.getElementById('filterChipsContainer');
+            if (!container) return;
+
+            const classes = ['Panamax', 'Aframax', 'Suezmax', 'Produtos', 'Gaseiro 7k', 'Gaseiro 4k'];
+            const contadores = {};
+
+            // Contar navios por classe
+            naviosReais.forEach(navio => {
+                contadores[navio.classe] = (contadores[navio.classe] || 0) + 1;
+            });
+
+            let html = '';
+            classes.forEach(classe => {
+                const count = contadores[classe] || 0;
+                const isActive = selectedClassesTemp.includes(classe) ? ' active' : '';
+                html += `<div class="filter-chip${isActive}" onclick="toggleChipClasse('${classe}')">
+                    ${classe}
+                    <span class="chip-count">${count}</span>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Função para toggle de chip
+        function toggleChipClasse(classe) {
+            const index = selectedClassesTemp.indexOf(classe);
+            if (index > -1) {
+                selectedClassesTemp.splice(index, 1);
+            } else {
+                selectedClassesTemp.push(classe);
+            }
+            renderizarChipsFiltro();
+        }
+
+        // Função para limpar seleção
+        function limparFiltrosClasse() {
+            selectedClassesTemp = [];
+            renderizarChipsFiltro();
+        }
+
+        // Função para aplicar filtros
+        function aplicarFiltrosClasse() {
+            currentClassFilter = [...selectedClassesTemp];
+            closeFilterPopup();
+            atualizarVisualFiltroClasse();
+            applyAllFilters();
+        }
+
+        // Modificar toggleFilterPopup para inicializar chips
+        const originalToggleFilterPopup = typeof toggleFilterPopup === 'function' ? toggleFilterPopup : null;
 
         function loadJSONFile(event) {
             const file = event.target.files[0];
@@ -2805,29 +3114,21 @@
                 .sort((a, b) => b[1] - a[1])
                 .map(([classe, count]) => ({ classe, count }));
 
-            // Gerar HTML do popup principal
+            // Gerar HTML do popup principal (agora usa chips - ver renderizarChipsFiltro)
+            // Esta parte foi substituída pelos chips, mas mantemos para compatibilidade
             const popupContainer = document.getElementById('filterPopupItems');
             if (popupContainer) {
-                let html = `<div class="filter-popup-item${currentClassFilter === 'Todas' ? ' active' : ''}" onclick="filterByClassPopup('Todas')">
-                    Todas <span class="count">(${naviosReais.length})</span>
-                </div>`;
-                classesOrdenadas.forEach(({ classe, count }) => {
-                    const isActive = currentClassFilter === classe ? ' active' : '';
-                    html += `<div class="filter-popup-item${isActive}" onclick="filterByClassPopup('${classe}')">
-                        ${classe} <span class="count">(${count})</span>
-                    </div>`;
-                });
-                popupContainer.innerHTML = html;
+                // Não mais usado - chips são renderizados por renderizarChipsFiltro()
             }
 
-            // Gerar HTML do dropdown secundário
+            // Gerar HTML do dropdown secundário (modo normal)
             const dropdownContainer = document.getElementById('filterDropdownItems');
             if (dropdownContainer) {
-                let html = `<div class="filter-dropdown-item${currentClassFilter === 'Todas' ? ' active' : ''}" onclick="filterByClass('Todas')">
+                let html = `<div class="filter-dropdown-item${currentClassFilter.length === 0 ? ' active' : ''}" onclick="filterByClass('Todas')">
                     Todas <span class="count">(${naviosReais.length})</span>
                 </div>`;
                 classesOrdenadas.forEach(({ classe, count }) => {
-                    const isActive = currentClassFilter === classe ? ' active' : '';
+                    const isActive = currentClassFilter.includes(classe) ? ' active' : '';
                     html += `<div class="filter-dropdown-item${isActive}" onclick="filterByClass('${classe}')">
                         ${classe} <span class="count">(${count})</span>
                     </div>`;
@@ -3054,10 +3355,216 @@
             dropdown.classList.toggle('active');
         }
 
+        // ============================================
+        // MODO PRIVACIDADE - Ocultar nomes
+        // Estados: 0 = visível, 1 = blur, 2 = oculto 2col, 3 = oculto 3col
+        // ============================================
+        let privacyMode = 0;
+
+        function togglePrivacyMode() {
+            // Ciclar entre os 4 estados: 0 → 1 → 2 → 3 → 0
+            privacyMode = (privacyMode + 1) % 4;
+
+            const btn = document.getElementById('btnPrivacy');
+            const tooltip = btn.querySelector('.tooltip-home');
+            const svg = btn.querySelector('svg');
+
+            // Elementos para manipular
+            const crewSections = document.querySelectorAll('.crew-section');
+            const crewHeaders = document.querySelectorAll('.crew-header-section');
+
+            // SVG do olho aberto
+            const eyeOpen = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
+
+            // SVG do olho com linha diagonal (blur)
+            const eyeSlash = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
+
+            // SVG do olho com X (oculto 2 colunas)
+            const eyeX = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><path d="M9.17 9.17L14.83 14.83M14.83 9.17L9.17 14.83" stroke="white" stroke-width="2" stroke-linecap="round"/>`;
+
+            // SVG do olho com ! (ultra compacto 3 colunas)
+            const eyeExclaim = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><text x="12" y="14" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>`;
+
+            if (privacyMode === 0) {
+                // Estado 0: Tudo visível
+                btn.classList.remove('active');
+                svg.innerHTML = eyeOpen;
+                tooltip.textContent = 'Ocultar nomes';
+
+                // Remover blur e mostrar colunas
+                crewSections.forEach(el => {
+                    el.classList.remove('censored');
+                    el.classList.remove('privacy-hidden');
+                });
+                crewHeaders.forEach(el => {
+                    el.classList.remove('privacy-hidden');
+                });
+
+                // Remover modo ultra compacto (voltar para 2 colunas)
+                const systemsGrid = document.querySelector('.systems-grid.compact');
+                if (systemsGrid) {
+                    systemsGrid.classList.remove('ultra-compact');
+                    systemsGrid.classList.remove('privacy-compact');
+                }
+                reorganizarColunas(2);
+
+            } else if (privacyMode === 1) {
+                // Estado 1: Blur nos nomes
+                btn.classList.add('active');
+                svg.innerHTML = eyeSlash;
+                tooltip.textContent = 'Ocultar tripulação';
+
+                // Aplicar blur, manter colunas visíveis
+                crewSections.forEach(el => {
+                    el.classList.add('censored');
+                    el.classList.remove('privacy-hidden');
+                });
+                crewHeaders.forEach(el => {
+                    el.classList.remove('privacy-hidden');
+                });
+
+                // Remover modo ultra compacto (voltar para 2 colunas)
+                const systemsGrid = document.querySelector('.systems-grid.compact');
+                if (systemsGrid) {
+                    systemsGrid.classList.remove('ultra-compact');
+                    systemsGrid.classList.remove('privacy-compact');
+                }
+                reorganizarColunas(2);
+
+            } else if (privacyMode === 2) {
+                // Estado 2: Ocultar colunas completamente (2 colunas)
+                btn.classList.add('active');
+                svg.innerHTML = eyeX;
+                tooltip.textContent = 'Modo compacto';
+
+                // Ocultar colunas de tripulação via CSS
+                const systemsGrid = document.querySelector('.systems-grid.compact');
+                if (systemsGrid) {
+                    systemsGrid.classList.remove('ultra-compact');
+                    systemsGrid.classList.add('privacy-compact');
+                }
+
+                // Ocultar headers de tripulação
+                crewHeaders.forEach(el => {
+                    el.classList.add('privacy-hidden');
+                });
+
+                reorganizarColunas(2);
+
+            } else if (privacyMode === 3) {
+                // Estado 3: Ultra compacto (3 colunas)
+                btn.classList.add('active');
+                svg.innerHTML = eyeExclaim;
+                tooltip.textContent = 'Exibir tripulação';
+
+                // Ocultar colunas de tripulação via CSS
+                const systemsGrid = document.querySelector('.systems-grid.compact');
+                if (systemsGrid) {
+                    systemsGrid.classList.add('ultra-compact');
+                    systemsGrid.classList.add('privacy-compact');
+                }
+
+                // Ocultar headers de tripulação
+                crewHeaders.forEach(el => {
+                    el.classList.add('privacy-hidden');
+                });
+
+                reorganizarColunas(3);
+            }
+        }
+
+        // Função para reorganizar navios em 2 ou 3 colunas
+        function reorganizarColunas(numColunas) {
+            const systemsGrid = document.querySelector('.systems-grid.compact');
+            if (!systemsGrid) return;
+
+            // Coletar TODOS os ship-rows
+            const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row.compact-mode'));
+
+            // Separar visíveis e ocultos
+            const visibleRows = allRows.filter(row => row.style.display !== 'none');
+            const hiddenRows = allRows.filter(row => row.style.display === 'none');
+
+            // Remover colunas existentes
+            const existingColumns = systemsGrid.querySelectorAll('.column-container');
+            existingColumns.forEach(col => col.remove());
+
+            // Criar novas colunas
+            const columns = [];
+            for (let i = 0; i < numColunas; i++) {
+                const col = document.createElement('div');
+                col.className = 'column-container';
+
+                // Criar header para cada coluna
+                const header = document.createElement('div');
+                header.className = 'compact-column-header';
+
+                // Determinar quais headers mostrar baseado no privacyMode
+                if (privacyMode >= 2) {
+                    // Modo compacto - apenas NAVIO e IDADE
+                    header.innerHTML = `
+                        <div class="compact-header-name" onclick="toggleFilterPopup()" style="cursor: pointer;" title="Clique para filtrar">
+                            <svg class="filter-icon-header" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px; opacity: 0.6;">
+                                <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+                            </svg>
+                            Navio
+                        </div>
+                        <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
+                        <span class="classe-filter-badge"></span>
+                    `;
+                } else {
+                    // Modo normal - todos os headers
+                    header.innerHTML = `
+                        <div class="compact-header-name" onclick="toggleFilterPopup()" style="cursor: pointer;" title="Clique para filtrar">
+                            <svg class="filter-icon-header" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px; opacity: 0.6;">
+                                <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+                            </svg>
+                            Navio
+                        </div>
+                        <div class="compact-header-section crew-header-section" title="Comandante">CMT</div>
+                        <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
+                        <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
+                        <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
+                        <span class="classe-filter-badge"></span>
+                    `;
+                }
+
+                col.appendChild(header);
+                columns.push(col);
+                systemsGrid.appendChild(col);
+            }
+
+            // Distribuir navios VISÍVEIS entre as colunas (esquerda-direita, cima-baixo)
+            visibleRows.forEach((row, index) => {
+                const columnIndex = index % numColunas;
+                columns[columnIndex].appendChild(row);
+            });
+
+            // Adicionar navios ocultos na primeira coluna (não afeta layout)
+            hiddenRows.forEach(row => {
+                columns[0].appendChild(row);
+            });
+
+            // Atualizar visual do filtro de classe
+            atualizarVisualFiltroClasse();
+
+            // Redesenhar linhas verticais
+            if (currentMode === 'compact') {
+                addThirdAndFourthVerticalLines();
+            }
+        }
+
         // Funções para filtro popup (modo compacto)
         function toggleFilterPopup() {
             const popup = document.getElementById('filterPopup');
             const overlay = document.getElementById('filterOverlay');
+
+            // Se está abrindo, inicializar seleção temporária com filtro atual
+            if (!popup.classList.contains('active')) {
+                selectedClassesTemp = [...currentClassFilter];
+                renderizarChipsFiltro();
+            }
+
             popup.classList.toggle('active');
             overlay.classList.toggle('active');
         }
@@ -3103,8 +3610,8 @@
 
                 if (!navio) return;
 
-                // Verificar filtro de classe
-                const passaFiltroClasse = currentClassFilter === 'Todas' || navio.classe === currentClassFilter;
+                // Verificar filtro de classe (array vazio = todas)
+                const passaFiltroClasse = currentClassFilter.length === 0 || currentClassFilter.includes(navio.classe);
 
                 // Verificar filtro de cor
                 let passaFiltroCor = true;
@@ -3130,14 +3637,19 @@
         }
 
         function filterByClassPopup(classe) {
-            currentClassFilter = classe;
+            // Função legada - converte para array
+            if (classe === 'Todas') {
+                currentClassFilter = [];
+            } else {
+                currentClassFilter = [classe];
+            }
 
             closeFilterPopup();
 
             atualizarContadoresClasses();
             atualizarVisualFiltroClasse();
 
-            applyClassFilter(classe);
+            applyAllFilters();
         }
 
         // Função para atualizar visual quando filtro de classe está ativo
@@ -3145,14 +3657,19 @@
             const headerNames = document.querySelectorAll('.compact-header-name');
             const badges = document.querySelectorAll('.classe-filter-badge');
 
-            if (currentClassFilter !== 'Todas') {
+            if (currentClassFilter.length > 0) {
                 // Mudar cor do "Navio" para indicar filtro ativo
                 headerNames.forEach(header => {
                     header.classList.add('filter-active');
                 });
                 // Mostrar badges nos headers
                 badges.forEach(badge => {
-                    badge.textContent = currentClassFilter;
+                    // Mostrar quantidade de filtros ou nome se for só 1
+                    if (currentClassFilter.length === 1) {
+                        badge.textContent = currentClassFilter[0];
+                    } else {
+                        badge.textContent = currentClassFilter.length + ' classes';
+                    }
                     badge.classList.add('active');
                 });
             } else {
@@ -3179,7 +3696,12 @@
         });
 
         function filterByClass(classe) {
-            currentClassFilter = classe;
+            // Função legada - converte para array
+            if (classe === 'Todas') {
+                currentClassFilter = [];
+            } else {
+                currentClassFilter = [classe];
+            }
 
             document.getElementById('filterLabel').textContent = classe;
 
@@ -3187,7 +3709,7 @@
 
             atualizarContadoresClasses();
 
-            applyClassFilter(classe);
+            applyAllFilters();
         }
 
         function applyClassFilter(classe) {
@@ -3240,28 +3762,38 @@
             const systemsGrid = document.getElementById('systemsGrid');
             if (!systemsGrid) return;
 
-            const columns = systemsGrid.querySelectorAll('.column-container');
-            if (columns.length !== 2) return;
+            const columns = Array.from(systemsGrid.querySelectorAll('.column-container'));
+            if (columns.length === 0) return;
 
-            const leftColumn = columns[0];
-            const rightColumn = columns[1];
+            const numColunas = columns.length;
 
-            const visibleRows = [];
-            visibleShipNumbers.sort((a, b) => a - b).forEach(shipNumber => {
-                const row = document.querySelector(`.ship-row[data-ship-number="${shipNumber}"]`);
-                if (row) {
-                    visibleRows.push(row);
-                }
+            // Coletar TODOS os rows de todas as colunas
+            const allRows = [];
+            columns.forEach(col => {
+                const rows = col.querySelectorAll('.ship-row.compact-mode');
+                rows.forEach(row => allRows.push(row));
             });
 
-            const halfCount = Math.ceil(visibleRows.length / 2);
+            // Separar visíveis e ocultos
+            const visibleRows = allRows.filter(row => row.style.display !== 'none');
+            const hiddenRows = allRows.filter(row => row.style.display === 'none');
 
+            // Ordenar visíveis por data-ship-number para manter ordem consistente
+            visibleRows.sort((a, b) => {
+                const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
+                const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
+                return numA - numB;
+            });
+
+            // Distribuir visíveis entre as colunas (esquerda-direita, cima-baixo)
             visibleRows.forEach((row, index) => {
-                if (index < halfCount) {
-                    leftColumn.appendChild(row);
-                } else {
-                    rightColumn.appendChild(row);
-                }
+                const columnIndex = index % numColunas;
+                columns[columnIndex].appendChild(row);
+            });
+
+            // Adicionar ocultos na primeira coluna (não afeta layout visual)
+            hiddenRows.forEach(row => {
+                columns[0].appendChild(row);
             });
         }
 
@@ -3350,7 +3882,38 @@
             });
 
             // Limpar filtro de classe
-            currentClassFilter = 'Todas';
+            currentClassFilter = [];
+
+            // Resetar modo privacidade para 0 (tudo visível)
+            privacyMode = 0;
+            const btnPrivacy = document.getElementById('btnPrivacy');
+            if (btnPrivacy) {
+                btnPrivacy.classList.remove('active');
+                const svg = btnPrivacy.querySelector('svg');
+                if (svg) {
+                    svg.innerHTML = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
+                }
+                const tooltip = btnPrivacy.querySelector('.tooltip-home');
+                if (tooltip) {
+                    tooltip.textContent = 'Ocultar nomes';
+                }
+            }
+
+            // Remover blur e mostrar colunas de tripulação
+            document.querySelectorAll('.crew-section').forEach(el => {
+                el.classList.remove('censored');
+                el.classList.remove('privacy-hidden');
+            });
+            document.querySelectorAll('.crew-header-section').forEach(el => {
+                el.classList.remove('privacy-hidden');
+            });
+
+            // Remover modo ultra compacto
+            const systemsGrid = document.querySelector('.systems-grid.compact');
+            if (systemsGrid) {
+                systemsGrid.classList.remove('ultra-compact');
+                systemsGrid.classList.remove('privacy-compact');
+            }
 
             // Atualizar contadores e estados visuais
             atualizarContadoresClasses();
@@ -3579,9 +4142,9 @@
                     </svg>
                     Navio
                 </div>
-                <div class="compact-header-section" title="Comandante">CMT</div>
-                <div class="compact-header-section" title="Chefe de Máquinas">CFM</div>
-                <div class="compact-header-section" title="Imediato">IMT</div>
+                <div class="compact-header-section crew-header-section" title="Comandante">CMT</div>
+                <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
+                <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
                 <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
                 <span class="classe-filter-badge"></span>
             `;
@@ -3597,9 +4160,9 @@
                     </svg>
                     Navio
                 </div>
-                <div class="compact-header-section" title="Comandante">CMT</div>
-                <div class="compact-header-section" title="Chefe de Máquinas">CFM</div>
-                <div class="compact-header-section" title="Imediato">IMT</div>
+                <div class="compact-header-section crew-header-section" title="Comandante">CMT</div>
+                <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
+                <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
                 <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
                 <span class="classe-filter-badge"></span>
             `;
@@ -3662,7 +4225,6 @@
                 const ageData = calculateShipAge(shipNameText);
                 idadeDiv.textContent = ageData.years !== '-' ? ageData.years + ' anos' : '-';
                 idadeDiv.title = ageData.days !== '-' ? ageData.days.toLocaleString() + ' dias de operação' : 'Data não disponível';
-                idadeDiv.style.cursor = 'help';
 
                 textDiv.appendChild(cmtDiv);
                 textDiv.appendChild(cfmDiv);
