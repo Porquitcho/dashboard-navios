@@ -836,76 +836,13 @@
             height: 16px;
         }
 
-        /* Modo privacy - ocultar tripulação e ajustar layout */
-        .systems-grid.privacy-compact .crew-section {
+        /* Modo privacy - ocultar tripulação e manter layout correto */
+        .systems-grid.compact.privacy-compact .crew-section {
             display: none !important;
         }
 
-        .systems-grid.privacy-compact .crew-header-section {
+        .systems-grid.compact.privacy-compact .crew-header-section {
             display: none !important;
-        }
-
-        .systems-grid.privacy-compact .compact-ship-info {
-            width: 55px !important;
-            justify-content: center;
-        }
-
-        .systems-grid.privacy-compact .idade-section {
-            display: flex !important;
-            width: 55px !important;
-        }
-
-        .systems-grid.privacy-compact .ship-row.compact-mode {
-            grid-template-columns: 1fr 55px auto !important;
-        }
-
-        .systems-grid.privacy-compact .ship-name.compact-mode {
-            width: auto !important;
-            min-width: 100px;
-        }
-
-        .systems-grid.privacy-compact .compact-column-header {
-            display: grid !important;
-            grid-template-columns: 1fr 55px 105px !important;
-            align-items: center;
-        }
-
-        .systems-grid.privacy-compact .compact-header-name {
-            width: auto !important;
-        }
-
-        .systems-grid.privacy-compact .compact-header-idade {
-            width: 55px !important;
-            text-align: center;
-        }
-
-        .systems-grid.privacy-compact .classe-filter-badge {
-            position: static !important;
-            transform: none !important;
-            justify-self: end;
-            margin-right: 10px;
-        }
-
-        /* Modo ultra-compact (3 colunas) ajustes adicionais */
-        .systems-grid.compact.ultra-compact.privacy-compact .ship-row.compact-mode {
-            grid-template-columns: 1fr 45px auto !important;
-        }
-
-        .systems-grid.compact.ultra-compact.privacy-compact .compact-ship-info {
-            width: 45px !important;
-        }
-
-        .systems-grid.compact.ultra-compact.privacy-compact .idade-section {
-            width: 45px !important;
-            font-size: 8px;
-        }
-
-        .systems-grid.compact.ultra-compact.privacy-compact .compact-column-header {
-            grid-template-columns: 1fr 45px 75px !important;
-        }
-
-        .systems-grid.compact.ultra-compact.privacy-compact .compact-header-idade {
-            width: 45px !important;
         }
 
         .column-container {
@@ -972,17 +909,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* Efeito blur para nomes censurados */
-        .censored {
-            filter: blur(5px);
-            user-select: none;
-            transition: filter 0.3s ease;
-        }
-
-        .censored:hover {
-            filter: blur(3px);
         }
 
         /* Modo privacidade completa - ocultar colunas de tripulação */
@@ -2163,7 +2089,7 @@
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "amarelo", obs: "Trifix em 72%" },
+                    "Trifix %": { cor: "amarelo", obs: "Gabina é o melhor chefe do mundo" },
                     "Tripulantes vencidos": { cor: "vermelho", obs: "12 certificados vencendo" },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
@@ -3357,7 +3283,7 @@
 
         // ============================================
         // MODO PRIVACIDADE - Ocultar nomes
-        // Estados: 0 = visível, 1 = blur, 2 = oculto 2col, 3 = oculto 3col
+        // Estados: 0 = visível, 1 = traços, 2 = oculto 2col, 3 = oculto 3col
         // ============================================
         let privacyMode = 0;
 
@@ -3376,7 +3302,7 @@
             // SVG do olho aberto
             const eyeOpen = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
 
-            // SVG do olho com linha diagonal (blur)
+            // SVG do olho com linha diagonal (traços)
             const eyeSlash = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
 
             // SVG do olho com X (oculto 2 colunas)
@@ -3386,21 +3312,24 @@
             const eyeExclaim = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><text x="12" y="14" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>`;
 
             if (privacyMode === 0) {
-                // Estado 0: Tudo visível
+                // Estado 0: Tudo visível - restaurar nomes originais
                 btn.classList.remove('active');
                 svg.innerHTML = eyeOpen;
                 tooltip.textContent = 'Ocultar nomes';
 
-                // Remover blur e mostrar colunas
+                // Restaurar nomes originais
                 crewSections.forEach(el => {
-                    el.classList.remove('censored');
+                    if (el.hasAttribute('data-original-text')) {
+                        el.innerHTML = el.getAttribute('data-original-text');
+                        el.style.fontWeight = '';
+                    }
                     el.classList.remove('privacy-hidden');
                 });
                 crewHeaders.forEach(el => {
                     el.classList.remove('privacy-hidden');
                 });
 
-                // Remover modo ultra compacto (voltar para 2 colunas)
+                // Remover modos
                 const systemsGrid = document.querySelector('.systems-grid.compact');
                 if (systemsGrid) {
                     systemsGrid.classList.remove('ultra-compact');
@@ -3409,21 +3338,25 @@
                 reorganizarColunas(2);
 
             } else if (privacyMode === 1) {
-                // Estado 1: Blur nos nomes
+                // Estado 1: Substituir nomes por "- - -"
                 btn.classList.add('active');
                 svg.innerHTML = eyeSlash;
                 tooltip.textContent = 'Ocultar tripulação';
 
-                // Aplicar blur, manter colunas visíveis
+                // Salvar texto original e substituir por traços
                 crewSections.forEach(el => {
-                    el.classList.add('censored');
+                    if (!el.hasAttribute('data-original-text')) {
+                        el.setAttribute('data-original-text', el.innerHTML);
+                    }
+                    el.innerHTML = '<b>- - -</b>';
+                    el.style.fontWeight = 'bold';
                     el.classList.remove('privacy-hidden');
                 });
                 crewHeaders.forEach(el => {
                     el.classList.remove('privacy-hidden');
                 });
 
-                // Remover modo ultra compacto (voltar para 2 colunas)
+                // Remover modos
                 const systemsGrid = document.querySelector('.systems-grid.compact');
                 if (systemsGrid) {
                     systemsGrid.classList.remove('ultra-compact');
@@ -3437,17 +3370,12 @@
                 svg.innerHTML = eyeX;
                 tooltip.textContent = 'Modo compacto';
 
-                // Ocultar colunas de tripulação via CSS
+                // Adicionar classe para ocultar via CSS
                 const systemsGrid = document.querySelector('.systems-grid.compact');
                 if (systemsGrid) {
                     systemsGrid.classList.remove('ultra-compact');
                     systemsGrid.classList.add('privacy-compact');
                 }
-
-                // Ocultar headers de tripulação
-                crewHeaders.forEach(el => {
-                    el.classList.add('privacy-hidden');
-                });
 
                 reorganizarColunas(2);
 
@@ -3457,17 +3385,12 @@
                 svg.innerHTML = eyeExclaim;
                 tooltip.textContent = 'Exibir tripulação';
 
-                // Ocultar colunas de tripulação via CSS
+                // Adicionar classes para modo ultra compacto
                 const systemsGrid = document.querySelector('.systems-grid.compact');
                 if (systemsGrid) {
                     systemsGrid.classList.add('ultra-compact');
                     systemsGrid.classList.add('privacy-compact');
                 }
-
-                // Ocultar headers de tripulação
-                crewHeaders.forEach(el => {
-                    el.classList.add('privacy-hidden');
-                });
 
                 reorganizarColunas(3);
             }
@@ -3484,6 +3407,13 @@
             // Separar visíveis e ocultos
             const visibleRows = allRows.filter(row => row.style.display !== 'none');
             const hiddenRows = allRows.filter(row => row.style.display === 'none');
+
+            // Ordenar visíveis por data-ship-number para manter ordem consistente
+            visibleRows.sort((a, b) => {
+                const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
+                const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
+                return numA - numB;
+            });
 
             // Remover colunas existentes
             const existingColumns = systemsGrid.querySelectorAll('.column-container');
@@ -3899,8 +3829,12 @@
                 }
             }
 
-            // Remover blur e mostrar colunas de tripulação
+            // Restaurar textos originais e remover classes
             document.querySelectorAll('.crew-section').forEach(el => {
+                if (el.hasAttribute('data-original-text')) {
+                    el.innerHTML = el.getAttribute('data-original-text');
+                    el.style.fontWeight = '';
+                }
                 el.classList.remove('censored');
                 el.classList.remove('privacy-hidden');
             });
