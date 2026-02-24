@@ -305,6 +305,37 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        /* Chips de grupo (Longo Curso / Cabotagem) */
+        .filter-chip.grupo {
+            border-style: dashed;
+            border-color: rgba(255, 193, 7, 0.4);
+            color: rgba(255, 193, 7, 0.9);
+            font-style: italic;
+        }
+
+        .filter-chip.grupo:hover {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.7);
+        }
+
+        .filter-chip.grupo.active {
+            background: rgba(255, 193, 7, 0.25);
+            border-color: rgba(255, 193, 7, 0.9);
+            color: #ffc107;
+        }
+
+        .filter-chip.grupo.active .chip-count {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Separador entre grupos e classes individuais */
+        .filter-chips-separator {
+            width: 100%;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 2px 0;
+        }
+
         .filter-actions {
             display: flex;
             gap: 10px;
@@ -803,8 +834,7 @@
         .systems-grid.compact.ultra-compact .compact-column-header {
             padding: 6px 8px;
             min-height: 30px;
-            display: grid !important;
-            grid-template-columns: 1fr auto;
+            display: flex !important;
             align-items: center;
         }
 
@@ -835,7 +865,7 @@
         }
 
         .systems-grid.compact.ultra-compact .status-indicators {
-            gap: 3px;
+            gap: 10px;
         }
 
         .systems-grid.compact.ultra-compact .status-indicator {
@@ -851,6 +881,23 @@
         .systems-grid.compact.privacy-compact .crew-header-section {
             display: none !important;
         }
+
+        /* ── MODO 2: olho com X (privacy-compact sem ultra-compact) ────────────
+           Barra divisória à direita da IDADE no header e nas linhas de dados. */
+        .systems-grid.compact.privacy-compact:not(.ultra-compact) .compact-header-section.compact-header-idade {
+            border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .systems-grid.compact.privacy-compact:not(.ultra-compact) .compact-text-section.idade-section {
+            border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Modo 3: sem barra divisória no header */
+        .systems-grid.compact.ultra-compact .compact-header-name {
+            border-right: none !important;
+        }
+
+
 
         .column-container {
             display: contents;
@@ -893,6 +940,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             min-height: 40px;
+            position: relative;
             position: relative;
         }
 
@@ -2118,7 +2166,7 @@
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "amarelo", obs: "Gabina é o melhor chefe do mundo!!!" },
+                    "Trifix %": { cor: "amarelo", obs: "Trifix em 72%" },
                     "Tripulantes vencidos": { cor: "vermelho", obs: "12 certificados vencendo" },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
@@ -2754,40 +2802,18 @@
             }));
         }
 
-        function loadDadosNaviosJSON() {
-            fetch('dados_navios_atualizado.json')
-                .then(response => response.json())
-                .then(data => {
-                    console.log('📊 JSON carregado:', data.length, 'navios');
 
-                    dadosNaviosCompletos = data.map(navio => ({
-                        nome: navio.navio,
-                        classe: navio.classe,
-                        CMT: navio.CMT || '',
-                        CFM: navio.CFM || '',
-                        IMT: navio.IMT || ''
-                    }));
-
-                    dadosNavios = data.map(navio =>
-                        navio.sistemas.map(sistema => sistema.status)
-                    );
-
-                    console.log('✅ Dados processados:', dadosNaviosCompletos.length);
-
-                    if (currentMode === 'compact') {
-                        toggleViewMode('compact');
-                    }
-                })
-                .catch(error => {
-                    console.log('⚠️ JSON não encontrado, usando dados de exemplo');
-                    initDadosCompletos();
-                });
-        }
         // Filtro de classes - agora suporta múltipla seleção
         let currentClassFilter = []; // Array vazio = todas as classes
         let selectedClassesTemp = []; // Seleção temporária no popup
 
         // Função para renderizar chips no popup
+        // Definição dos grupos de navegação
+        const GRUPOS_NAVEGACAO = {
+            'Longo Curso': ['Suezmax', 'Aframax'],
+            'Cabotagem': ['Panamax', 'Produtos', 'Gaseiro 7k', 'Gaseiro 4k']
+        };
+
         function renderizarChipsFiltro() {
             const container = document.getElementById('filterChipsContainer');
             if (!container) return;
@@ -2801,6 +2827,22 @@
             });
 
             let html = '';
+
+            // ── Chips de grupo (Longo Curso / Cabotagem) ──────────────────
+            Object.entries(GRUPOS_NAVEGACAO).forEach(([grupo, classesDoGrupo]) => {
+                const totalGrupo = classesDoGrupo.reduce((sum, c) => sum + (contadores[c] || 0), 0);
+                const todasAtivas = classesDoGrupo.every(c => selectedClassesTemp.includes(c));
+                const isActive = todasAtivas ? ' active' : '';
+                html += `<div class="filter-chip grupo${isActive}" onclick="toggleGrupoClasse('${grupo}')">
+                    ${grupo}
+                    <span class="chip-count">${totalGrupo}</span>
+                </div>`;
+            });
+
+            // ── Separador ─────────────────────────────────────────────────
+            html += '<hr class="filter-chips-separator">';
+
+            // ── Chips de classe individual ────────────────────────────────
             classes.forEach(classe => {
                 const count = contadores[classe] || 0;
                 const isActive = selectedClassesTemp.includes(classe) ? ' active' : '';
@@ -2813,13 +2855,34 @@
             container.innerHTML = html;
         }
 
-        // Função para toggle de chip
+        // Toggle de classe individual
         function toggleChipClasse(classe) {
             const index = selectedClassesTemp.indexOf(classe);
             if (index > -1) {
                 selectedClassesTemp.splice(index, 1);
             } else {
                 selectedClassesTemp.push(classe);
+            }
+            renderizarChipsFiltro();
+        }
+
+        // Toggle de grupo: se todas as classes do grupo estão ativas, desativa todas; senão ativa todas
+        function toggleGrupoClasse(grupo) {
+            const classesDoGrupo = GRUPOS_NAVEGACAO[grupo];
+            if (!classesDoGrupo) return;
+
+            const todasAtivas = classesDoGrupo.every(c => selectedClassesTemp.includes(c));
+
+            if (todasAtivas) {
+                // Desativar todas as classes do grupo
+                selectedClassesTemp = selectedClassesTemp.filter(c => !classesDoGrupo.includes(c));
+            } else {
+                // Ativar todas as classes do grupo que ainda não estão ativas
+                classesDoGrupo.forEach(c => {
+                    if (!selectedClassesTemp.includes(c)) {
+                        selectedClassesTemp.push(c);
+                    }
+                });
             }
             renderizarChipsFiltro();
         }
@@ -2841,81 +2904,9 @@
         // Modificar toggleFilterPopup para inicializar chips
         const originalToggleFilterPopup = typeof toggleFilterPopup === 'function' ? toggleFilterPopup : null;
 
-        function loadJSONFile(event) {
-            const file = event.target.files[0];
 
-            if (!file) {
-                return;
-            }
 
-            document.getElementById('fileName').textContent = file.name;
 
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                try {
-                    const jsonData = JSON.parse(e.target.result);
-                    processJSONData(jsonData);
-                    showMessage('✅ Dados carregados com sucesso!', 'success');
-                } catch (error) {
-                    console.error('Erro ao processar JSON:', error);
-                    showMessage('❌ Erro ao carregar arquivo JSON: ' + error.message, 'error');
-                }
-            };
-
-            reader.onerror = function () {
-                showMessage('❌ Erro ao ler arquivo', 'error');
-            };
-
-            reader.readAsText(file);
-        }
-
-        function processJSONData(jsonData) {
-            dadosNavios = [];
-
-            // Estrutura esperada: Array de objetos com { Navio, Sistema, Status }
-            if (!Array.isArray(jsonData)) {
-                throw new Error('JSON deve ser um array de objetos');
-            }
-
-            // Agrupar dados por navio
-            const naviosMap = {};
-
-            jsonData.forEach(item => {
-                const navio = item.Navio || item.navio;
-                const sistema = item.Sistema || item.sistema;
-                const status = item.Status || item.status;
-
-                if (!navio || !sistema || !status) {
-                    console.warn('Item com dados incompletos:', item);
-                    return;
-                }
-
-                if (!naviosMap[navio]) {
-                    naviosMap[navio] = [];
-                }
-
-                // Mapear status para cor
-                const statusColor = statusMapping[status] || 'gray';
-                naviosMap[navio].push(statusColor);
-            });
-
-            // Converter para array e garantir 10 sistemas por navio
-            Object.keys(naviosMap).forEach(navio => {
-                const sistemas = naviosMap[navio];
-
-                // Completar com cinza se faltar sistemas
-                while (sistemas.length < 10) {
-                    sistemas.push('gray');
-                }
-
-                // Limitar a 10 sistemas
-                dadosNavios.push(sistemas.slice(0, 10));
-            });
-
-            // Reconstruir dashboard com novos dados
-            rebuildDashboard();
-        }
 
         // Função para reconstruir o dashboard
         function rebuildDashboard() {
@@ -3098,10 +3089,79 @@
 
         const SHAREPOINT_SITE = 'https://transpetro.sharepoint.com/sites/EstadoGeralDosNavios2';
         const LISTA_NAME = 'StatusNavios';
-        const API_URL = `${SHAREPOINT_SITE}/_api/web/lists/getbytitle('${LISTA_NAME}')/items?$orderby=DataPreenchimento desc&$top=500`;
 
-        // Função para buscar dados do SharePoint
+        // Todos os campos necessários declarados explicitamente
+        const CAMPOS_SELECT = [
+            'NomeNavio', 'DataPreenchimento',
+            // Equipamentos (Choice 1/2/3) + Observações
+            'MotorPrincipal', 'MotorPrincipalObs',
+            'MCAs', 'MCAsObs',
+            'GrupoDestilatorio', 'GrupoDestilatorioObs',
+            'EquipFundeio', 'EquipFundeioObs',
+            'CaldeirasAuxiliares', 'CaldeirasAuxiliaresObs',
+            'DGEBBAIncendio', 'DGEBBAIncendioObs',
+            'SistemaCargaDescarga', 'SistemaCargaDescargaObs',
+            'MaquinaLeme', 'MaquinaLemeObs',
+            'Purificadores', 'PurificadoresObs',
+            'SistemasNavegacao', 'SistemasNavegacaoObs',
+            'EstadoGeralConves', 'EstadoGeralConvesObs',
+            'EstadoGeralPM', 'EstadoGeralPMObs',
+            // Pessoal
+            'TrifixPercentual', 'TrifixObs',
+            'TripulantesVencidos', 'TripulantesVencidosObs',
+            'CrewMatrix', 'CrewMatrixObs',
+            'CertificacaoTripulante', 'CertificacaoTripulanteObs',
+            // Certificação
+            'DiasParaVencerDoc', 'PendenciaDocObs',
+            'CondicaoClasse', 'CondicaoClasseObs',
+            'VettingObservacoes', 'VettingObs'
+        ].join(',');
+
+        const API_URL = `${SHAREPOINT_SITE}/_api/web/lists/getbytitle('${LISTA_NAME}')/items` +
+            `?$select=${CAMPOS_SELECT}` +
+            `&$orderby=DataPreenchimento desc` +
+            `&$top=500`;
+
+        // Busca dados do SharePoint via REST API
+        // MODO TESTE: false = dados reais do SharePoint | true = dados simulados
+        const MODO_TESTE = false;
+
         async function buscarDadosSharePoint() {
+
+            // ── DADOS MOCK (simula retorno real da REST API do SharePoint) ──────
+            if (MODO_TESTE) {
+                console.log('🧪 MODO TESTE ativo — usando dados simulados');
+                return [
+                    { NomeNavio: 'ANITA GARIBALDI', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 85, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 120, CondicaoClasse: '1', VettingObservacoes: 3 },
+                    { NomeNavio: 'CASTRO ALVES', MotorPrincipal: '3', MCAs: '1', GrupoDestilatorio: '2', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 60, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 45, CondicaoClasse: '1', VettingObservacoes: 8 },
+                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '2', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 90, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 200, CondicaoClasse: '1', VettingObservacoes: 2 },
+                    { NomeNavio: 'OLAVO BILAC', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '3', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '3', TrifixPercentual: 40, TripulantesVencidos: '3', CrewMatrix: '3', CertificacaoTripulante: '1', DiasParaVencerDoc: 15, CondicaoClasse: '3', VettingObservacoes: 14 },
+                    { NomeNavio: 'GARRINCHA', MotorPrincipal: '2', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '2', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 75, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '2', DiasParaVencerDoc: 60, CondicaoClasse: '1', VettingObservacoes: 7 },
+                    { NomeNavio: 'PORTINARI', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 95, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 300, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'JOAO CANDIDO', MotorPrincipal: '1', MCAs: '3', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 82, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 100, CondicaoClasse: '1', VettingObservacoes: 5 },
+                    { NomeNavio: 'DRAGAO DO MAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 88, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 150, CondicaoClasse: '1', VettingObservacoes: 4 },
+                    { NomeNavio: 'HENRIQUE DIAS', MotorPrincipal: '2', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '2', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 55, TripulantesVencidos: '2', CrewMatrix: '2', CertificacaoTripulante: '1', DiasParaVencerDoc: 40, CondicaoClasse: '2', VettingObservacoes: 9 },
+                    { NomeNavio: 'ANDRE REBOUCAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 92, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 250, CondicaoClasse: '1', VettingObservacoes: 2 },
+                    { NomeNavio: 'MARCILIO DIAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '3', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '3', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 70, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: 20, CondicaoClasse: '1', VettingObservacoes: 13 },
+                    { NomeNavio: 'JOSE DO PATROCINIO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 78, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 80, CondicaoClasse: '1', VettingObservacoes: 6 },
+                    { NomeNavio: 'LUCIO COSTA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 86, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 110, CondicaoClasse: '1', VettingObservacoes: 3 },
+                    { NomeNavio: 'MACHADO DE ASSIS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 97, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 400, CondicaoClasse: '1', VettingObservacoes: 0 },
+                    { NomeNavio: 'MILTON SANTOS', MotorPrincipal: '2', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '2', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 65, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 55, CondicaoClasse: '2', VettingObservacoes: 8 },
+                    { NomeNavio: 'ABDIAS NASCIMENTO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 91, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 180, CondicaoClasse: '1', VettingObservacoes: 2 },
+                    { NomeNavio: 'DARCY RIBEIRO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '3', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 83, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 95, CondicaoClasse: '1', VettingObservacoes: 5 },
+                    { NomeNavio: 'CELSO FURTADO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '2', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 72, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 70, CondicaoClasse: '1', VettingObservacoes: 7 },
+                    { NomeNavio: 'SERGIO BUARQUE DE HOLANDA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 89, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 220, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'ROMULO ALMEIDA', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 68, TripulantesVencidos: '1', CrewMatrix: '2', CertificacaoTripulante: '1', DiasParaVencerDoc: 35, CondicaoClasse: '1', VettingObservacoes: 10 },
+                    { NomeNavio: 'ZUMBI DOS PALMARES', MotorPrincipal: '3', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '3', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 45, TripulantesVencidos: '3', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 10, CondicaoClasse: '3', VettingObservacoes: 15 },
+                    { NomeNavio: 'JOSE ALENCAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 94, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 310, CondicaoClasse: '1', VettingObservacoes: 2 },
+                    { NomeNavio: 'BARBOSA LIMA SOBRINHO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '2', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 76, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 65, CondicaoClasse: '1', VettingObservacoes: 6 },
+                    { NomeNavio: 'OSCAR NIEMEYER', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 98, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 365, CondicaoClasse: '1', VettingObservacoes: 0 },
+                    { NomeNavio: 'GILBERTO FREYRE', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '2', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '2', TrifixPercentual: 58, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 50, CondicaoClasse: '1', VettingObservacoes: 8 },
+                    { NomeNavio: 'JORGE AMADO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 87, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: 130, CondicaoClasse: '1', VettingObservacoes: 4 },
+                ];
+            }
+            // ── FIM DADOS MOCK ────────────────────────────────────────────────
+
             try {
                 const response = await fetch(API_URL, {
                     method: 'GET',
@@ -3124,10 +3184,22 @@
             }
         }
 
-        // Função para converter valor em cor (código 1, 2, 3 -> green, yellow, red)
+        // Converte campo Choice do SharePoint para cor
+        // SharePoint retorna a string completa: "1 - Operacional", "2 - Atenção", "3 - Crítico"
+        // Suporta também retorno como objeto { Value: "1 - Operacional" } ou número puro
         function converterParaCor(valor) {
             if (valor === null || valor === undefined || valor === '') return 'gray';
-            const num = typeof valor === 'string' ? parseInt(valor.charAt(0)) : valor;
+
+            // Se vier como objeto Choice (Power Apps às vezes retorna assim)
+            if (typeof valor === 'object' && valor.Value) {
+                valor = valor.Value;
+            }
+
+            // Extrair o número do início da string ou usar o valor diretamente
+            const num = typeof valor === 'string'
+                ? parseInt(valor.charAt(0))
+                : parseInt(valor);
+
             switch (num) {
                 case 1: return 'green';
                 case 2: return 'yellow';
@@ -3136,85 +3208,88 @@
             }
         }
 
-        // Funções de conversão automática
+        // TrifixPercentual — campo Número: >=80% verde, 50-79% amarelo, <50% vermelho
         function converterTrifix(percentual) {
-            if (percentual === null || percentual === undefined) return 'gray';
-            if (percentual >= 80) return 'green';
-            if (percentual >= 50) return 'yellow';
+            if (percentual === null || percentual === undefined || percentual === '') return 'gray';
+            const val = parseFloat(percentual);
+            if (isNaN(val)) return 'gray';
+            if (val >= 80) return 'green';
+            if (val >= 50) return 'yellow';
             return 'red';
         }
 
-        function converterTripulantesVencidos(quantidade) {
-            if (quantidade === null || quantidade === undefined) return 'gray';
-            if (quantidade <= 3) return 'green';
-            if (quantidade <= 10) return 'yellow';
-            return 'red';
+        // TripulantesVencidos — foi trocado para Choice, usa mesma lógica 1/2/3
+        function converterTripulantesVencidos(valor) {
+            return converterParaCor(valor);
         }
 
+        // DiasParaVencerDoc — campo Número: >90 verde, 30-90 amarelo, <30 vermelho
         function converterDiasParaVencer(dias) {
-            if (dias === null || dias === undefined) return 'gray';
-            if (dias > 90) return 'green';
-            if (dias >= 30) return 'yellow';
+            if (dias === null || dias === undefined || dias === '') return 'gray';
+            const val = parseFloat(dias);
+            if (isNaN(val)) return 'gray';
+            if (val > 90) return 'green';
+            if (val >= 30) return 'yellow';
             return 'red';
         }
 
+        // VettingObservacoes — campo Número: <=6 verde, 7-12 amarelo, >12 vermelho
         function converterVetting(observacoes) {
-            if (observacoes === null || observacoes === undefined) return 'gray';
-            if (observacoes <= 6) return 'green';
-            if (observacoes <= 12) return 'yellow';
+            if (observacoes === null || observacoes === undefined || observacoes === '') return 'gray';
+            const val = parseFloat(observacoes);
+            if (isNaN(val)) return 'gray';
+            if (val <= 6) return 'green';
+            if (val <= 12) return 'yellow';
             return 'red';
         }
 
-        // Função para calcular pior status de um array de cores
+        // Calcula o pior status de um array de cores
+        // Prioridade: vermelho > amarelo > verde > cinza (cinza = sem dado)
         function calcularPiorStatus(cores) {
-            // Prioridade: cinza > vermelho > amarelo > verde
-            let temVermelho = false;
-            let temAmarelo = false;
-            let temCinza = false;
-
-            cores.forEach(cor => {
-                if (cor === 'red' || cor === 'vermelho') temVermelho = true;
-                else if (cor === 'yellow' || cor === 'amarelo') temAmarelo = true;
-                else if (cor === 'gray' || cor === 'cinza') temCinza = true;
-            });
-
-            if (temCinza) return 'gray';
-            if (temVermelho) return 'red';
-            if (temAmarelo) return 'yellow';
+            if (cores.every(c => c === 'gray')) return 'gray';
+            if (cores.includes('red')) return 'red';
+            if (cores.includes('yellow')) return 'yellow';
             return 'green';
         }
 
-        // Função para processar dados de um navio do SharePoint
+        // Processa um registro do SharePoint e retorna [corEquipamentos, corPessoal, corCertificacao]
         function processarDadosNavioSharePoint(item) {
-            const equipamentos = [
-                'MotorPrincipal', 'MCAs', 'GrupoDestilatorio', 'EquipFundeio',
-                'CaldeirasAuxiliares', 'DGEBBAIncendio', 'SistemaCargaDescarga',
-                'MaquinaLeme', 'Purificadores', 'SistemasNavegacao',
-                'EstadoGeralConves', 'EstadoGeralPM'
+            // EQUIPAMENTOS — 12 campos Choice (1/2/3)
+            const coresEquipamentos = [
+                converterParaCor(item.MotorPrincipal),
+                converterParaCor(item.MCAs),
+                converterParaCor(item.GrupoDestilatorio),
+                converterParaCor(item.EquipFundeio),
+                converterParaCor(item.CaldeirasAuxiliares),
+                converterParaCor(item.DGEBBAIncendio),
+                converterParaCor(item.SistemaCargaDescarga),
+                converterParaCor(item.MaquinaLeme),
+                converterParaCor(item.Purificadores),
+                converterParaCor(item.SistemasNavegacao),
+                converterParaCor(item.EstadoGeralConves),
+                converterParaCor(item.EstadoGeralPM)
             ];
 
-            // Status dos equipamentos
-            const coresEquipamentos = equipamentos.map(equip => converterParaCor(item[equip]));
-            const piorEquipamento = calcularPiorStatus(coresEquipamentos);
-
-            // Status de Pessoal
+            // PESSOAL — 2 numéricos + 2 Choice
             const coresPessoal = [
                 converterTrifix(item.TrifixPercentual),
                 converterTripulantesVencidos(item.TripulantesVencidos),
                 converterParaCor(item.CrewMatrix),
                 converterParaCor(item.CertificacaoTripulante)
             ];
-            const piorPessoal = calcularPiorStatus(coresPessoal);
 
-            // Status de Certificação
+            // CERTIFICAÇÃO — 1 numérico + 1 Choice + 1 numérico
             const coresCertificacao = [
                 converterDiasParaVencer(item.DiasParaVencerDoc),
                 converterParaCor(item.CondicaoClasse),
                 converterVetting(item.VettingObservacoes)
             ];
-            const piorCertificacao = calcularPiorStatus(coresCertificacao);
 
-            return [piorEquipamento, piorPessoal, piorCertificacao];
+            return [
+                calcularPiorStatus(coresEquipamentos),
+                calcularPiorStatus(coresPessoal),
+                calcularPiorStatus(coresCertificacao)
+            ];
         }
 
         // Função para carregar dados reais do SharePoint
@@ -3256,37 +3331,14 @@
             return true;
         }
 
-        // Função para atualizar tripulação de um navio com dados do SharePoint
+        // Tripulação (CMT/CFM/IMT) não faz parte da lista StatusNavios atual.
+        // Mantida para compatibilidade futura quando esses campos forem adicionados.
         function atualizarTripulacaoNavio(nomeNavio, dados) {
-            // Verificar se há dados de tripulação no registro
-            const cmtNome = dados.CMT_Nome || dados.CMTNome || '';
-            const cmtMat = dados.CMT_Matricula || dados.CMTMatricula || '';
-            const cfmNome = dados.CFM_Nome || dados.CFMNome || '';
-            const cfmMat = dados.CFM_Matricula || dados.CFMMatricula || '';
-            const imtNome = dados.IMT_Nome || dados.IMTNome || '';
-            const imtMat = dados.IMT_Matricula || dados.IMTMatricula || '';
-
-            // Só atualiza se pelo menos um campo de tripulação foi preenchido
-            if (cmtNome || cfmNome || imtNome) {
-                // Preservar dados existentes se o campo do SharePoint estiver vazio
-                const tripulacaoAtual = tripulacaoNavios[nomeNavio] || {};
-
-                tripulacaoNavios[nomeNavio] = {
-                    CMT: cmtNome || tripulacaoAtual.CMT || '-',
-                    CMT_MAT: cmtMat || tripulacaoAtual.CMT_MAT || '',
-                    CFM: cfmNome || tripulacaoAtual.CFM || '-',
-                    CFM_MAT: cfmMat || tripulacaoAtual.CFM_MAT || '',
-                    IMT: imtNome || tripulacaoAtual.IMT || '-',
-                    IMT_MAT: imtMat || tripulacaoAtual.IMT_MAT || ''
-                };
-
-                console.log(`👤 Tripulação atualizada para ${nomeNavio}:`, tripulacaoNavios[nomeNavio]);
-            }
+            // sem campos de tripulação na lista atual — nenhuma ação necessária
         }
 
         // Inicializar
         initDadosCompletos();
-        loadDadosNaviosJSON();
         renderShipList();
         renderSystemsGrid();
         atualizarContadoresClasses();
@@ -3504,9 +3556,10 @@
                 systemsGrid.appendChild(col);
             }
 
-            // Distribuir navios VISÍVEIS entre as colunas (esquerda-direita, cima-baixo)
+            // Distribuição sequencial: primeira metade col0, segunda col1, etc.
+            const porColuna1 = Math.ceil(visibleRows.length / numColunas);
             visibleRows.forEach((row, index) => {
-                const columnIndex = index % numColunas;
+                const columnIndex = Math.min(Math.floor(index / porColuna1), numColunas - 1);
                 columns[columnIndex].appendChild(row);
             });
 
@@ -3628,29 +3681,35 @@
             const badges = document.querySelectorAll('.classe-filter-badge');
 
             if (currentClassFilter.length > 0) {
-                // Mudar cor do "Navio" para indicar filtro ativo
-                headerNames.forEach(header => {
-                    header.classList.add('filter-active');
-                });
-                // Mostrar badges nos headers
+                headerNames.forEach(header => header.classList.add('filter-active'));
+
+                // Verificar se o filtro ativo corresponde exatamente a um grupo
+                function filtroEhGrupo(nomeGrupo) {
+                    const classesGrupo = GRUPOS_NAVEGACAO[nomeGrupo];
+                    if (!classesGrupo) return false;
+                    const filtroOrdenado = [...currentClassFilter].sort().join(',');
+                    const grupoOrdenado = [...classesGrupo].sort().join(',');
+                    return filtroOrdenado === grupoOrdenado;
+                }
+
+                let labelBadge;
+                if (filtroEhGrupo('Longo Curso')) {
+                    labelBadge = 'Longo Curso';
+                } else if (filtroEhGrupo('Cabotagem')) {
+                    labelBadge = 'Cabotagem';
+                } else if (currentClassFilter.length === 1) {
+                    labelBadge = currentClassFilter[0];
+                } else {
+                    labelBadge = currentClassFilter.length + ' classes';
+                }
+
                 badges.forEach(badge => {
-                    // Mostrar quantidade de filtros ou nome se for só 1
-                    if (currentClassFilter.length === 1) {
-                        badge.textContent = currentClassFilter[0];
-                    } else {
-                        badge.textContent = currentClassFilter.length + ' classes';
-                    }
+                    badge.textContent = labelBadge;
                     badge.classList.add('active');
                 });
             } else {
-                // Voltar cor normal
-                headerNames.forEach(header => {
-                    header.classList.remove('filter-active');
-                });
-                // Esconder badges
-                badges.forEach(badge => {
-                    badge.classList.remove('active');
-                });
+                headerNames.forEach(header => header.classList.remove('filter-active'));
+                badges.forEach(badge => badge.classList.remove('active'));
             }
         }
 
@@ -3755,9 +3814,10 @@
                 return numA - numB;
             });
 
-            // Distribuir visíveis entre as colunas (esquerda-direita, cima-baixo)
+            // Distribuição sequencial: primeira metade col0, segunda col1, etc.
+            const porColuna2 = Math.ceil(visibleRows.length / numColunas);
             visibleRows.forEach((row, index) => {
-                const columnIndex = index % numColunas;
+                const columnIndex = Math.min(Math.floor(index / porColuna2), numColunas - 1);
                 columns[columnIndex].appendChild(row);
             });
 
@@ -4096,6 +4156,14 @@
             const systemsGrid = document.getElementById('systemsGrid');
             const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row'));
 
+            // Garantir sempre a ordem correta (Panamax → Aframax → Suezmax → Produtos → Gaseiro 7k → Gaseiro 4k)
+            // independente de qualquer reorganização anterior feita pelo botão do olho ou filtros
+            allRows.sort((a, b) => {
+                const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
+                const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
+                return numA - numB;
+            });
+
             // Manter a ordem original (já está correta por classe)
             systemsGrid.innerHTML = '';
 
@@ -4142,6 +4210,7 @@
             `;
             rightColumn.appendChild(rightHeader);
 
+            const porColuna0 = Math.ceil(allRows.length / 2);
             allRows.forEach((row, index) => {
                 const shipNumber = parseInt(row.getAttribute('data-ship-number'));
                 const navioData = dadosNaviosCompletos[shipNumber - 1];
@@ -4198,7 +4267,7 @@
                 idadeDiv.className = 'compact-text-section idade-section';
                 const ageData = calculateShipAge(shipNameText);
                 idadeDiv.textContent = ageData.years !== '-' ? ageData.years + ' anos' : '-';
-                idadeDiv.title = ageData.days !== '-' ? ageData.days.toLocaleString() + ' dias de operação' : 'Data não disponível';
+                idadeDiv.title = ageData.days !== '-' ? shipBirthDates[shipNameText.toUpperCase()] : 'Data não disponível';
 
                 textDiv.appendChild(cmtDiv);
                 textDiv.appendChild(cfmDiv);
@@ -4209,9 +4278,8 @@
                 const shipName = row.children[0]; // Primeiro filho é ship-name
                 shipName.after(textDiv);
 
-                console.log(`✅ Adicionado texto para ${navioData?.nome}: CMT="${navioData?.CMT}" CFM="${navioData?.CFM}" IMT="${navioData?.IMT}"`);
-
-                if (index < 13) {
+                const colIdx = Math.min(Math.floor(index / porColuna0), 1);
+                if (colIdx === 0) {
                     leftColumn.appendChild(row);
                 } else {
                     rightColumn.appendChild(row);
@@ -4228,11 +4296,7 @@
         }
 
         function addThirdAndFourthVerticalLines() {
-            console.log('🔵 Iniciando addThirdAndFourthVerticalLines');
-
-            // Linhas divisórias agora são feitas via CSS borders
-
-            console.log('✅ addThirdAndFourthVerticalLines concluído!');
+            // Não faz nada — divisores tratados via CSS
         }
     </script>
 </body>
