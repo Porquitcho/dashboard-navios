@@ -4298,6 +4298,112 @@
         function addThirdAndFourthVerticalLines() {
             // Não faz nada — divisores tratados via CSS
         }
+
+        // ══════════════════════════════════════════════════════
+        //  CHEAT CODE — "Gabina é o máximo"
+        //  Sequência: logo×2 → home×2 → logo×2
+        //  Qualquer clique fora da sequência reseta o progresso
+        // ══════════════════════════════════════════════════════
+        (function () {
+            const SEQUENCIA = ['logo', 'logo', 'home', 'home', 'logo', 'logo'];
+            let passo = 0;
+            let cheatAtivo = false;
+            let textoOriginal = null;
+
+            function registrarClique(elemento) {
+                if (cheatAtivo) return;
+
+                if (SEQUENCIA[passo] === elemento) {
+                    passo++;
+                    if (passo === SEQUENCIA.length) {
+                        ativarCheat();
+                        passo = 0;
+                    }
+                } else {
+                    // Clique errado — verifica se o elemento reinicia a sequência
+                    passo = (SEQUENCIA[0] === elemento) ? 1 : 0;
+                }
+            }
+
+            function ativarCheat() {
+                cheatAtivo = true;
+                textoOriginal = [];
+
+                const walker = document.createTreeWalker(
+                    document.body,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: function (node) {
+                            const pai = node.parentElement;
+                            if (!pai) return NodeFilter.FILTER_REJECT;
+                            const tag = pai.tagName.toUpperCase();
+                            if (['SCRIPT', 'STYLE', 'SVG', 'PATH', 'DEFS', 'G'].includes(tag)) return NodeFilter.FILTER_REJECT;
+                            if (node.textContent.trim() === '') return NodeFilter.FILTER_SKIP;
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                    }
+                );
+
+                let no;
+                while ((no = walker.nextNode())) {
+                    textoOriginal.push({ node: no, valor: no.textContent });
+                    no.textContent = 'Gabina é o máximo';
+                }
+
+                // Flash dourado
+                document.body.style.transition = 'background 0.4s';
+                document.body.style.background = 'radial-gradient(circle, #ffd700 0%, #1a2a4a 60%)';
+                setTimeout(() => { document.body.style.background = ''; }, 600);
+
+                console.log('%c🏆 CHEAT ATIVADO! Gabina é o máximo! 🏆', 'color: gold; font-size: 18px; font-weight: bold;');
+
+                // Restaura após 5 segundos
+                setTimeout(desativarCheat, 5000);
+            }
+
+            function desativarCheat() {
+                if (!textoOriginal) return;
+                textoOriginal.forEach(function (item) {
+                    try { item.node.textContent = item.valor; } catch (e) { }
+                });
+                textoOriginal = null;
+                cheatAtivo = false;
+            }
+
+            function inicializar() {
+                const logo = document.querySelector('.header-logo');
+                const home = document.getElementById('btnHome');
+
+                if (!logo || !home) {
+                    setTimeout(inicializar, 200);
+                    return;
+                }
+
+                logo.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    registrarClique('logo');
+                }, true);
+
+                home.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    registrarClique('home');
+                }, true);
+
+                // Qualquer clique em outro lugar reseta a sequência
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('.header-logo, #btnHome')) {
+                        passo = 0;
+                    }
+                }, true);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', inicializar);
+            } else {
+                inicializar();
+            }
+        })();
+
     </script>
 </body>
 
