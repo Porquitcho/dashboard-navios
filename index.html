@@ -1864,7 +1864,7 @@
                 <div style="display:flex;flex-direction:row;gap:10px;">
                     <button class="btn-home btn-sort" id="btnSort" onclick="toggleSortMode()" title="">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>
+                            <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
                         </svg>
                         <span class="tooltip-home">Ordenar: Original</span>
                     </button>
@@ -3254,11 +3254,11 @@
             const raw = dadosSharePoint[nome];
             if (!raw) return false;
             // Verificar se tem pelo menos um campo de status não-null
-            const campos = ['MotorPrincipal','MCAs','GrupoDestilatorio','EquipeFundeio',
-                'CaldeiraAuxiliar','DGEBBAIncendio','SistemaCargaDesc','MaquinaLeme',
-                'Purificadores','SistemasNavegacao','EstadoGeralConves','EstadoGeralPM',
-                'TrifixPercentual','TripulantesVencidos','CrewMatrix','CertTripulante',
-                'PendenciaDoc','CondicaoClasse','ObsVetting'];
+            const campos = ['MotorPrincipal', 'MCAs', 'GrupoDestilatorio', 'EquipFundeio',
+                'CaldeirasAuxiliares', 'DGEBBAIncendio', 'SistemaCargaDescarga', 'MaquinaLeme',
+                'Purificadores', 'SistemasNavegacao', 'EstadoGeralConves', 'EstadoGeralPM',
+                'TrifixPercentual', 'TripulantesVencidos', 'CrewMatrix', 'CertificacaoTripulante',
+                'DiasParaVencerDoc', 'CondicaoClasse', 'VettingObservacoes'];
             return campos.some(c => raw[c] !== null && raw[c] !== undefined);
         }
 
@@ -3281,7 +3281,7 @@
             if (currentSortMode !== 'preenchidos') {
                 rows.sort((a, b) => {
                     return (parseInt(a.getAttribute('data-ship-number')) || 0) -
-                           (parseInt(b.getAttribute('data-ship-number')) || 0);
+                        (parseInt(b.getAttribute('data-ship-number')) || 0);
                 });
             } else {
                 rows.sort((a, b) => {
@@ -3576,121 +3576,85 @@
         }
 
         // ============================================
-        // INTEGRAÇÃO COM SHAREPOINT - StatusDosNavios
+        // INTEGRAÇÃO COM SHAREPOINT - StatusNavios
         // ============================================
 
         const SHAREPOINT_SITE = 'https://transpetro.sharepoint.com/sites/EstadoGeralDosNavios2';
-        const LISTA_NAME = 'StatusDosNavios';
+        const LISTA_NAME = 'StatusNavios';
 
-        // ── URL do Power Automate (usado quando hospedado fora do SharePoint) ──
-        const AUTOMATE_URL = 'https://default46f6a78086e145709459bb97b7d99f.9d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fcd93c1d1ef04f0ca19d597819b4412f/triggers/manual/paths/invoke?api-version=1';
-        const USAR_AUTOMATE = true;
-
-        // Nomes EXATOS das colunas na lista StatusDosNavios do SharePoint
+        // Todos os campos necessários declarados explicitamente
         const CAMPOS_SELECT = [
             'NomeNavio', 'DataPreenchimento',
             // Equipamentos (Choice 1/2/3) + Observações
             'MotorPrincipal', 'MotorPrincipalObs',
             'MCAs', 'MCAsObs',
             'GrupoDestilatorio', 'GrupoDestilatorioObs',
-            'EquipeFundeio', 'EquipeFundeioObs',
-            'CaldeiraAuxiliar', 'CaldeiraAuxiliarObs',
-            'DGEBBAIncendio', 'DGEBBAObs',
-            'SistemaCargaDesc', 'SistemaCargaObs',
+            'EquipFundeio', 'EquipFundeioObs',
+            'CaldeirasAuxiliares', 'CaldeirasAuxiliaresObs',
+            'DGEBBAIncendio', 'DGEBBAIncendioObs',
+            'SistemaCargaDescarga', 'SistemaCargaDescargaObs',
             'MaquinaLeme', 'MaquinaLemeObs',
             'Purificadores', 'PurificadoresObs',
-            'SistemasNavegacao', 'SistemasNavObs',
+            'SistemasNavegacao', 'SistemasNavegacaoObs',
             'EstadoGeralConves', 'EstadoGeralConvesObs',
-            'EstadoGeralPM', 'EstadoPMObs',
+            'EstadoGeralPM', 'EstadoGeralPMObs',
             // Pessoal
             'TrifixPercentual', 'TrifixObs',
             'TripulantesVencidos', 'TripulantesVencidosObs',
             'CrewMatrix', 'CrewMatrixObs',
-            'CertTripulante', 'CertTripulanteObs',
+            'CertificacaoTripulante', 'CertificacaoTripulanteObs',
             // Certificação
-            'PendenciaDoc', 'PendenciaDocObs',
+            'DiasParaVencerDoc', 'PendenciaDocObs',
             'CondicaoClasse', 'CondicaoClasseObs',
-            'ObsVetting', 'ObsVettingObs',
-            // NSE
-            'IDOSD', 'ReqOutstanding', 'SRsOutstanding',
-            // Tripulação
-            'CMT', 'CMT_MAT', 'CFM', 'CFM_MAT', 'IMT', 'IMT_MAT'
+            'VettingObservacoes', 'VettingObs'
         ].join(',');
 
-        // URL da REST API direta (quando hospedado no SharePoint)
         const API_URL = `${SHAREPOINT_SITE}/_api/web/lists/getbytitle('${LISTA_NAME}')/items` +
             `?$select=${CAMPOS_SELECT}` +
             `&$orderby=DataPreenchimento desc` +
             `&$top=500`;
 
-        // Busca dados — suporta Power Automate (GitHub) e REST API direta (SharePoint)
-        // MODO TESTE: false = dados reais | true = dados simulados locais
-        const MODO_TESTE = false;
+        // Busca dados do SharePoint via REST API
+        // MODO TESTE: false = dados reais do SharePoint | true = dados simulados
+        const MODO_TESTE = true;
 
         async function buscarDadosSharePoint() {
 
-            // ── DADOS MOCK com nomes de campo EXATOS do SharePoint ───────────
+            // ── DADOS MOCK (simula retorno real da REST API do SharePoint) ──────
             if (MODO_TESTE) {
                 console.log('🧪 MODO TESTE ativo — usando dados simulados');
-                const vazio = { MotorPrincipal:null,MCAs:null,GrupoDestilatorio:null,EquipeFundeio:null,CaldeiraAuxiliar:null,DGEBBAIncendio:null,SistemaCargaDesc:null,MaquinaLeme:null,Purificadores:null,SistemasNavegacao:null,EstadoGeralConves:null,EstadoGeralPM:null,TrifixPercentual:null,TripulantesVencidos:null,CrewMatrix:null,CertTripulante:null,PendenciaDoc:null,CondicaoClasse:null,ObsVetting:null,IDOSD:null,ReqOutstanding:null,SRsOutstanding:null,CMT:null,CMT_MAT:null,CFM:null,CFM_MAT:null,IMT:null,IMT_MAT:null };
                 return [
-                    { NomeNavio:'ANITA GARIBALDI',          ...vazio },
-                    { NomeNavio:'CASTRO ALVES',              ...vazio },
-                    { NomeNavio:'CARLOS DRUMMOND DE ANDRADE',...vazio },
-                    { NomeNavio:'OLAVO BILAC',               ...vazio },
-                    { NomeNavio:'GARRINCHA',                 ...vazio, MotorPrincipal:'1',MCAs:'1',GrupoDestilatorio:'1',EquipeFundeio:'1',CaldeiraAuxiliar:'1',DGEBBAIncendio:'1',SistemaCargaDesc:'2',MaquinaLeme:'1',Purificadores:'1',SistemasNavegacao:'1',EstadoGeralConves:'1',EstadoGeralPM:'1',TrifixPercentual:100,TripulantesVencidos:'2',CrewMatrix:'1',CertTripulante:'2',PendenciaDoc:'1',CondicaoClasse:'1',ObsVetting:5,IDOSD:100,ReqOutstanding:152,SRsOutstanding:22 },
-                    { NomeNavio:'PORTINARI',                 ...vazio },
-                    { NomeNavio:'JOAO CANDIDO',              ...vazio },
-                    { NomeNavio:'DRAGAO DO MAR',             ...vazio },
-                    { NomeNavio:'HENRIQUE DIAS',             ...vazio },
-                    { NomeNavio:'ANDRE REBOUCAS',            ...vazio },
-                    { NomeNavio:'MARCILIO DIAS',             ...vazio },
-                    { NomeNavio:'JOSE DO PATROCINIO',        ...vazio },
-                    { NomeNavio:'MACHADO DE ASSIS',          ...vazio, MotorPrincipal:'1',MCAs:'2',GrupoDestilatorio:'1',EquipeFundeio:'1',CaldeiraAuxiliar:'1',DGEBBAIncendio:'1',SistemaCargaDesc:'3',MaquinaLeme:'1',Purificadores:'3',SistemasNavegacao:'1',EstadoGeralConves:'3',EstadoGeralPM:'1',TrifixPercentual:100,TripulantesVencidos:'2',CrewMatrix:'2',CertTripulante:'1',PendenciaDoc:'1',CondicaoClasse:'1',ObsVetting:7,IDOSD:100,ReqOutstanding:287,SRsOutstanding:31 },
-                    { NomeNavio:'MILTON SANTOS',             ...vazio },
-                    { NomeNavio:'ABDIAS NASCIMENTO',         ...vazio, MotorPrincipal:'2',MCAs:'1',GrupoDestilatorio:'3',EquipeFundeio:'1',CaldeiraAuxiliar:'1',DGEBBAIncendio:'1',SistemaCargaDesc:'1',MaquinaLeme:'1',Purificadores:'1',SistemasNavegacao:'1',EstadoGeralConves:'2',EstadoGeralPM:'1',TrifixPercentual:90,TripulantesVencidos:'2',CrewMatrix:'1',CertTripulante:'1',PendenciaDoc:'1',CondicaoClasse:'1',ObsVetting:17,IDOSD:100,ReqOutstanding:203,SRsOutstanding:44 },
-                    { NomeNavio:'ZUMBI DOS PALMARES',        ...vazio },
-                    { NomeNavio:'CELSO FURTADO',             ...vazio },
-                    { NomeNavio:'SERGIO BUARQUE DE HOLANDA', ...vazio },
-                    { NomeNavio:'ROMULO ALMEIDA',            ...vazio },
-                    { NomeNavio:'JOSE ALENCAR',              ...vazio },
-                    { NomeNavio:'LUCIO COSTA',               ...vazio },
-                    { NomeNavio:'DARCY RIBEIRO',             ...vazio },
-                    { NomeNavio:'BARBOSA LIMA SOBRINHO',     ...vazio },
-                    { NomeNavio:'OSCAR NIEMEYER',            ...vazio },
-                    { NomeNavio:'GILBERTO FREYRE',           ...vazio },
-                    { NomeNavio:'JORGE AMADO',               ...vazio }
+                    { NomeNavio: 'ANITA GARIBALDI', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'CASTRO ALVES', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'OLAVO BILAC', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'GARRINCHA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 5 },
+                    { NomeNavio: 'PORTINARI', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'JOAO CANDIDO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'DRAGAO DO MAR', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'HENRIQUE DIAS', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'ANDRE REBOUCAS', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'MARCILIO DIAS', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'JOSE DO PATROCINIO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'MACHADO DE ASSIS', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '3', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '3', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '2', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 7 },
+                    { NomeNavio: 'MILTON SANTOS', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'ABDIAS NASCIMENTO', MotorPrincipal: '2', MCAs: '1', GrupoDestilatorio: '3', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 90, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 17 },
+                    { NomeNavio: 'ZUMBI DOS PALMARES', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'CELSO FURTADO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'SERGIO BUARQUE DE HOLANDA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'ROMULO ALMEIDA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'JOSE ALENCAR', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'LUCIO COSTA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'DARCY RIBEIRO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'BARBOSA LIMA SOBRINHO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'OSCAR NIEMEYER', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'GILBERTO FREYRE', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'JORGE AMADO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null }
                 ];
             }
             // ── FIM DADOS MOCK ────────────────────────────────────────────────
 
-            // ── VIA POWER AUTOMATE (GitHub / fora do SharePoint) ─────────────
-            if (USAR_AUTOMATE && AUTOMATE_URL !== 'COLE_AQUI_A_URL_DO_FLOW') {
-                try {
-                    console.log('🔁 Buscando via Power Automate...');
-                    const response = await fetch(AUTOMATE_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({})
-                    });
-                    if (!response.ok) throw new Error(`Automate HTTP ${response.status}`);
-                    const data = await response.json();
-                    // O flow retorna o array diretamente ou dentro de .value
-                    const items = Array.isArray(data) ? data : (data.value || []);
-                    console.log(`✅ Power Automate retornou ${items.length} registros`);
-                    return items;
-                } catch (error) {
-                    console.error('❌ Erro no Power Automate:', error);
-                    return null;
-                }
-            }
-
-            // ── VIA REST API DIRETA (hospedado no SharePoint) ────────────────
             try {
-                console.log('🔄 Buscando via REST API SharePoint...');
                 const response = await fetch(API_URL, {
                     method: 'GET',
                     headers: {
@@ -3699,11 +3663,15 @@
                     },
                     credentials: 'include'
                 });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
                 const data = await response.json();
                 return data.d.results;
             } catch (error) {
-                console.error('❌ Erro na REST API SharePoint:', error);
+                console.error('Erro ao buscar dados do SharePoint:', error);
                 return null;
             }
         }
@@ -3778,15 +3746,15 @@
 
         // Processa um registro do SharePoint e retorna [corEquipamentos, corPessoal, corCertificacao]
         function processarDadosNavioSharePoint(item) {
-            // EQUIPAMENTOS — 12 campos Choice (1/2/3) com nomes exatos do SharePoint
+            // EQUIPAMENTOS — 12 campos Choice (1/2/3)
             const coresEquipamentos = [
                 converterParaCor(item.MotorPrincipal),
                 converterParaCor(item.MCAs),
                 converterParaCor(item.GrupoDestilatorio),
-                converterParaCor(item.EquipeFundeio),        // EquipeFundeio (com 'e')
-                converterParaCor(item.CaldeiraAuxiliar),     // CaldeiraAuxiliar (singular)
+                converterParaCor(item.EquipFundeio),
+                converterParaCor(item.CaldeirasAuxiliares),
                 converterParaCor(item.DGEBBAIncendio),
-                converterParaCor(item.SistemaCargaDesc),     // SistemaCargaDesc
+                converterParaCor(item.SistemaCargaDescarga),
                 converterParaCor(item.MaquinaLeme),
                 converterParaCor(item.Purificadores),
                 converterParaCor(item.SistemasNavegacao),
@@ -3794,19 +3762,19 @@
                 converterParaCor(item.EstadoGeralPM)
             ];
 
-            // PESSOAL
+            // PESSOAL — 2 numéricos + 2 Choice
             const coresPessoal = [
                 converterTrifix(item.TrifixPercentual),
-                converterParaCor(item.TripulantesVencidos),
+                converterTripulantesVencidos(item.TripulantesVencidos),
                 converterParaCor(item.CrewMatrix),
-                converterParaCor(item.CertTripulante)        // CertTripulante
+                converterParaCor(item.CertificacaoTripulante)
             ];
 
-            // CERTIFICAÇÃO — PendenciaDoc agora é Choice (1/2/3)
+            // CERTIFICAÇÃO — 1 numérico + 1 Choice + 1 numérico
             const coresCertificacao = [
-                converterParaCor(item.PendenciaDoc),         // PendenciaDoc (Choice)
+                converterDiasParaVencer(item.DiasParaVencerDoc),
                 converterParaCor(item.CondicaoClasse),
-                converterVetting(item.ObsVetting)            // ObsVetting (número)
+                converterVetting(item.VettingObservacoes)
             ];
 
             return [
@@ -3836,86 +3804,29 @@
                 if (nomeNavio && !dadosSharePoint[nomeNavio]) {
                     dadosSharePoint[nomeNavio] = item;
 
-                    // Atualizar painel de detalhes (obs + cores de todos os campos)
-                    atualizarDetalhesNavio(nomeNavio, item);
-                    // Atualizar NSE (IDO-SD, Reqs, SRs)
-                    atualizarNSENavio(nomeNavio, item);
-                    // Atualizar tripulação (CMT/CFM/IMT)
+                    // Atualizar tripulação se os campos existirem
                     atualizarTripulacaoNavio(nomeNavio, item);
                 }
             });
 
             console.log(`📊 Dados processados para ${Object.keys(dadosSharePoint).length} navios`);
 
-            // Re-renderizar e reaplicar sort+filtros
+            // Re-renderizar o grid com dados reais
             renderSystemsGrid();
             atualizarContadoresClasses();
 
-            // Aguardar modo compacto estar pronto antes de aplicar sort/filtros
+            // Atualizar visual
             setTimeout(() => {
                 setViewMode('compact');
             }, 100);
-            setTimeout(() => {
-                applyAllFilters();
-            }, 300);
 
             return true;
         }
 
-        // Atualiza tripulacaoNavios com dados reais do SharePoint
-        function atualizarTripulacaoNavio(nomeNavio, item) {
-            const vazio = '---';
-            tripulacaoNavios[nomeNavio] = {
-                CMT:     (item.CMT     && item.CMT.trim())     ? item.CMT.trim()     : vazio,
-                CMT_MAT: (item.CMT_MAT && item.CMT_MAT.trim()) ? item.CMT_MAT.trim() : '',
-                CFM:     (item.CFM     && item.CFM.trim())     ? item.CFM.trim()     : vazio,
-                CFM_MAT: (item.CFM_MAT && item.CFM_MAT.trim()) ? item.CFM_MAT.trim() : '',
-                IMT:     (item.IMT     && item.IMT.trim())     ? item.IMT.trim()     : vazio,
-                IMT_MAT: (item.IMT_MAT && item.IMT_MAT.trim()) ? item.IMT_MAT.trim() : ''
-            };
-        }
-
-        // Atualiza dadosIndicadores (NSE) com dados reais do SharePoint
-        function atualizarNSENavio(nomeNavio, item) {
-            const n = v => (v !== null && v !== undefined && v !== '') ? parseFloat(v) || 0 : 0;
-            dadosIndicadores[nomeNavio] = {
-                idoSD:           n(item.IDOSD),
-                reqsOutstanding: n(item.ReqOutstanding),
-                srsOutstanding:  n(item.SRsOutstanding)
-            };
-        }
-
-        // Atualiza statusDetalhesNavios com obs e cores vindas do SharePoint
-        function atualizarDetalhesNavio(nomeNavio, item) {
-            const c = v => converterParaCor(v);         // Choice → cor dashboard
-            const s = v => (v && v !== null) ? String(v) : '';  // obs segura
-            statusDetalhesNavios[nomeNavio] = {
-                equipamentos: {
-                    'Motor principal':                        { cor: c(item.MotorPrincipal),    obs: s(item.MotorPrincipalObs) },
-                    'MCAs':                                   { cor: c(item.MCAs),              obs: s(item.MCAsObs) },
-                    'Grupo destilatório':                     { cor: c(item.GrupoDestilatorio), obs: s(item.GrupoDestilatorioObs) },
-                    'Equip. fundeio, amarração e guindastes': { cor: c(item.EquipeFundeio),     obs: s(item.EquipeFundeioObs) },
-                    'Caldeira auxiliar':                      { cor: c(item.CaldeiraAuxiliar),  obs: s(item.CaldeiraAuxiliarObs) },
-                    'DGE E BBA incêndio emergência':          { cor: c(item.DGEBBAIncendio),    obs: s(item.DGEBBAObs) },
-                    'Sistema de carga e descarga':            { cor: c(item.SistemaCargaDesc),  obs: s(item.SistemaCargaObs) },
-                    'Máquina do leme':                        { cor: c(item.MaquinaLeme),       obs: s(item.MaquinaLemeObs) },
-                    'Purificadores':                          { cor: c(item.Purificadores),     obs: s(item.PurificadoresObs) },
-                    'Sistemas de navegação':                  { cor: c(item.SistemasNavegacao), obs: s(item.SistemasNavObs) },
-                    'Estado geral convés':                    { cor: c(item.EstadoGeralConves), obs: s(item.EstadoGeralConvesObs) },
-                    'Estado geral PM':                        { cor: c(item.EstadoGeralPM),     obs: s(item.EstadoPMObs) }
-                },
-                pessoal: {
-                    'Trifix %':                    { cor: converterTrifix(item.TrifixPercentual), obs: s(item.TrifixObs) },
-                    'Tripulantes vencidos':        { cor: c(item.TripulantesVencidos),            obs: s(item.TripulantesVencidosObs) },
-                    'Crew Matrix':                 { cor: c(item.CrewMatrix),                     obs: s(item.CrewMatrixObs) },
-                    'Certificação de Tripulante':  { cor: c(item.CertTripulante),                 obs: s(item.CertTripulanteObs) }
-                },
-                certificacao: {
-                    'Pendência de Documentação Navio': { cor: c(item.PendenciaDoc),    obs: s(item.PendenciaDocObs) },
-                    'Condição de classe':              { cor: c(item.CondicaoClasse),  obs: s(item.CondicaoClasseObs) },
-                    'Obs Vetting':                     { cor: converterVetting(item.ObsVetting), obs: s(item.ObsVettingObs) }
-                }
-            };
+        // Tripulação (CMT/CFM/IMT) não faz parte da lista StatusNavios atual.
+        // Mantida para compatibilidade futura quando esses campos forem adicionados.
+        function atualizarTripulacaoNavio(nomeNavio, dados) {
+            // sem campos de tripulação na lista atual — nenhuma ação necessária
         }
 
         // Inicializar
@@ -4375,7 +4286,7 @@
                 if (currentSortMode === 'preenchidos') {
                     const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row'));
                     const visibleRows = allRows.filter(r => r.style.display !== 'none');
-                    const hiddenRows  = allRows.filter(r => r.style.display === 'none');
+                    const hiddenRows = allRows.filter(r => r.style.display === 'none');
                     sortearRows(visibleRows);
                     visibleRows.forEach(r => systemsGrid.appendChild(r));
                     hiddenRows.forEach(r => systemsGrid.appendChild(r));
@@ -5043,8 +4954,10 @@
 
                 // Cor do dashboard (green/yellow/red/gray ou verde/amarelo/vermelho/cinza) → editor
                 function dc(c) {
-                    return { green: 'verde', yellow: 'amarelo', red: 'vermelho', gray: 'cinza',
-                             verde: 'verde', amarelo: 'amarelo', vermelho: 'vermelho', cinza: 'cinza' }[c] || 'cinza';
+                    return {
+                        green: 'verde', yellow: 'amarelo', red: 'vermelho', gray: 'cinza',
+                        verde: 'verde', amarelo: 'amarelo', vermelho: 'vermelho', cinza: 'cinza'
+                    }[c] || 'cinza';
                 }
 
                 // Choice '1'/'2'/'3'/null → cor editor
@@ -5058,13 +4971,13 @@
 
                 naviosReais.forEach(function (navio) {
                     const nome = navio.nome;
-                    const sd   = statusDetalhesNavios[nome] || {};
+                    const sd = statusDetalhesNavios[nome] || {};
                     const sdEq = sd.equipamentos || {};
-                    const sdPe = sd.pessoal      || {};
+                    const sdPe = sd.pessoal || {};
                     const sdCe = sd.certificacao || {};
-                    const raw  = dadosSharePoint[nome] || {};   // dados brutos com os números
-                    const nse  = dadosIndicadores[nome] || { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
-                    const trip = tripulacaoNavios[nome]  || {};
+                    const raw = dadosSharePoint[nome] || {};   // dados brutos com os números
+                    const nse = dadosIndicadores[nome] || { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
+                    const trip = tripulacaoNavios[nome] || {};
 
                     // ── Equipamentos: cor vem do statusDetalhes (mais confiável) ──
                     const eq = EQ_LABELS.map(function (label, i) {
@@ -5076,55 +4989,56 @@
 
                     // ── Trifix: número exato do dadosSharePoint ──
                     const trifixItem = sdPe['Trifix %'] || {};
-                    const trifixVal  = (raw.TrifixPercentual !== null && raw.TrifixPercentual !== undefined)
+                    const trifixVal = (raw.TrifixPercentual !== null && raw.TrifixPercentual !== undefined)
                         ? raw.TrifixPercentual : '';
 
                     // ── Vetting: número exato do dadosSharePoint ──
                     const vetItem = sdCe['Obs Vetting'] || {};
-                    const vetVal  = (raw.ObsVetting !== null && raw.ObsVetting !== undefined)
-                        ? raw.ObsVetting : '';
+                    const vetVal = (raw.VettingObservacoes !== null && raw.VettingObservacoes !== undefined)
+                        ? raw.VettingObservacoes : '';
 
-                    // ── PendenciaDoc: agora Choice (1/2/3), não número ──
-                    const diasVal = 0;  // campo numérico não existe mais no SharePoint
+                    // ── Dias para vencer: número exato do dadosSharePoint ──
+                    const diasVal = (raw.DiasParaVencerDoc !== null && raw.DiasParaVencerDoc !== undefined)
+                        ? raw.DiasParaVencerDoc : 0;
 
                     // Pessoal
-                    const tvItem = sdPe['Tripulantes vencidos']        || {};
-                    const cmItem = sdPe['Crew Matrix']                 || {};
-                    const ctItem = sdPe['Certificação de Tripulante']  || {};
+                    const tvItem = sdPe['Tripulantes vencidos'] || {};
+                    const cmItem = sdPe['Crew Matrix'] || {};
+                    const ctItem = sdPe['Certificação de Tripulante'] || {};
 
                     // Certificação
                     const pdItem = sdCe['Pendência de Documentação Navio'] || {};
-                    const ccItem = sdCe['Condição de classe']               || {};
+                    const ccItem = sdCe['Condição de classe'] || {};
 
                     resultado[nome] = {
                         classe: navio.classe,
                         eq: eq,
-                        trifix:         trifixVal,
-                        trifixObs:      trifixItem.obs || '',
-                        tripVencidos:   { cor: dc(tvItem.cor) || choiceCor(raw.TripulantesVencidos),  obs: tvItem.obs || '' },
-                        crewMatrix:     { cor: dc(cmItem.cor) || choiceCor(raw.CrewMatrix),            obs: cmItem.obs || '' },
-                        certTripulante: { cor: dc(ctItem.cor) || choiceCor(raw.CertTripulante),        obs: ctItem.obs || '' },
-                        pendencia:      { cor: dc(pdItem.cor) || choiceCor(raw.PendenciaDoc),          obs: pdItem.obs || '' },
-                        diasVencer:     diasVal,
-                        condicaoClasse: { cor: dc(ccItem.cor) || choiceCor(raw.CondicaoClasse),        obs: ccItem.obs || '' },
-                        vetting:        vetVal,
-                        vettingObs:     vetItem.obs || '',
-                        idoSD: nse.idoSD             || 0,
-                        reqs:  nse.reqsOutstanding   || 0,
-                        srs:   nse.srsOutstanding    || 0,
-                        cmt:    (trip.CMT    && trip.CMT    !== 'Não informado') ? trip.CMT    : '',
+                        trifix: trifixVal,
+                        trifixObs: trifixItem.obs || '',
+                        tripVencidos: { cor: dc(tvItem.cor) || choiceCor(raw.TripulantesVencidos), obs: tvItem.obs || '' },
+                        crewMatrix: { cor: dc(cmItem.cor) || choiceCor(raw.CrewMatrix), obs: cmItem.obs || '' },
+                        certTripulante: { cor: dc(ctItem.cor) || choiceCor(raw.CertificacaoTripulante), obs: ctItem.obs || '' },
+                        pendencia: { cor: dc(pdItem.cor) || choiceCor(raw.CondicaoClasse), obs: pdItem.obs || '' },
+                        diasVencer: diasVal,
+                        condicaoClasse: { cor: dc(ccItem.cor) || choiceCor(raw.CondicaoClasse), obs: ccItem.obs || '' },
+                        vetting: vetVal,
+                        vettingObs: vetItem.obs || '',
+                        idoSD: nse.idoSD || 0,
+                        reqs: nse.reqsOutstanding || 0,
+                        srs: nse.srsOutstanding || 0,
+                        cmt: (trip.CMT && trip.CMT !== 'Não informado') ? trip.CMT : '',
                         cmtMat: trip.CMT_MAT || '',
-                        cfm:    (trip.CFM    && trip.CFM    !== 'Não informado') ? trip.CFM    : '',
+                        cfm: (trip.CFM && trip.CFM !== 'Não informado') ? trip.CFM : '',
                         cfmMat: trip.CFM_MAT || '',
-                        imt:    (trip.IMT    && trip.IMT    !== 'Não informado') ? trip.IMT    : '',
+                        imt: (trip.IMT && trip.IMT !== 'Não informado') ? trip.IMT : '',
                         imtMat: trip.IMT_MAT || ''
                     };
                 });
 
                 const json = JSON.stringify(resultado, null, 2);
                 const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
-                const url  = URL.createObjectURL(blob);
-                const a    = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
                 a.href = url; a.download = 'editor_navios_progresso.json';
                 document.body.appendChild(a); a.click();
                 document.body.removeChild(a);
