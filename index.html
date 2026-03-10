@@ -2012,7 +2012,7 @@
             "CELSO FURTADO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "SERGIO BUARQUE DE HOLANDA": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "ROMULO ALMEIDA": { idoSD: 100, reqsOutstanding: 176, srsOutstanding: 46 },
-            "JOSE ALENCAR": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
+            "JOSE ALENCAR": { idoSD: 100, reqsOutstanding: 155, srsOutstanding: 34 },
             "LUCIO COSTA": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "DARCY RIBEIRO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "BARBOSA LIMA SOBRINHO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
@@ -2040,8 +2040,8 @@
             "ZUMBI DOS PALMARES": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "CELSO FURTADO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "SERGIO BUARQUE DE HOLANDA": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
-            "ROMULO ALMEIDA": { CMT: "Jamesson", CMT_MAT: "6445", CFM: "Lima", CFM_MAT: "7656", IMT: "Amanda", IMT_MAT: "8637" },
-            "JOSE ALENCAR": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
+            "ROMULO ALMEIDA": { CMT: "Jamesson", CMT_MAT: "", CFM: "Lima", CFM_MAT: "", IMT: "Amanda", IMT_MAT: "" },
+            "JOSE ALENCAR": { CMT: "Pedro Henrique", CMT_MAT: "5603", CFM: "Baia", CFM_MAT: "114352", IMT: "Vilas Boas", IMT_MAT: "7923" },
             "LUCIO COSTA": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "DARCY RIBEIRO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "BARBOSA LIMA SOBRINHO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
@@ -2566,29 +2566,29 @@
             },
             "JOSE ALENCAR": {
                 equipamentos: {
-                    "Motor principal": { cor: "cinza", obs: "" },
-                    "MCAs": { cor: "cinza", obs: "" },
-                    "Grupo destilatório": { cor: "cinza", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "cinza", obs: "" },
-                    "Caldeira auxiliar": { cor: "cinza", obs: "" },
-                    "DGE E BBA incêndio emergência": { cor: "cinza", obs: "" },
-                    "Sistema de carga e descarga": { cor: "cinza", obs: "" },
-                    "Máquina do leme": { cor: "cinza", obs: "" },
-                    "Purificadores": { cor: "cinza", obs: "" },
-                    "Sistemas de navegação": { cor: "cinza", obs: "" },
-                    "Estado geral convés": { cor: "cinza", obs: "" },
-                    "Estado geral PM": { cor: "cinza", obs: "" }
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "vermelho", obs: "Purificador OL MCA 3 e OL MCP 2 inoperantes" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "amarelo", obs: "Tratamento e pintura em andamento. Troca de redes em andamento." },
+                    "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "cinza", obs: "" },
-                    "Tripulantes vencidos": { cor: "cinza", obs: "" },
-                    "Crew Matrix": { cor: "cinza", obs: "" },
-                    "Certificação de Tripulante": { cor: "cinza", obs: "" }
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "vermelho", obs: "2ON sem ESOP" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
-                    "Condição de classe": { cor: "cinza", obs: "" },
-                    "Obs Vetting": { cor: "cinza", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
                 }
             },
             "LUCIO COSTA": {
@@ -3532,7 +3532,7 @@
                     { NomeNavio: 'CELSO FURTADO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'SERGIO BUARQUE DE HOLANDA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'ROMULO ALMEIDA', MotorPrincipal: '2', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 6 },
-                    { NomeNavio: 'JOSE ALENCAR', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'JOSE ALENCAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'LUCIO COSTA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'DARCY RIBEIRO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'BARBOSA LIMA SOBRINHO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
