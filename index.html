@@ -4827,6 +4827,179 @@
                 inicializar();
             }
         })();
+        // ══════════════════════════════════════════════════════
+        //  CHEAT CODE ADM — Exportar JSON para o Editor
+        //  Sequência: logo×3 → home×3 → logo×3
+        // ══════════════════════════════════════════════════════
+        (function () {
+            const SEQ = ['logo', 'logo', 'logo', 'home', 'home', 'home', 'logo', 'logo', 'logo'];
+            let passo = 0;
+            let btnExport = null;
+
+            function registrarClique(el) {
+                if (SEQ[passo] === el) {
+                    passo++;
+                    if (passo === SEQ.length) { ativarAdm(); passo = 0; }
+                } else {
+                    passo = (SEQ[0] === el) ? 1 : 0;
+                }
+            }
+
+            function ativarAdm() {
+                // Toggle: se já está visível, remove
+                if (btnExport) { btnExport.remove(); btnExport = null; return; }
+
+                btnExport = document.createElement('button');
+                btnExport.textContent = '\u2B07 Exportar JSON para Editor';
+                btnExport.style.cssText = [
+                    'position:fixed', 'bottom:24px', 'right:24px', 'z-index:99999',
+                    'background:linear-gradient(135deg,#1f6feb,#388bfd)',
+                    'color:#fff', 'border:none', 'padding:12px 20px', 'border-radius:10px',
+                    'font-size:13px', 'font-weight:700', 'cursor:pointer', 'letter-spacing:.5px',
+                    'box-shadow:0 4px 20px rgba(56,139,253,.5)', 'font-family:inherit',
+                    'transition:all .2s'
+                ].join(';');
+                btnExport.onmouseover = function () { this.style.transform = 'translateY(-2px)'; };
+                btnExport.onmouseout = function () { this.style.transform = ''; };
+                btnExport.onclick = exportarParaEditor;
+                document.body.appendChild(btnExport);
+
+                console.log('%c\uD83D\uDD11 MODO ADM ATIVADO \u2014 Bot\u00e3o de exporta\u00e7\u00e3o vis\u00edvel', 'color:#388bfd;font-size:14px;font-weight:bold');
+            }
+
+            function exportarParaEditor() {
+                const EQ_LABELS = [
+                    'Motor principal', 'MCAs', 'Grupo destilatório',
+                    'Equip. fundeio, amarração e guindastes', 'Caldeira auxiliar',
+                    'DGE E BBA incêndio emergência', 'Sistema de carga e descarga',
+                    'Máquina do leme', 'Purificadores', 'Sistemas de navegação',
+                    'Estado geral convés', 'Estado geral PM'
+                ];
+                const EQ_MOCK_KEYS = [
+                    'MotorPrincipal', 'MCAs', 'GrupoDestilatorio', 'EquipFundeio',
+                    'CaldeirasAuxiliares', 'DGEBBAIncendio', 'SistemaCargaDescarga',
+                    'MaquinaLeme', 'Purificadores', 'SistemasNavegacao',
+                    'EstadoGeralConves', 'EstadoGeralPM'
+                ];
+
+                // Cor do dashboard (green/yellow/red/gray ou verde/amarelo/vermelho/cinza) → editor
+                function dc(c) {
+                    return {
+                        green: 'verde', yellow: 'amarelo', red: 'vermelho', gray: 'cinza',
+                        verde: 'verde', amarelo: 'amarelo', vermelho: 'vermelho', cinza: 'cinza'
+                    }[c] || 'cinza';
+                }
+
+                // Choice '1'/'2'/'3'/null → cor editor
+                function choiceCor(v) {
+                    if (v === null || v === undefined) return 'cinza';
+                    const n = typeof v === 'string' ? parseInt(v.charAt(0)) : parseInt(v);
+                    return n === 1 ? 'verde' : n === 2 ? 'amarelo' : n === 3 ? 'vermelho' : 'cinza';
+                }
+
+                const resultado = {};
+
+                naviosReais.forEach(function (navio) {
+                    const nome = navio.nome;
+                    const sd = statusDetalhesNavios[nome] || {};
+                    const sdEq = sd.equipamentos || {};
+                    const sdPe = sd.pessoal || {};
+                    const sdCe = sd.certificacao || {};
+                    const raw = dadosSharePoint[nome] || {};   // dados brutos com os números
+                    const nse = dadosIndicadores[nome] || { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
+                    const trip = tripulacaoNavios[nome] || {};
+
+                    // ── Equipamentos: cor vem do statusDetalhes (mais confiável) ──
+                    const eq = EQ_LABELS.map(function (label, i) {
+                        const item = sdEq[label] || {};
+                        // Fallback: se não tem cor no statusDetalhes, ler do mock
+                        const cor = item.cor ? dc(item.cor) : choiceCor(raw[EQ_MOCK_KEYS[i]]);
+                        return { label: label, mockKey: EQ_MOCK_KEYS[i], cor: cor, obs: item.obs || '' };
+                    });
+
+                    // ── Trifix: número exato do dadosSharePoint ──
+                    const trifixItem = sdPe['Trifix %'] || {};
+                    const trifixVal = (raw.TrifixPercentual !== null && raw.TrifixPercentual !== undefined)
+                        ? raw.TrifixPercentual : '';
+
+                    // ── Vetting: número exato do dadosSharePoint ──
+                    const vetItem = sdCe['Obs Vetting'] || {};
+                    const vetVal = (raw.VettingObservacoes !== null && raw.VettingObservacoes !== undefined)
+                        ? raw.VettingObservacoes : '';
+
+                    // ── Dias para vencer: número exato do dadosSharePoint ──
+                    const diasVal = (raw.DiasParaVencerDoc !== null && raw.DiasParaVencerDoc !== undefined)
+                        ? raw.DiasParaVencerDoc : 0;
+
+                    // Pessoal
+                    const tvItem = sdPe['Tripulantes vencidos'] || {};
+                    const cmItem = sdPe['Crew Matrix'] || {};
+                    const ctItem = sdPe['Certificação de Tripulante'] || {};
+
+                    // Certificação
+                    const pdItem = sdCe['Pendência de Documentação Navio'] || {};
+                    const ccItem = sdCe['Condição de classe'] || {};
+
+                    resultado[nome] = {
+                        classe: navio.classe,
+                        eq: eq,
+                        trifix: trifixVal,
+                        trifixObs: trifixItem.obs || '',
+                        tripVencidos: { cor: dc(tvItem.cor) || choiceCor(raw.TripulantesVencidos), obs: tvItem.obs || '' },
+                        crewMatrix: { cor: dc(cmItem.cor) || choiceCor(raw.CrewMatrix), obs: cmItem.obs || '' },
+                        certTripulante: { cor: dc(ctItem.cor) || choiceCor(raw.CertificacaoTripulante), obs: ctItem.obs || '' },
+                        pendencia: { cor: dc(pdItem.cor) || choiceCor(raw.CondicaoClasse), obs: pdItem.obs || '' },
+                        diasVencer: diasVal,
+                        condicaoClasse: { cor: dc(ccItem.cor) || choiceCor(raw.CondicaoClasse), obs: ccItem.obs || '' },
+                        vetting: vetVal,
+                        vettingObs: vetItem.obs || '',
+                        idoSD: nse.idoSD || 0,
+                        reqs: nse.reqsOutstanding || 0,
+                        srs: nse.srsOutstanding || 0,
+                        cmt: (trip.CMT && trip.CMT !== 'Não informado') ? trip.CMT : '',
+                        cmtMat: trip.CMT_MAT || '',
+                        cfm: (trip.CFM && trip.CFM !== 'Não informado') ? trip.CFM : '',
+                        cfmMat: trip.CFM_MAT || '',
+                        imt: (trip.IMT && trip.IMT !== 'Não informado') ? trip.IMT : '',
+                        imtMat: trip.IMT_MAT || ''
+                    };
+                });
+
+                const json = JSON.stringify(resultado, null, 2);
+                const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'editor_navios_progresso.json';
+                document.body.appendChild(a); a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                btnExport.textContent = '\u2705 JSON Baixado!';
+                setTimeout(function () {
+                    if (btnExport) btnExport.textContent = '\u2B07 Exportar JSON para Editor';
+                }, 2000);
+            }
+
+            function inicializar() {
+                const logo = document.querySelector('.header-logo');
+                const home = document.getElementById('btnHome');
+                if (!logo || !home) { setTimeout(inicializar, 200); return; }
+
+                logo.addEventListener('click', function () { registrarClique('logo'); });
+                home.addEventListener('click', function () { registrarClique('home'); });
+
+                // Qualquer clique fora da sequência reseta o progresso
+                document.addEventListener('click', function (e) {
+                    if (!e.target.closest('.header-logo, #btnHome')) passo = 0;
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', inicializar);
+            } else {
+                inicializar();
+            }
+        })();
 
     </script>
 </body>
