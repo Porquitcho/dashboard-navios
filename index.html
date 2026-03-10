@@ -134,6 +134,15 @@
             box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
         }
 
+        .btn-sort.active {
+            background: rgba(46, 160, 67, 0.6);
+        }
+
+        .btn-sort.active:hover {
+            background: rgba(46, 160, 67, 0.8) !important;
+            box-shadow: 0 4px 20px rgba(46, 160, 67, 0.4) !important;
+        }
+
         .btn-home svg {
             width: 28px;
             height: 28px;
@@ -1846,19 +1855,27 @@
                 <div class="subtitle">Sistema de Monitoramento - 26 Embarcações</div>
             </div>
             <div class="home-button-container">
-                <button class="btn-home" id="btnHome" onclick="voltarParaHome()">
+                <button class="btn-home" id="btnHome" onclick="voltarParaHome()" style="align-self:flex-end;">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                     </svg>
                     <span class="tooltip-home">Home</span>
                 </button>
-                <button class="btn-home btn-privacy" id="btnPrivacy" onclick="togglePrivacyMode()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-                    </svg>
-                    <span class="tooltip-home">Ocultar nomes</span>
-                </button>
+                <div style="display:flex;flex-direction:row;gap:10px;">
+                    <button class="btn-home btn-sort" id="btnSort" onclick="toggleSortMode()" title="">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>
+                        </svg>
+                        <span class="tooltip-home">Ordenar: Original</span>
+                    </button>
+                    <button class="btn-home btn-privacy" id="btnPrivacy" onclick="togglePrivacyMode()">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                        </svg>
+                        <span class="tooltip-home">Ocultar nomes</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -3231,6 +3248,55 @@
 
         // Filtro de classes - agora suporta múltipla seleção
         let currentClassFilter = []; // Array vazio = todas as classes
+        let currentSortMode = 'original'; // 'original' ou 'preenchidos'
+
+        function eNavioPreenchido(nome) {
+            const raw = dadosSharePoint[nome];
+            if (!raw) return false;
+            // Verificar se tem pelo menos um campo de status não-null
+            const campos = ['MotorPrincipal','MCAs','GrupoDestilatorio','EquipFundeio',
+                'CaldeirasAuxiliares','DGEBBAIncendio','SistemaCargaDescarga','MaquinaLeme',
+                'Purificadores','SistemasNavegacao','EstadoGeralConves','EstadoGeralPM',
+                'TrifixPercentual','TripulantesVencidos','CrewMatrix','CertificacaoTripulante',
+                'DiasParaVencerDoc','CondicaoClasse','VettingObservacoes'];
+            return campos.some(c => raw[c] !== null && raw[c] !== undefined);
+        }
+
+        function toggleSortMode() {
+            currentSortMode = currentSortMode === 'original' ? 'preenchidos' : 'original';
+            const btn = document.getElementById('btnSort');
+            const tooltip = btn.querySelector('.tooltip-home');
+            if (currentSortMode === 'preenchidos') {
+                btn.classList.add('active');
+                tooltip.textContent = 'Ordenar: Preenchidos primeiro';
+            } else {
+                btn.classList.remove('active');
+                tooltip.textContent = 'Ordenar: Original';
+            }
+            // Re-aplicar filtros com nova ordenação
+            applyAllFilters();
+        }
+
+        function sortearRows(rows) {
+            if (currentSortMode !== 'preenchidos') {
+                rows.sort((a, b) => {
+                    return (parseInt(a.getAttribute('data-ship-number')) || 0) -
+                           (parseInt(b.getAttribute('data-ship-number')) || 0);
+                });
+            } else {
+                rows.sort((a, b) => {
+                    const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
+                    const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
+                    const nA = naviosReais[numA - 1]?.nome || '';
+                    const nB = naviosReais[numB - 1]?.nome || '';
+                    const pA = eNavioPreenchido(nA) ? 0 : 1;
+                    const pB = eNavioPreenchido(nB) ? 0 : 1;
+                    if (pA !== pB) return pA - pB;          // preenchidos primeiro
+                    return nA.localeCompare(nB, 'pt-BR');   // depois A-Z
+                });
+            }
+            return rows;
+        }
         let selectedClassesTemp = []; // Seleção temporária no popup
 
         // Função para renderizar chips no popup
@@ -3915,12 +3981,8 @@
             const visibleRows = allRows.filter(row => row.style.display !== 'none');
             const hiddenRows = allRows.filter(row => row.style.display === 'none');
 
-            // Ordenar visíveis por data-ship-number para manter ordem consistente
-            visibleRows.sort((a, b) => {
-                const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
-                const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
-                return numA - numB;
-            });
+            // Ordenar visíveis respeitando currentSortMode
+            sortearRows(visibleRows);
 
             // Remover colunas existentes
             const existingColumns = systemsGrid.querySelectorAll('.column-container');
@@ -4218,7 +4280,19 @@
             if (!systemsGrid) return;
 
             const columns = Array.from(systemsGrid.querySelectorAll('.column-container'));
-            if (columns.length === 0) return;
+
+            // Modo normal (sem colunas): reordenar rows direto no grid
+            if (columns.length === 0) {
+                if (currentSortMode === 'preenchidos') {
+                    const allRows = Array.from(systemsGrid.querySelectorAll('.ship-row'));
+                    const visibleRows = allRows.filter(r => r.style.display !== 'none');
+                    const hiddenRows  = allRows.filter(r => r.style.display === 'none');
+                    sortearRows(visibleRows);
+                    visibleRows.forEach(r => systemsGrid.appendChild(r));
+                    hiddenRows.forEach(r => systemsGrid.appendChild(r));
+                }
+                return;
+            }
 
             const numColunas = columns.length;
 
@@ -4233,12 +4307,8 @@
             const visibleRows = allRows.filter(row => row.style.display !== 'none');
             const hiddenRows = allRows.filter(row => row.style.display === 'none');
 
-            // Ordenar visíveis por data-ship-number para manter ordem consistente
-            visibleRows.sort((a, b) => {
-                const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
-                const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
-                return numA - numB;
-            });
+            // Ordenar visíveis respeitando currentSortMode
+            sortearRows(visibleRows);
 
             // Distribuição sequencial: primeira metade col0, segunda col1, etc.
             const porColuna2 = Math.ceil(visibleRows.length / numColunas);
@@ -4884,10 +4954,8 @@
 
                 // Cor do dashboard (green/yellow/red/gray ou verde/amarelo/vermelho/cinza) → editor
                 function dc(c) {
-                    return {
-                        green: 'verde', yellow: 'amarelo', red: 'vermelho', gray: 'cinza',
-                        verde: 'verde', amarelo: 'amarelo', vermelho: 'vermelho', cinza: 'cinza'
-                    }[c] || 'cinza';
+                    return { green: 'verde', yellow: 'amarelo', red: 'vermelho', gray: 'cinza',
+                             verde: 'verde', amarelo: 'amarelo', vermelho: 'vermelho', cinza: 'cinza' }[c] || 'cinza';
                 }
 
                 // Choice '1'/'2'/'3'/null → cor editor
@@ -4901,13 +4969,13 @@
 
                 naviosReais.forEach(function (navio) {
                     const nome = navio.nome;
-                    const sd = statusDetalhesNavios[nome] || {};
+                    const sd   = statusDetalhesNavios[nome] || {};
                     const sdEq = sd.equipamentos || {};
-                    const sdPe = sd.pessoal || {};
+                    const sdPe = sd.pessoal      || {};
                     const sdCe = sd.certificacao || {};
-                    const raw = dadosSharePoint[nome] || {};   // dados brutos com os números
-                    const nse = dadosIndicadores[nome] || { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
-                    const trip = tripulacaoNavios[nome] || {};
+                    const raw  = dadosSharePoint[nome] || {};   // dados brutos com os números
+                    const nse  = dadosIndicadores[nome] || { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
+                    const trip = tripulacaoNavios[nome]  || {};
 
                     // ── Equipamentos: cor vem do statusDetalhes (mais confiável) ──
                     const eq = EQ_LABELS.map(function (label, i) {
@@ -4919,12 +4987,12 @@
 
                     // ── Trifix: número exato do dadosSharePoint ──
                     const trifixItem = sdPe['Trifix %'] || {};
-                    const trifixVal = (raw.TrifixPercentual !== null && raw.TrifixPercentual !== undefined)
+                    const trifixVal  = (raw.TrifixPercentual !== null && raw.TrifixPercentual !== undefined)
                         ? raw.TrifixPercentual : '';
 
                     // ── Vetting: número exato do dadosSharePoint ──
                     const vetItem = sdCe['Obs Vetting'] || {};
-                    const vetVal = (raw.VettingObservacoes !== null && raw.VettingObservacoes !== undefined)
+                    const vetVal  = (raw.VettingObservacoes !== null && raw.VettingObservacoes !== undefined)
                         ? raw.VettingObservacoes : '';
 
                     // ── Dias para vencer: número exato do dadosSharePoint ──
@@ -4932,43 +5000,43 @@
                         ? raw.DiasParaVencerDoc : 0;
 
                     // Pessoal
-                    const tvItem = sdPe['Tripulantes vencidos'] || {};
-                    const cmItem = sdPe['Crew Matrix'] || {};
-                    const ctItem = sdPe['Certificação de Tripulante'] || {};
+                    const tvItem = sdPe['Tripulantes vencidos']        || {};
+                    const cmItem = sdPe['Crew Matrix']                 || {};
+                    const ctItem = sdPe['Certificação de Tripulante']  || {};
 
                     // Certificação
                     const pdItem = sdCe['Pendência de Documentação Navio'] || {};
-                    const ccItem = sdCe['Condição de classe'] || {};
+                    const ccItem = sdCe['Condição de classe']               || {};
 
                     resultado[nome] = {
                         classe: navio.classe,
                         eq: eq,
-                        trifix: trifixVal,
-                        trifixObs: trifixItem.obs || '',
-                        tripVencidos: { cor: dc(tvItem.cor) || choiceCor(raw.TripulantesVencidos), obs: tvItem.obs || '' },
-                        crewMatrix: { cor: dc(cmItem.cor) || choiceCor(raw.CrewMatrix), obs: cmItem.obs || '' },
+                        trifix:         trifixVal,
+                        trifixObs:      trifixItem.obs || '',
+                        tripVencidos:   { cor: dc(tvItem.cor) || choiceCor(raw.TripulantesVencidos),  obs: tvItem.obs || '' },
+                        crewMatrix:     { cor: dc(cmItem.cor) || choiceCor(raw.CrewMatrix),            obs: cmItem.obs || '' },
                         certTripulante: { cor: dc(ctItem.cor) || choiceCor(raw.CertificacaoTripulante), obs: ctItem.obs || '' },
-                        pendencia: { cor: dc(pdItem.cor) || choiceCor(raw.CondicaoClasse), obs: pdItem.obs || '' },
-                        diasVencer: diasVal,
-                        condicaoClasse: { cor: dc(ccItem.cor) || choiceCor(raw.CondicaoClasse), obs: ccItem.obs || '' },
-                        vetting: vetVal,
-                        vettingObs: vetItem.obs || '',
-                        idoSD: nse.idoSD || 0,
-                        reqs: nse.reqsOutstanding || 0,
-                        srs: nse.srsOutstanding || 0,
-                        cmt: (trip.CMT && trip.CMT !== 'Não informado') ? trip.CMT : '',
+                        pendencia:      { cor: dc(pdItem.cor) || choiceCor(raw.CondicaoClasse),        obs: pdItem.obs || '' },
+                        diasVencer:     diasVal,
+                        condicaoClasse: { cor: dc(ccItem.cor) || choiceCor(raw.CondicaoClasse),        obs: ccItem.obs || '' },
+                        vetting:        vetVal,
+                        vettingObs:     vetItem.obs || '',
+                        idoSD: nse.idoSD             || 0,
+                        reqs:  nse.reqsOutstanding   || 0,
+                        srs:   nse.srsOutstanding    || 0,
+                        cmt:    (trip.CMT    && trip.CMT    !== 'Não informado') ? trip.CMT    : '',
                         cmtMat: trip.CMT_MAT || '',
-                        cfm: (trip.CFM && trip.CFM !== 'Não informado') ? trip.CFM : '',
+                        cfm:    (trip.CFM    && trip.CFM    !== 'Não informado') ? trip.CFM    : '',
                         cfmMat: trip.CFM_MAT || '',
-                        imt: (trip.IMT && trip.IMT !== 'Não informado') ? trip.IMT : '',
+                        imt:    (trip.IMT    && trip.IMT    !== 'Não informado') ? trip.IMT    : '',
                         imtMat: trip.IMT_MAT || ''
                     };
                 });
 
                 const json = JSON.stringify(resultado, null, 2);
                 const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const url  = URL.createObjectURL(blob);
+                const a    = document.createElement('a');
                 a.href = url; a.download = 'editor_navios_progresso.json';
                 document.body.appendChild(a); a.click();
                 document.body.removeChild(a);
