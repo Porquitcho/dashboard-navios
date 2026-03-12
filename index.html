@@ -1995,7 +1995,7 @@
         const dadosIndicadores = {
             "ANITA GARIBALDI": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "CASTRO ALVES": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
-            "CARLOS DRUMMOND DE ANDRADE": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
+            "CARLOS DRUMMOND DE ANDRADE": { idoSD: 100, reqsOutstanding: 92, srsOutstanding: 38 },
             "OLAVO BILAC": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "GARRINCHA": { idoSD: 100, reqsOutstanding: 152, srsOutstanding: 22 },
             "PORTINARI": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
@@ -2024,7 +2024,7 @@
         const tripulacaoNavios = {
             "ANITA GARIBALDI": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "CASTRO ALVES": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
-            "CARLOS DRUMMOND DE ANDRADE": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
+            "CARLOS DRUMMOND DE ANDRADE": { CMT: "Juniel", CMT_MAT: "", CFM: "Francisco", CFM_MAT: "", IMT: "Azevedo", IMT_MAT: "" },
             "OLAVO BILAC": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "GARRINCHA": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "PORTINARI": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
@@ -2041,7 +2041,7 @@
             "CELSO FURTADO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "SERGIO BUARQUE DE HOLANDA": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "ROMULO ALMEIDA": { CMT: "Jamesson", CMT_MAT: "", CFM: "Lima", CFM_MAT: "", IMT: "Amanda", IMT_MAT: "" },
-            "JOSE ALENCAR": { CMT: "Pedro Henrique", CMT_MAT: "5603", CFM: "Baia", CFM_MAT: "114352", IMT: "Vilas Boas", IMT_MAT: "7923" },
+            "JOSE ALENCAR": { CMT: "Pedro Henrique", CMT_MAT: "", CFM: "Baia", CFM_MAT: "", IMT: "Vilas Boas", IMT_MAT: "" },
             "LUCIO COSTA": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "DARCY RIBEIRO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
             "BARBOSA LIMA SOBRINHO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
@@ -2107,29 +2107,29 @@
             },
             "CARLOS DRUMMOND DE ANDRADE": {
                 equipamentos: {
-                    "Motor principal": { cor: "cinza", obs: "" },
-                    "MCAs": { cor: "cinza", obs: "" },
-                    "Grupo destilatório": { cor: "cinza", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "cinza", obs: "" },
-                    "Caldeira auxiliar": { cor: "cinza", obs: "" },
-                    "DGE E BBA incêndio emergência": { cor: "cinza", obs: "" },
-                    "Sistema de carga e descarga": { cor: "cinza", obs: "" },
-                    "Máquina do leme": { cor: "cinza", obs: "" },
-                    "Purificadores": { cor: "cinza", obs: "" },
-                    "Sistemas de navegação": { cor: "cinza", obs: "" },
-                    "Estado geral convés": { cor: "cinza", obs: "" },
-                    "Estado geral PM": { cor: "cinza", obs: "" }
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "amarelo", obs: "Substituir CPU do PLC do Purificador#1 de OL do Motor, o material foi recebido a bordo. Fabricante será contratado para instalação e configuração do CPU." },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "cinza", obs: "" },
-                    "Tripulantes vencidos": { cor: "cinza", obs: "" },
-                    "Crew Matrix": { cor: "cinza", obs: "" },
-                    "Certificação de Tripulante": { cor: "cinza", obs: "" }
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
-                    "Condição de classe": { cor: "cinza", obs: "" },
-                    "Obs Vetting": { cor: "cinza", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
                 }
             },
             "OLAVO BILAC": {
@@ -3515,7 +3515,7 @@
                 return [
                     { NomeNavio: 'ANITA GARIBALDI', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'CASTRO ALVES', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
-                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'OLAVO BILAC', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'GARRINCHA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 5 },
                     { NomeNavio: 'PORTINARI', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
