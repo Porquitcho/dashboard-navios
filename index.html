@@ -1993,21 +1993,21 @@
 
         // Dados de IDO-SD, Reqs Outstanding e SRs Outstanding por navio
         const dadosIndicadores = {
-            "ANITA GARIBALDI": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
+            "ANITA GARIBALDI": { idoSD: 98, reqsOutstanding: 32, srsOutstanding: 33 },
             "CASTRO ALVES": { idoSD: 100, reqsOutstanding: 203, srsOutstanding: 44 },
-            "CARLOS DRUMMOND DE ANDRADE": { idoSD: 100, reqsOutstanding: 92, srsOutstanding: 38 },
-            "OLAVO BILAC": { idoSD: 100, reqsOutstanding: 117, srsOutstanding: 14 },
-            "GARRINCHA": { idoSD: 100, reqsOutstanding: 158, srsOutstanding: 22 },
+            "CARLOS DRUMMOND DE ANDRADE": { idoSD: 100, reqsOutstanding: 96, srsOutstanding: 36 },
+            "OLAVO BILAC": { idoSD: 100, reqsOutstanding: 120, srsOutstanding: 15 },
+            "GARRINCHA": { idoSD: 100, reqsOutstanding: 158, srsOutstanding: 20 },
             "PORTINARI": { idoSD: 100, reqsOutstanding: 94, srsOutstanding: 26 },
-            "JOAO CANDIDO": { idoSD: 99, reqsOutstanding: 187, srsOutstanding: 33 },
-            "DRAGAO DO MAR": { idoSD: 100, reqsOutstanding: 124, srsOutstanding: 110 },
-            "HENRIQUE DIAS": { idoSD: 100, reqsOutstanding: 83, srsOutstanding: 61 },
-            "ANDRE REBOUCAS": { idoSD: 100, reqsOutstanding: 198, srsOutstanding: 39 },
+            "JOAO CANDIDO": { idoSD: 99, reqsOutstanding: 192, srsOutstanding: 42 },
+            "DRAGAO DO MAR": { idoSD: 100, reqsOutstanding: 133, srsOutstanding: 110 },
+            "HENRIQUE DIAS": { idoSD: 99, reqsOutstanding: 85, srsOutstanding: 63 },
+            "ANDRE REBOUCAS": { idoSD: 100, reqsOutstanding: 201, srsOutstanding: 40 },
             "MARCILIO DIAS": { idoSD: 100, reqsOutstanding: 286, srsOutstanding: 42 },
             "JOSE DO PATROCINIO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
-            "MACHADO DE ASSIS": { idoSD: 100, reqsOutstanding: 254, srsOutstanding: 20 },
-            "MILTON SANTOS": { idoSD: 99, reqsOutstanding: 112, srsOutstanding: 52 },
-            "ABDIAS NASCIMENTO": { idoSD: 100, reqsOutstanding: 196, srsOutstanding: 62 },
+            "MACHADO DE ASSIS": { idoSD: 100, reqsOutstanding: 259, srsOutstanding: 25 },
+            "MILTON SANTOS": { idoSD: 100, reqsOutstanding: 117, srsOutstanding: 55 },
+            "ABDIAS NASCIMENTO": { idoSD: 100, reqsOutstanding: 203, srsOutstanding: 64 },
             "ZUMBI DOS PALMARES": { idoSD: 100, reqsOutstanding: 134, srsOutstanding: 67 },
             "CELSO FURTADO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
             "SERGIO BUARQUE DE HOLANDA": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
@@ -2015,20 +2015,20 @@
             "JOSE ALENCAR": { idoSD: 100, reqsOutstanding: 146, srsOutstanding: 27 },
             "LUCIO COSTA": { idoSD: 100, reqsOutstanding: 89, srsOutstanding: 19 },
             "DARCY RIBEIRO": { idoSD: 100, reqsOutstanding: 116, srsOutstanding: 34 },
-            "BARBOSA LIMA SOBRINHO": { idoSD: 100, reqsOutstanding: 105, srsOutstanding: 31 },
+            "BARBOSA LIMA SOBRINHO": { idoSD: 97, reqsOutstanding: 48, srsOutstanding: 42 },
             "OSCAR NIEMEYER": { idoSD: 100, reqsOutstanding: 47, srsOutstanding: 5 },
-            "GILBERTO FREYRE": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 },
-            "JORGE AMADO": { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 }
+            "GILBERTO FREYRE": { idoSD: 100, reqsOutstanding: 44, srsOutstanding: 11 },
+            "JORGE AMADO": { idoSD: 100, reqsOutstanding: 79, srsOutstanding: 4 }
         };
 
         const tripulacaoNavios = {
-            "ANITA GARIBALDI": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
+            "ANITA GARIBALDI": { CMT: "IVO", CMT_MAT: "", CFM: "MARCELA", CFM_MAT: "", IMT: "WILLIAM", IMT_MAT: "" },
             "CASTRO ALVES": { CMT: "ABEL ALBINO SANCA", CMT_MAT: "", CFM: "RAIMUNDO NONATO LIMA VIEIRA", CFM_MAT: "", IMT: "ALEX MONTEIRO DIONISIO", IMT_MAT: "" },
             "CARLOS DRUMMOND DE ANDRADE": { CMT: "Juniel", CMT_MAT: "", CFM: "Francisco", CFM_MAT: "", IMT: "Azevedo", IMT_MAT: "" },
-            "OLAVO BILAC": { CMT: "PEDRO", CMT_MAT: "", CFM: "FRANCISCO", CFM_MAT: "", IMT: "VICTOR", IMT_MAT: "" },
+            "OLAVO BILAC": { CMT: "Pedro", CMT_MAT: "", CFM: "Francisco", CFM_MAT: "", IMT: "Victor", IMT_MAT: "" },
             "GARRINCHA": { CMT: "Richardison", CMT_MAT: "", CFM: "Valente", CFM_MAT: "", IMT: "Leonardo", IMT_MAT: "" },
             "PORTINARI": { CMT: "HUGO DE OLIVEIRA ALCOFORADO", CMT_MAT: "", CFM: "RAFAEL FERREIRA GOMES", CFM_MAT: "", IMT: "PAULO RENATO DE ALMEIDA BARBOSA", IMT_MAT: "" },
-            "JOAO CANDIDO": { CMT: "JOEL MARTINS MYRA DE MORAES", CMT_MAT: "", CFM: "DIEGO SARAIVA MONTEIRO", CFM_MAT: "", IMT: "RAFAEL RUBEN RODRIGUEZ MORAL", IMT_MAT: "" },
+            "JOAO CANDIDO": { CMT: "Myra", CMT_MAT: "", CFM: "Monteiro", CFM_MAT: "", IMT: "Ruben", IMT_MAT: "" },
             "DRAGAO DO MAR": { CMT: "Marques", CMT_MAT: "", CFM: "Maurício", CFM_MAT: "", IMT: "Marcio", IMT_MAT: "" },
             "HENRIQUE DIAS": { CMT: "Frederico", CMT_MAT: "", CFM: "Arnaldo", CFM_MAT: "", IMT: "Francisco", IMT_MAT: "" },
             "ANDRE REBOUCAS": { CMT: "Luciano", CMT_MAT: "", CFM: "Lucena", CFM_MAT: "", IMT: "Camorim", IMT_MAT: "" },
@@ -2044,38 +2044,38 @@
             "JOSE ALENCAR": { CMT: "Pedro Henrique", CMT_MAT: "", CFM: "Baia", CFM_MAT: "", IMT: "Vilas Boas", IMT_MAT: "" },
             "LUCIO COSTA": { CMT: "De Paula", CMT_MAT: "", CFM: "Tavares", CFM_MAT: "", IMT: "Ademar", IMT_MAT: "" },
             "DARCY RIBEIRO": { CMT: "Gustavo", CMT_MAT: "", CFM: "Osmacle", CFM_MAT: "", IMT: "Damasceno", IMT_MAT: "" },
-            "BARBOSA LIMA SOBRINHO": { CMT: "Ribeiro", CMT_MAT: "", CFM: "Almada", CFM_MAT: "", IMT: "Edson", IMT_MAT: "" },
+            "BARBOSA LIMA SOBRINHO": { CMT: "VICENTE", CMT_MAT: "", CFM: "WAGNER", CFM_MAT: "", IMT: "- - -", IMT_MAT: "" },
             "OSCAR NIEMEYER": { CMT: "Michele", CMT_MAT: "", CFM: "Coelho", CFM_MAT: "", IMT: "Ramon", IMT_MAT: "" },
-            "GILBERTO FREYRE": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" },
-            "JORGE AMADO": { CMT: "---", CMT_MAT: "", CFM: "---", CFM_MAT: "", IMT: "---", IMT_MAT: "" }
+            "GILBERTO FREYRE": { CMT: "Luis Otávio Virgens da Silva", CMT_MAT: "", CFM: "Edson William da costa Lima", CFM_MAT: "", IMT: "Raul Cesar Freitas Mendes de Lira", IMT_MAT: "" },
+            "JORGE AMADO": { CMT: "Helton Guilherme Pereira", CMT_MAT: "", CFM: "Jorge Euclides Palheta Lobato", CFM_MAT: "", IMT: "Elias Garcia Luiz", IMT_MAT: "" }
         };
 
         const statusDetalhesNavios = {
             "ANITA GARIBALDI": {
                 equipamentos: {
-                    "Motor principal": { cor: "cinza", obs: "" },
-                    "MCAs": { cor: "cinza", obs: "" },
-                    "Grupo destilatório": { cor: "cinza", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "cinza", obs: "" },
-                    "Caldeira auxiliar": { cor: "cinza", obs: "" },
-                    "DGE E BBA incêndio emergência": { cor: "cinza", obs: "" },
-                    "Sistema de carga e descarga": { cor: "cinza", obs: "" },
-                    "Máquina do leme": { cor: "cinza", obs: "" },
-                    "Purificadores": { cor: "cinza", obs: "" },
-                    "Sistemas de navegação": { cor: "cinza", obs: "" },
-                    "Estado geral convés": { cor: "cinza", obs: "" },
-                    "Estado geral PM": { cor: "cinza", obs: "" }
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "verde", obs: "" },
+                    "Grupo destilatório": { cor: "amarelo", obs: "EM MONTAGEM DO DESTILADOR #2" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "verde", obs: "" },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "cinza", obs: "" },
-                    "Tripulantes vencidos": { cor: "cinza", obs: "" },
-                    "Crew Matrix": { cor: "cinza", obs: "" },
-                    "Certificação de Tripulante": { cor: "cinza", obs: "" }
+                    "Trifix %": { cor: "amarelo", obs: "." },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "vermelho", obs: "." }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
-                    "Condição de classe": { cor: "cinza", obs: "" },
-                    "Obs Vetting": { cor: "cinza", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
                 }
             },
             "CASTRO ALVES": {
@@ -2110,12 +2110,12 @@
                     "Motor principal": { cor: "verde", obs: "" },
                     "MCAs": { cor: "verde", obs: "" },
                     "Grupo destilatório": { cor: "verde", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: " Necessário substituir as válvulas contrabalanço dos Guindastes de Carga BB/BE. Material sendo adquirido pelo PC 4501923737, previsão de entrega no Caju até 27/03. " },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
                     "Sistema de carga e descarga": { cor: "verde", obs: "" },
                     "Máquina do leme": { cor: "verde", obs: "" },
-                    "Purificadores": { cor: "amarelo", obs: "Substituir CPU do PLC do Purificador#1 de OL do Motor, o material foi recebido a bordo. Fabricante será contratado para instalação e configuração do CPU." },
+                    "Purificadores": { cor: "amarelo", obs: "Substituir CPU do PLC do Purificador#1 de OL do Motor, o material foi recebido a bordo. Chefe notou que será necessário aquisição de material complementar, além do já recebido, criada nova requisição, que está em andamento. Fabricante será contratado para instalação e configuração do CPU." },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
                     "Estado geral convés": { cor: "verde", obs: "" },
                     "Estado geral PM": { cor: "verde", obs: "" }
@@ -2135,21 +2135,21 @@
             "OLAVO BILAC": {
                 equipamentos: {
                     "Motor principal": { cor: "verde", obs: "" },
-                    "MCAs": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "amarelo", obs: " DISJUNTOR HYUNDAI UAN16A3C localizado no QEP do MCA#01, pois o mesmo não rearma " },
                     "Grupo destilatório": { cor: "verde", obs: "" },
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
                     "Sistema de carga e descarga": { cor: "verde", obs: "" },
                     "Máquina do leme": { cor: "verde", obs: "" },
-                    "Purificadores": { cor: "amarelo", obs: " Purificador oc (houve atendimento porem, falta valv 3 vias para restabelecer operacionalidade do equipamento)" },
+                    "Purificadores": { cor: "amarelo", obs: "Purificador oc (houve atendimento porem, falta valv 3 vias para restabelecer operacionalidade do equipamento)" },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
                     "Estado geral convés": { cor: "verde", obs: "" },
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
                     "Trifix %": { cor: "verde", obs: "" },
-                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "." },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
@@ -2167,7 +2167,7 @@
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
-                    "Sistema de carga e descarga": { cor: "amarelo", obs: " Bomba de carga 1 vazamento pelo selo, aguardando chegada de material " },
+                    "Sistema de carga e descarga": { cor: "amarelo", obs: "Bomba de carga 1 vazamento pelo selo, aguardando chegada de material " },
                     "Máquina do leme": { cor: "verde", obs: "" },
                     "Purificadores": { cor: "verde", obs: "" },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
@@ -2176,12 +2176,12 @@
                 },
                 pessoal: {
                     "Trifix %": { cor: "verde", obs: "" },
-                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "05 tripulantes - troca 25/03 " },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "30 dias para vencer Anuais de classe, vencimento 18/06. Programado para próxima estadia no Brasil, Abril/26 " },
                     "Condição de classe": { cor: "verde", obs: "" },
                     "Obs Vetting": { cor: "verde", obs: "" }
                 }
@@ -2216,14 +2216,14 @@
             "JOAO CANDIDO": {
                 equipamentos: {
                     "Motor principal": { cor: "verde", obs: "" },
-                    "MCAs": { cor: "amarelo", obs: " Mca 3 aguardando aquisicão material 1345019 para aplicação imediata, cames cilindro #6 e #7 danificados. troca eixo cames (constatado durante atendimento descarbonização julho 2025)" },
+                    "MCAs": { cor: "amarelo", obs: "Mca 3 aguardando aquisicão material 1345019 para aplicação imediata, cames cilindro #6 e #7 danificados. troca eixo cames (constatado durante atendimento descarbonização julho 2025)" },
                     "Grupo destilatório": { cor: "verde", obs: "" },
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
                     "Sistema de carga e descarga": { cor: "vermelho", obs: " TBC 1 inoperante, aguardando aquisição material PC4501923271, prontificação julho/26 necessario aquisição PLC e Bateria, para sistema parada emergencia das TBCS" },
-                    "Máquina do leme": { cor: "amarelo", obs: " necessário aquisicao material conforme req 1345044 - LEVEL SWITCH MAQ LEME 1 ( low low não esta operando  , so temos alarme nivel baixo (low))" },
-                    "Purificadores": { cor: "amarelo", obs: " Purif ol 2 - realizado retrofit IHM, porem no decorrer do texte nao obterve sucesso, equipe de bordo em investigaçao, suspeita-se motor eletrico avariado." },
+                    "Máquina do leme": { cor: "amarelo", obs: "necessário aquisicao material conforme req 1345044 - LEVEL SWITCH MAQ LEME 1 ( low low não esta operando  , so temos alarme nivel baixo (low))" },
+                    "Purificadores": { cor: "amarelo", obs: "Purif ol 2 - realizado retrofit IHM, porem no decorrer do texte nao obterve sucesso, equipe de bordo em investigaçao, suspeita-se motor eletrico avariado." },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
                     "Estado geral convés": { cor: "amarelo", obs: " Firma a bordo para tratamento e pintura para sanar additional requiriment aplicada pela ABS, com vencimento julho/26" },
                     "Estado geral PM": { cor: "verde", obs: "" }
@@ -2235,7 +2235,7 @@
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "amarelo", obs: " dias para vencer Anuais - range 13.02 a 13.08" },
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Anuais - range 13.02 a 13.08" },
                     "Condição de classe": { cor: "verde", obs: "" },
                     "Obs Vetting": { cor: "verde", obs: "" }
                 }
@@ -2246,7 +2246,7 @@
                     "MCAs": { cor: "verde", obs: "" },
                     "Grupo destilatório": { cor: "verde", obs: "" },
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
-                    "Caldeira auxiliar": { cor: "amarelo", obs: " Caldeira #1 apresenta falha, quando utilizado o combustível Very low Sulfur nas áreas ECAs. Programado atendimento do Service Engineer da Alfa Laval, durante estadia em Algeciras, ETA 30/03." },
+                    "Caldeira auxiliar": { cor: "amarelo", obs: "Caldeira #1 apresenta falha, quando utilizado o combustível Very low Sulfur nas áreas ECAs. Programado atendimento do Service Engineer da Alfa Laval, durante estadia em Algeciras, ETA 30/03." },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
                     "Sistema de carga e descarga": { cor: "verde", obs: "" },
                     "Máquina do leme": { cor: "verde", obs: "" },
@@ -2256,13 +2256,13 @@
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "verde", obs: "" },
+                    "Trifix %": { cor: "amarelo", obs: "Porcentagem fornecida pela GTRIP de 75%." },
                     "Tripulantes vencidos": { cor: "verde", obs: "" },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "amarelo", obs: " dias para vencer Retirada da pendência da inspeção MLC, realizada no Rio de Janeiro em Março/26." },
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Necessário a retirada da pendência da inspeção MLC, realizada no Rio de Janeiro em Março/26." },
                     "Condição de classe": { cor: "verde", obs: "" },
                     "Obs Vetting": { cor: "verde", obs: "" }
                 }
@@ -2275,10 +2275,10 @@
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
-                    "Sistema de carga e descarga": { cor: "amarelo", obs: "Sistema de Gás Inerte com defeito no módulo X32, Gerência Manutenção prestando suporte. Previsão de atendimento e resolução da falha, nos dias 15 e 16/03 em São Sebastião." },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
                     "Máquina do leme": { cor: "verde", obs: "" },
                     "Purificadores": { cor: "verde", obs: "" },
-                    "Sistemas de navegação": { cor: "amarelo", obs: "Sensor do Speed Log com falha de funcionamento. Aguardando recebimento do sensor para instalação, PC 4501927258." },
+                    "Sistemas de navegação": { cor: "amarelo", obs: "S Sensor do Speed Log com falha de funcionamento. Aguardando recebimento do sensor para instalação, PC 4501927258.ensor do Speed Log com falha de funcionamento. Aguardando recebimento do sensor para instalação, PC 4501927258." },
                     "Estado geral convés": { cor: "verde", obs: "" },
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
@@ -2289,7 +2289,7 @@
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Renovação do Certificado do Cargo Gear será programado para inspeção da Classe durante estadia em São Sebastião." },
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Renovação do Certificado do Cargo Gear será programado para inspeção da Classe durante estadia em Singapura." },
                     "Condição de classe": { cor: "verde", obs: "" },
                     "Obs Vetting": { cor: "verde", obs: "" }
                 }
@@ -2303,7 +2303,7 @@
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
                     "Sistema de carga e descarga": { cor: "verde", obs: "" },
-                    "Máquina do leme": { cor: "amarelo", obs: " Notado vazamento controlado OH nas conexões nos blocos da máquina do leme. Gerência Técnica prestando suporte e realizando contato com o fabricante MacGregor para atendimento em Singapura." },
+                    "Máquina do leme": { cor: "amarelo", obs: "Notado vazamento controlado OH nas conexões nos blocos da máquina do leme. Gerência Técnica prestando suporte e realizando contato com o fabricante MacGregor para atendimento em Singapura." },
                     "Purificadores": { cor: "verde", obs: "" },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
                     "Estado geral convés": { cor: "verde", obs: "" },
@@ -2316,9 +2316,9 @@
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Anuais de Classe e Cargo Gear irão vencer em Julho/26. As Inspeções da Classe estão sendo programadas para serem realizadas durante estadia em Singapura. " },
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "Anuais de Classe e Cargo Gear irão vencer em Julho/26. As Inspeções da Classe estão sendo programadas para serem realizadas durante estadia em Singapura." },
                     "Condição de classe": { cor: "verde", obs: "" },
-                    "Obs Vetting": { cor: "vermelho", obs: "Ultima Vetting realizada em Novembro/25 com a REPSOL. Sendo programado nova inspeção para descarga em Singapura." }
+                    "Obs Vetting": { cor: "vermelho", obs: "Última Vetting realizada em Novembro/25 com a REPSOL. Sendo programado nova inspeção para descarga em Singapura." }
                 }
             },
             "MARCILIO DIAS": {
@@ -2383,17 +2383,17 @@
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
-                    "Sistema de carga e descarga": { cor: "vermelho", obs: " Ventilador#2 do gás inerte em reparo, TBC 3 aguardando teste final após reparo. " },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
                     "Máquina do leme": { cor: "verde", obs: "" },
-                    "Purificadores": { cor: "vermelho", obs: "Purificadores MCAs inoperantes, aguardando chegada de material " },
+                    "Purificadores": { cor: "vermelho", obs: " Purificadores MCAs inoperantes, aguardando chegada de material " },
                     "Sistemas de navegação": { cor: "verde", obs: "" },
-                    "Estado geral convés": { cor: "vermelho", obs: " Tratamento e pintura em andamento pela tripulação" },
+                    "Estado geral convés": { cor: "vermelho", obs: "Tratamento e pintura em andamento pela tripulação. " },
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
                     "Trifix %": { cor: "verde", obs: "" },
                     "Tripulantes vencidos": { cor: "verde", obs: "" },
-                    "Crew Matrix": { cor: "vermelho", obs: " Tempo de embarque na função CMT + IMT = 0,75, não atende à maioria das Mayors" },
+                    "Crew Matrix": { cor: "verde", obs: " Tempo de embarque na função CMT + IMT = 0,75, não atende à maioria das Mayors" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
@@ -2404,36 +2404,36 @@
             },
             "MILTON SANTOS": {
                 equipamentos: {
-                    "Motor principal": { cor: "verde", obs: "" },
+                    "Motor principal": { cor: "amarelo", obs: "Necessário programar descarbonização 4 cilindros" },
                     "MCAs": { cor: "vermelho", obs: " MCA1 INOPERANTE, aguadando aquisicao materiais para reparo/montagem MCA2 - apos full inspection realizada, constatado gotejamento agua em 3 cilindros" },
                     "Grupo destilatório": { cor: "verde", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: " guindaste  necessario substituição cabo, rolamentos e fabricação pino guindaste provisoes, necessario limite switchs" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: " guindaste  necessario substituição cabo, rolamentos e fabricação pino" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
-                    "Sistema de carga e descarga": { cor: "amarelo", obs: " sistema lastro bba vapor inoperante, necessario aquisição material (bba lubrificação) - em cadastro material." },
+                    "Sistema de carga e descarga": { cor: "amarelo", obs: "sistema lastro bba vapor inoperante, necessario aquisição material (bba lubrificação) - em cadastro material." },
                     "Máquina do leme": { cor: "verde", obs: "" },
                     "Purificadores": { cor: "verde", obs: "" },
-                    "Sistemas de navegação": { cor: "amarelo", obs: " necessario reparo speed log - aquisicao material (cabo rompido) fonoclama de manobra, necessario baterias para restabelecer operacionalidade" },
-                    "Estado geral convés": { cor: "amarelo", obs: " tratamento e pintura, suporte redes e cavaletes.  (redes e acessorios conves)" },
+                    "Sistemas de navegação": { cor: "amarelo", obs: "necessario reparo speed log - aquisicao material (cabo rompido) fonoclama de manobra, necessario baterias para restabelecer operacionalidade" },
+                    "Estado geral convés": { cor: "amarelo", obs: "tratamento e pintura, suporte redes e cavaletes.  (redes e acessorios conves)" },
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
                     "Trifix %": { cor: "amarelo", obs: "-" },
-                    "Tripulantes vencidos": { cor: "amarelo", obs: "ASA, BOMBEADOR, 1ON, MNC (3)" },
-                    "Crew Matrix": { cor: "vermelho", obs: " modificação para gtrip solicitada pelo cmt" },
-                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                    "Tripulantes vencidos": { cor: "verde", obs: "ASA, BOMBEADOR, 1ON, MNC (3)" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "vermelho", obs: "modificação para gtrip solicitada pelo cmt" }
                 },
                 certificacao: {
                     "Pendência de Documentação Navio": { cor: "amarelo", obs: "MCA venc Abril" },
                     "Condição de classe": { cor: "verde", obs: "" },
-                    "Obs Vetting": { cor: "amarelo", obs: "2 29/08/2025 - Angra dos Reis - 07 OBS" }
+                    "Obs Vetting": { cor: "amarelo", obs: "9 observações - repsol madre de deus - 20.03.2026" }
                 }
             },
             "ABDIAS NASCIMENTO": {
                 equipamentos: {
-                    "Motor principal": { cor: "amarelo", obs: " Cilindros 4 e 5 vencidos, previsto para serem realizadas na chegada ao Brasil, abr-26" },
+                    "Motor principal": { cor: "amarelo", obs: "Cilindros 4 e 5 vencidos, previsto para serem realizadas na chegada ao Brasil, abr-26" },
                     "MCAs": { cor: "verde", obs: "" },
-                    "Grupo destilatório": { cor: "vermelho", obs: " Salgamento pela condensadora, foram fornecidas 22 placas, que foram substituídas em viagem Singapura x Brasil. Destilador produzindo com baixa vazão e ainda em fase de teste." },
+                    "Grupo destilatório": { cor: "vermelho", obs: " Destilador produzindo com baixa vazão devido a histórico de salgamento, aguardando chegada de novas placas. Em observação.  Salgamento pela condensadora, foram fornecidas 22 placas, que foram substituídas em viagem Singapura x Brasil. Destilador produzindo com baixa vazão e ainda em fase de teste." },
                     "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
@@ -2445,15 +2445,15 @@
                     "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "verde", obs: "90%" },
-                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "amarelo", obs: "04 tripulantes - troca em 29/03 " },
                     "Crew Matrix": { cor: "verde", obs: "" },
                     "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
                     "Pendência de Documentação Navio": { cor: "verde", obs: "" },
                     "Condição de classe": { cor: "verde", obs: "" },
-                    "Obs Vetting": { cor: "vermelho", obs: "Todas fechadas" }
+                    "Obs Vetting": { cor: "vermelho", obs: "17 observações - Todas fechadas" }
                 }
             },
             "ZUMBI DOS PALMARES": {
@@ -2648,28 +2648,28 @@
             "BARBOSA LIMA SOBRINHO": {
                 equipamentos: {
                     "Motor principal": { cor: "verde", obs: "" },
-                    "MCAs": { cor: "amarelo", obs: "MCA#3 apresentando contaminação do cárter por diesel. Cfm está investigando a causa" },
-                    "Grupo destilatório": { cor: "vermelho", obs: "Inoperante. Aguardando entrega de sobressalentes." },
-                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: "." },
+                    "MCAs": { cor: "verde", obs: "MCA#3 apresentando contaminação do cárter por diesel. Cfm está investigando a caus" },
+                    "Grupo destilatório": { cor: "vermelho", obs: "SISTEMA OBSOLETO" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "amarelo", obs: " COM VAZAMENTOS PELO BLOCO" },
                     "Caldeira auxiliar": { cor: "verde", obs: "" },
                     "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
-                    "Sistema de carga e descarga": { cor: "amarelo", obs: "Compressor de carga #1 com trinca na base." },
-                    "Máquina do leme": { cor: "amarelo", obs: "." },
-                    "Purificadores": { cor: "amarelo", obs: " Aguardando sobressalentes" },
-                    "Sistemas de navegação": { cor: "verde", obs: "" },
-                    "Estado geral convés": { cor: "verde", obs: "" },
-                    "Estado geral PM": { cor: "verde", obs: "" }
+                    "Sistema de carga e descarga": { cor: "verde", obs: "Compressor de carga #1 com trinca na base." },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "amarelo", obs: " PURIFICADOR DE O.L #2 EM MANUTENÇÃO CORRETIVA Aguardando sobressalentes" },
+                    "Sistemas de navegação": { cor: "amarelo", obs: " ANEMÔMETRO DANIFICADO" },
+                    "Estado geral convés": { cor: "vermelho", obs: " CORROSÃO ACENTUADA " },
+                    "Estado geral PM": { cor: "amarelo", obs: " NECESSITANDO PINTURA" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "verde", obs: "" },
+                    "Trifix %": { cor: "amarelo", obs: "." },
                     "Tripulantes vencidos": { cor: "verde", obs: "" },
-                    "Crew Matrix": { cor: "verde", obs: "" },
-                    "Certificação de Tripulante": { cor: "verde", obs: "" }
+                    "Crew Matrix": { cor: "vermelho", obs: "." },
+                    "Certificação de Tripulante": { cor: "vermelho", obs: "." }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "vermelho", obs: "." },
-                    "Condição de classe": { cor: "verde", obs: "" },
-                    "Obs Vetting": { cor: "verde", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "amarelo", obs: "CORROSÃO NO CONVÉS E MCA#2 EM FINALIZAÇÃO DE DESCARBONIZAÇÃO ( JÁ FINALIZADO DIA 19/03 , PORÉM AINDA VAMOS RETIRAR A PENDÊNCIA JUNTO A CLASSE" },
+                    "Condição de classe": { cor: "vermelho", obs: "CORROSÃO NO CONVÉS E MCA#2 EM FINALIZAÇÃO DE DESCARBONIZAÇÃO ( JÁ FINALIZADO DIA 19/03 , PORÉM AINDA VAMOS RETIRAR A PENDÊNCIA JUNTO A CLASSE" },
+                    "Obs Vetting": { cor: "vermelho", obs: "." }
                 }
             },
             "OSCAR NIEMEYER": {
@@ -2701,56 +2701,56 @@
             },
             "GILBERTO FREYRE": {
                 equipamentos: {
-                    "Motor principal": { cor: "cinza", obs: "" },
-                    "MCAs": { cor: "cinza", obs: "" },
-                    "Grupo destilatório": { cor: "cinza", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "cinza", obs: "" },
-                    "Caldeira auxiliar": { cor: "cinza", obs: "" },
-                    "DGE E BBA incêndio emergência": { cor: "cinza", obs: "" },
-                    "Sistema de carga e descarga": { cor: "cinza", obs: "" },
-                    "Máquina do leme": { cor: "cinza", obs: "" },
-                    "Purificadores": { cor: "cinza", obs: "" },
-                    "Sistemas de navegação": { cor: "cinza", obs: "" },
-                    "Estado geral convés": { cor: "cinza", obs: "" },
-                    "Estado geral PM": { cor: "cinza", obs: "" }
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "amarelo", obs: "Descarbonização do MCA#1 de 24.000 hs atrasada. Serviço aguardando chegada de material e programado para iniciar em 02/04/2026 em Belém" },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "amarelo", obs: " Aguardando materiais para finalizar os devidos reparos. 1Purifcado de OL do MCP e 1 Purificador de OC do MCP estão em manutenção BORDAREP" },
+                    "Sistemas de navegação": { cor: "amarelo", obs: "VDR com problema de comunicação da capsula FRM, estamos aguardando feedback da MTM para dar segmento na conclusão do problema. De acordo com o relatório do representante do fabricante, a capsula está obsoleta." },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "cinza", obs: "" },
-                    "Tripulantes vencidos": { cor: "cinza", obs: "" },
-                    "Crew Matrix": { cor: "cinza", obs: "" },
-                    "Certificação de Tripulante": { cor: "cinza", obs: "" }
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "verde", obs: "" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
-                    "Condição de classe": { cor: "cinza", obs: "" },
-                    "Obs Vetting": { cor: "cinza", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "verde", obs: "" }
                 }
             },
             "JORGE AMADO": {
                 equipamentos: {
-                    "Motor principal": { cor: "cinza", obs: "" },
-                    "MCAs": { cor: "cinza", obs: "" },
-                    "Grupo destilatório": { cor: "cinza", obs: "" },
-                    "Equip. fundeio, amarração e guindastes": { cor: "cinza", obs: "" },
-                    "Caldeira auxiliar": { cor: "cinza", obs: "" },
-                    "DGE E BBA incêndio emergência": { cor: "cinza", obs: "" },
-                    "Sistema de carga e descarga": { cor: "cinza", obs: "" },
-                    "Máquina do leme": { cor: "cinza", obs: "" },
-                    "Purificadores": { cor: "cinza", obs: "" },
-                    "Sistemas de navegação": { cor: "cinza", obs: "" },
-                    "Estado geral convés": { cor: "cinza", obs: "" },
-                    "Estado geral PM": { cor: "cinza", obs: "" }
+                    "Motor principal": { cor: "verde", obs: "" },
+                    "MCAs": { cor: "amarelo", obs: "MCA#3 com descarbonização de 24.000 hs em atraso. De acordo com a programação do programada de descarbonização centralizada, será realizada após a finalização da descarbonização do MCA#1 do Gilberto Freyre." },
+                    "Grupo destilatório": { cor: "verde", obs: "" },
+                    "Equip. fundeio, amarração e guindastes": { cor: "verde", obs: "" },
+                    "Caldeira auxiliar": { cor: "verde", obs: "" },
+                    "DGE E BBA incêndio emergência": { cor: "verde", obs: "" },
+                    "Sistema de carga e descarga": { cor: "verde", obs: "" },
+                    "Máquina do leme": { cor: "verde", obs: "" },
+                    "Purificadores": { cor: "verde", obs: "" },
+                    "Sistemas de navegação": { cor: "amarelo", obs: " VDR com problema de comunicação da capsula FRM. Aguardando feedback da MTM para conclusão do problema. De acordo com o relatório do representante do fabricante, a capsula está obsoleta." },
+                    "Estado geral convés": { cor: "verde", obs: "" },
+                    "Estado geral PM": { cor: "verde", obs: "" }
                 },
                 pessoal: {
-                    "Trifix %": { cor: "cinza", obs: "" },
-                    "Tripulantes vencidos": { cor: "cinza", obs: "" },
-                    "Crew Matrix": { cor: "cinza", obs: "" },
-                    "Certificação de Tripulante": { cor: "cinza", obs: "" }
+                    "Trifix %": { cor: "verde", obs: "" },
+                    "Tripulantes vencidos": { cor: "verde", obs: "" },
+                    "Crew Matrix": { cor: "verde", obs: "" },
+                    "Certificação de Tripulante": { cor: "vermelho", obs: "1OM/ Mario Mello sem o EOPN" }
                 },
                 certificacao: {
-                    "Pendência de Documentação Navio": { cor: "cinza", obs: "" },
-                    "Condição de classe": { cor: "cinza", obs: "" },
-                    "Obs Vetting": { cor: "cinza", obs: "" }
+                    "Pendência de Documentação Navio": { cor: "verde", obs: "" },
+                    "Condição de classe": { cor: "verde", obs: "" },
+                    "Obs Vetting": { cor: "amarelo", obs: "3 observações dependem de mudança do plano de manutenção ou revisão do SGF. 1 problema de construção do navio e só poderá ser corrigido na próxima docagem.  " }
                 }
             }
         }
@@ -3513,21 +3513,21 @@
             if (MODO_TESTE) {
                 console.log('🧪 MODO TESTE ativo — usando dados simulados');
                 return [
-                    { NomeNavio: 'ANITA GARIBALDI', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
+                    { NomeNavio: 'ANITA GARIBALDI', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '2', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 50, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'CASTRO ALVES', MotorPrincipal: '1', MCAs: '3', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '2', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
-                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
-                    { NomeNavio: 'OLAVO BILAC', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
-                    { NomeNavio: 'GARRINCHA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 5 },
+                    { NomeNavio: 'CARLOS DRUMMOND DE ANDRADE', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'OLAVO BILAC', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'GARRINCHA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 5 },
                     { NomeNavio: 'PORTINARI', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '2', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'JOAO CANDIDO', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '3', MaquinaLeme: '2', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
-                    { NomeNavio: 'DRAGAO DO MAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '2', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
-                    { NomeNavio: 'HENRIQUE DIAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'DRAGAO DO MAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '2', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 70, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'HENRIQUE DIAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'ANDRE REBOUCAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '2', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 13 },
                     { NomeNavio: 'MARCILIO DIAS', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'JOSE DO PATROCINIO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
-                    { NomeNavio: 'MACHADO DE ASSIS', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '3', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '3', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '3', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 7 },
-                    { NomeNavio: 'MILTON SANTOS', MotorPrincipal: '1', MCAs: '3', GrupoDestilatorio: '1', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 55, TripulantesVencidos: '2', CrewMatrix: '3', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 8 },
-                    { NomeNavio: 'ABDIAS NASCIMENTO', MotorPrincipal: '2', MCAs: '1', GrupoDestilatorio: '3', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 90, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 17 },
+                    { NomeNavio: 'MACHADO DE ASSIS', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '3', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 7 },
+                    { NomeNavio: 'MILTON SANTOS', MotorPrincipal: '2', MCAs: '3', GrupoDestilatorio: '1', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 55, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 8 },
+                    { NomeNavio: 'ABDIAS NASCIMENTO', MotorPrincipal: '2', MCAs: '1', GrupoDestilatorio: '3', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 90, TripulantesVencidos: '2', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 17 },
                     { NomeNavio: 'ZUMBI DOS PALMARES', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 111, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 1 },
                     { NomeNavio: 'CELSO FURTADO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
                     { NomeNavio: 'SERGIO BUARQUE DE HOLANDA', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
@@ -3535,10 +3535,10 @@
                     { NomeNavio: 'JOSE ALENCAR', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '3', SistemasNavegacao: '1', EstadoGeralConves: '2', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
                     { NomeNavio: 'LUCIO COSTA', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '3', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 1 },
                     { NomeNavio: 'DARCY RIBEIRO', MotorPrincipal: '1', MCAs: '3', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 1 },
-                    { NomeNavio: 'BARBOSA LIMA SOBRINHO', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '3', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '2', MaquinaLeme: '2', Purificadores: '2', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'BARBOSA LIMA SOBRINHO', MotorPrincipal: '1', MCAs: '1', GrupoDestilatorio: '3', EquipFundeio: '2', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '2', EstadoGeralConves: '3', EstadoGeralPM: '2', TrifixPercentual: 50, TripulantesVencidos: '1', CrewMatrix: '3', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 14 },
                     { NomeNavio: 'OSCAR NIEMEYER', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '2', SistemaCargaDescarga: '1', MaquinaLeme: '2', Purificadores: '1', SistemasNavegacao: '1', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '3', VettingObservacoes: 1 },
-                    { NomeNavio: 'GILBERTO FREYRE', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null },
-                    { NomeNavio: 'JORGE AMADO', MotorPrincipal: null, MCAs: null, GrupoDestilatorio: null, EquipFundeio: null, CaldeirasAuxiliares: null, DGEBBAIncendio: null, SistemaCargaDescarga: null, MaquinaLeme: null, Purificadores: null, SistemasNavegacao: null, EstadoGeralConves: null, EstadoGeralPM: null, TrifixPercentual: null, TripulantesVencidos: null, CrewMatrix: null, CertificacaoTripulante: null, DiasParaVencerDoc: null, CondicaoClasse: null, VettingObservacoes: null }
+                    { NomeNavio: 'GILBERTO FREYRE', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '2', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '1', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 1 },
+                    { NomeNavio: 'JORGE AMADO', MotorPrincipal: '1', MCAs: '2', GrupoDestilatorio: '1', EquipFundeio: '1', CaldeirasAuxiliares: '1', DGEBBAIncendio: '1', SistemaCargaDescarga: '1', MaquinaLeme: '1', Purificadores: '1', SistemasNavegacao: '2', EstadoGeralConves: '1', EstadoGeralPM: '1', TrifixPercentual: 100, TripulantesVencidos: '1', CrewMatrix: '1', CertificacaoTripulante: '3', DiasParaVencerDoc: null, CondicaoClasse: '1', VettingObservacoes: 8 }
                 ];
             }
             // ── FIM DADOS MOCK ────────────────────────────────────────────────
