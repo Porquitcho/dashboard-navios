@@ -18,6 +18,7 @@
             color: #ffffff;
             padding: 20px;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
@@ -187,20 +188,23 @@
             bottom: -40px;
         }
 
-        /* Tooltip do botão Home aparece em CIMA */
-        #btnHome .tooltip-home {
+        /* Tooltip dos botões da linha superior aparecem em CIMA */
+        #btnHome .tooltip-home,
+        #btnApresentacao .tooltip-home {
             bottom: auto;
             top: -35px;
         }
 
-        #btnHome .tooltip-home::before {
+        #btnHome .tooltip-home::before,
+        #btnApresentacao .tooltip-home::before {
             top: auto;
             bottom: -6px;
             border-bottom-color: transparent;
             border-top-color: rgba(0, 0, 0, 0.8);
         }
 
-        #btnHome:hover .tooltip-home {
+        #btnHome:hover .tooltip-home,
+        #btnApresentacao:hover .tooltip-home {
             bottom: auto;
             top: -40px;
         }
@@ -969,7 +973,7 @@
             border-radius: 8px;
             min-height: 40px;
             position: relative;
-            position: relative;
+            overflow: visible;
         }
 
         .systems-grid.compact .compact-column-header .classe-filter-badge {
@@ -1096,7 +1100,56 @@
 
         .compact-header-indicators {
             flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 6px;
             height: 100%;
+            gap: 0;
+        }
+
+        /* Cada slot de ícone tem largura fixa = mesma das bolinhas (42px) */
+        .compact-header-bolinha {
+            width: 42px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.65);
+            transition: color 0.2s;
+            position: static;
+        }
+        .compact-header-bolinha:hover .compact-header-bolinha-tooltip {
+            display: block;
+        }
+        .compact-header-bolinha:not(:first-child) {
+            border-left: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .compact-header-bolinha:hover {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Tooltip dos ícones — igual ao estilo dos outros cabeçalhos */
+        /* Tooltip dos ícones via JS — ver função abaixo */
+        .icon-tooltip {
+            position: fixed;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 999999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            letter-spacing: 0.3px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .icon-tooltip.visible {
+            opacity: 1;
         }
 
         /* Seções de texto para CMT, CFM, IMT */
@@ -1203,8 +1256,7 @@
         }
 
         .classe-filter-badge.active {
-            display: inline-block;
-            animation: fadeIn 0.3s ease;
+            display: none;
         }
 
         @keyframes fadeIn {
@@ -1353,11 +1405,25 @@
         }
 
         .status-indicators.compact-mode {
-            gap: 10px;
+            gap: 20px;
             padding-left: 0;
             justify-content: flex-end;
-            padding-right: 15px;
+            padding-right: 16px;
             position: relative;
+        }
+
+        /* Divisória entre bolinhas — sem tocar no tamanho */
+        .status-indicators.compact-mode .status-circle.compact-mode {
+            position: relative;
+        }
+        .status-indicators.compact-mode .status-circle.compact-mode:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 10%;
+            height: 80%;
+            width: 1px;
+            background: rgba(255,255,255,0.15);
         }
 
         .status-circle {
@@ -1454,6 +1520,34 @@
             border: 2px solid transparent;
         }
 
+        /* ── INDICADOR DE ATUALIZAÇÃO AUTOMÁTICA ── */
+        .auto-refresh-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            padding: 6px 0 4px 4px;
+            font-size: 11px;
+            color: #5d7a8a;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .refresh-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #5d7a8a;
+            transition: background 0.3s;
+        }
+        .refresh-dot.atualizando {
+            background: #4fc3f7;
+            animation: pulseDot 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes pulseDot {
+            from { opacity: 0.4; transform: scale(0.8); }
+            to   { opacity: 1;   transform: scale(1.2); }
+        }
+
         .stat-card:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: scale(1.05);
@@ -1502,8 +1596,7 @@
             display: none;
             grid-template-columns: 280px 1fr;
             gap: 30px;
-            height: calc(100vh - 180px);
-            min-height: 800px;
+            min-height: calc(100vh - 180px);
         }
 
         .lista-navios-container.active {
@@ -1515,7 +1608,8 @@
             border-radius: 10px;
             padding: 15px;
             overflow-y: auto;
-            max-height: 100%;
+            align-self: start;
+            max-height: var(--lista-lateral-height, 600px);
         }
 
         .lista-lateral-titulo {
@@ -1568,8 +1662,6 @@
             background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%);
             border-radius: 15px;
             padding: 30px;
-            overflow-y: auto;
-            max-height: 100%;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -1604,6 +1696,40 @@
             padding: 20px 0 30px 0;
             border-bottom: 2px solid rgba(0, 0, 0, 0.1);
             flex-wrap: wrap;
+            position: relative;
+        }
+
+        .btn-voltar-perfil {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-voltar-perfil:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-voltar-perfil svg {
+            flex-shrink: 0;
+        }
+
+        body.modo-apresentacao .btn-voltar-perfil {
+            display: flex;
         }
 
         .navio-titulo-box {
@@ -1674,7 +1800,6 @@
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             padding: 25px 20px 20px 20px;
-            min-height: 550px;
             transition: all 0.3s ease;
         }
 
@@ -1791,7 +1916,7 @@
         .tooltip-obs.visible {
             opacity: 1;
             visibility: visible;
-            pointer-events: auto;
+            pointer-events: none;
         }
 
         .tooltip-obs.obs-amarelo {
@@ -1985,6 +2110,163 @@
             0%   { transform: translateY(0) scale(1);   opacity: 0.7; }
             100% { transform: translateY(-30px) scale(2.5); opacity: 0; }
         }
+        
+        /* ── MODO APRESENTAÇÃO ── */
+        body.modo-apresentacao,
+        body.modo-apresentacao html {
+            overflow: hidden !important;
+        }
+        body.modo-apresentacao #statusMessage,
+        body.modo-apresentacao .filter-popup-overlay,
+        body.modo-apresentacao .filter-overlay {
+            display: none !important;
+        }
+        /* No fullscreen: ocultar apenas os botões do header, manter logo e título */
+        body.modo-apresentacao .home-button-container {
+            display: none !important;
+        }
+        body.modo-apresentacao .ship-list {
+            display: none !important;
+        }
+        body.modo-apresentacao .container {
+            padding: 10px 12px;
+            zoom: var(--apres-zoom, 1);
+            overflow: hidden;
+        }
+        body.modo-apresentacao .header {
+            padding: 8px 16px;
+            margin-bottom: 4px;
+            gap: 16px;
+        }
+        body.modo-apresentacao .header-logo img {
+            height: 52px;
+        }
+        body.modo-apresentacao .header h1 {
+            font-size: 28px;
+            letter-spacing: 6px;
+        }
+        body.modo-apresentacao .header .subtitle {
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-top: 3px;
+        }
+        body.modo-apresentacao .header-text {
+            padding-right: 0;
+        }
+        body.modo-apresentacao .stats {
+            margin-top: 4px;
+            margin-bottom: 4px;
+            padding: 4px 12px;
+            gap: 20px;
+        }
+        body.modo-apresentacao .stat-card {
+            padding: 4px 14px;
+            min-width: 80px;
+        }
+        body.modo-apresentacao .stat-number {
+            font-size: 16px;
+            margin-bottom: 1px;
+        }
+        body.modo-apresentacao .stat-label {
+            font-size: 8px;
+        }
+        /* Suprimir tooltips dos headers da tabela no fullscreen — evita sobreposição com os balões */
+        body.modo-apresentacao .compact-header-section[title]:hover::after,
+        body.modo-apresentacao .compact-header-section[title]:hover::before {
+            display: none !important;
+        }
+
+        body.modo-apresentacao .ship-row.compact-mode {
+            min-height: 38px;
+            padding: 2px 8px 2px 10px;
+            margin-bottom: 1px;
+        }
+        body.modo-apresentacao .ship-name.compact-mode {
+            font-size: 10px;
+        }
+        body.modo-apresentacao .ship-class.compact-mode {
+            font-size: 9px;
+        }
+        body.modo-apresentacao .compact-text-section {
+            font-size: 9px;
+        }
+
+        body.modo-apresentacao .auto-refresh-bar {
+            display: none !important;
+        }
+        /* Balão flutuante do contador no modo apresentação */
+        #autoRefreshFloat {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 9999999;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 9px;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+            padding: 3px 10px 3px 8px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(2px);
+            transition: all 0.3s;
+        }
+        #autoRefreshFloat:hover {
+            background: rgba(0,0,0,0.5);
+            color: rgba(255,255,255,0.7);
+        }
+        #autoRefreshFloat .refresh-dot {
+            width: 5px;
+            height: 5px;
+        }
+        body.modo-apresentacao .dashboard {
+            height: auto;
+            overflow: hidden;
+        }
+        body.modo-apresentacao #systemsGrid {
+            overflow: visible;
+        }
+
+        /* ── BOTÃO SAIR MODO APRESENTAÇÃO ── */
+        /* Balão flutuante para sair — não ocupa espaço no layout */
+        #btnSairApresentacao {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999999;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            color: rgba(255,255,255,0.25);
+            font-size: 9px;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s;
+            backdrop-filter: blur(2px);
+            pointer-events: all;
+        }
+        #btnSairApresentacao:hover {
+            background: rgba(0,0,0,0.55);
+            color: rgba(255,255,255,0.8);
+            border-color: rgba(255,255,255,0.2);
+        }
+        #btnSairApresentacao svg {
+            width: 8px;
+            height: 8px;
+            fill: rgba(255,255,255,0.25);
+            transition: fill 0.3s;
+        }
+        #btnSairApresentacao:hover svg {
+            fill: rgba(255,255,255,0.8);
+        }
         </style>
 </head>
 
@@ -2080,18 +2362,26 @@
                 <div class="subtitle">Sistema de Monitoramento - 26 Embarcações</div>
             </div>
             <div class="home-button-container">
-                <button class="btn-home" id="btnHome" onclick="voltarParaHome()" style="align-self:flex-end;">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                    </svg>
-                    <span class="tooltip-home">Home</span>
-                </button>
+                <div style="display:flex;flex-direction:row;gap:10px;align-self:flex-end;">
+                    <button class="btn-home" id="btnApresentacao" onclick="ativarModoApresentacao()">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 5h5V3H3v7h2V5zm9-2v2h5v5h2V3h-7zm-9 14H3v7h7v-2H5v-5zm14 5h-5v2h7v-7h-2v5z"/>
+                        </svg>
+                        <span class="tooltip-home">Modo Apresentação</span>
+                    </button>
+                    <button class="btn-home" id="btnHome" onclick="voltarParaHome()">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg>
+                        <span class="tooltip-home">Home</span>
+                    </button>
+                </div>
                 <div style="display:flex;flex-direction:row;gap:10px;">
                     <button class="btn-home btn-sort" id="btnSort" onclick="toggleSortMode()" title="">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/>
                         </svg>
-                        <span class="tooltip-home">Ordenar: Original</span>
+                        <span class="tooltip-home">Ordenar: Ordem Alfabética</span>
                     </button>
                     <button class="btn-home btn-privacy" id="btnPrivacy" onclick="togglePrivacyMode()">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -2106,7 +2396,7 @@
 
         <div id="statusMessage" class="status-message"></div>
 
-        <!-- Overlay e Popup de filtro (acionado pelos headers) -->
+        <!-- Overlay e Popup de filtro -->
         <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPopup()"></div>
         <div class="filter-popup" id="filterPopup">
             <div class="filter-popup-header">Filtrar por Classe</div>
@@ -2161,6 +2451,11 @@
                 </div>
             </div>
             <div class="systems-grid" id="systemsGrid"></div>
+        </div>
+
+        <div class="auto-refresh-bar">
+            <div class="refresh-dot" id="refreshDot"></div>
+            <span id="refreshLabel">Aguardando dados...</span>
         </div>
 
         <!-- Container para modo Lista de Navios -->
@@ -3469,7 +3764,7 @@
 
         // Filtro de classes - agora suporta múltipla seleção
         let currentClassFilter = []; // Array vazio = todas as classes
-        let currentSortMode = 'original'; // 'original' ou 'preenchidos'
+        let currentSortMode = 'preenchidos'; // 'preenchidos' (A-Z, padrão) ou 'original' (por grupo)
 
         function eNavioPreenchido(nome) {
             const raw = dadosSharePoint[nome];
@@ -3486,15 +3781,15 @@
         }
 
         function toggleSortMode() {
-            currentSortMode = currentSortMode === 'original' ? 'preenchidos' : 'original';
+            currentSortMode = currentSortMode === 'preenchidos' ? 'original' : 'preenchidos';
             const btn = document.getElementById('btnSort');
             const tooltip = btn.querySelector('.tooltip-home');
-            if (currentSortMode === 'preenchidos') {
+            if (currentSortMode === 'original') {
                 btn.classList.add('active');
-                tooltip.textContent = 'Ordenar: Preenchidos primeiro';
+                tooltip.textContent = 'Ordenar: Por grupo';
             } else {
                 btn.classList.remove('active');
-                tooltip.textContent = 'Ordenar: Original';
+                tooltip.textContent = 'Ordenar: Ordem Alfabética';
             }
             // Re-aplicar filtros com nova ordenação
             applyAllFilters();
@@ -3507,15 +3802,13 @@
                            (parseInt(b.getAttribute('data-ship-number')) || 0);
                 });
             } else {
+                // Ordem alfabética pura (A-Z)
                 rows.sort((a, b) => {
                     const numA = parseInt(a.getAttribute('data-ship-number')) || 0;
                     const numB = parseInt(b.getAttribute('data-ship-number')) || 0;
                     const nA = naviosReais[numA - 1]?.nome || '';
                     const nB = naviosReais[numB - 1]?.nome || '';
-                    const pA = eNavioPreenchido(nA) ? 0 : 1;
-                    const pB = eNavioPreenchido(nB) ? 0 : 1;
-                    if (pA !== pB) return pA - pB;          // preenchidos primeiro
-                    return nA.localeCompare(nB, 'pt-BR');   // depois A-Z
+                    return nA.localeCompare(nB, 'pt-BR');
                 });
             }
             return rows;
@@ -4239,6 +4532,118 @@
             };
         }
 
+        // ── TOOLTIP DOS ÍCONES DE CATEGORIA (position:fixed — sempre visível) ──
+        (function() {
+            const tip = document.createElement('div');
+            tip.className = 'icon-tooltip';
+            document.body.appendChild(tip);
+
+            document.addEventListener('mouseover', function(e) {
+                const el = e.target.closest('.compact-header-bolinha');
+                if (el && el.title) {
+                    const r = el.getBoundingClientRect();
+                    tip.textContent = el.title;
+                    tip.style.left = (r.left + r.width / 2 - tip.offsetWidth / 2) + 'px';
+                    tip.style.top  = (r.top - tip.offsetHeight - 10) + 'px';
+                    tip.classList.add('visible');
+                    // recalcular após render
+                    requestAnimationFrame(() => {
+                        tip.style.left = (r.left + r.width / 2 - tip.offsetWidth / 2) + 'px';
+                        tip.style.top  = (r.top - tip.offsetHeight - 10) + 'px';
+                    });
+                }
+            });
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.compact-header-bolinha')) {
+                    tip.classList.remove('visible');
+                }
+            });
+        })();
+        // ─────────────────────────────────────────────────────────────────
+
+        // ── MODO APRESENTAÇÃO ────────────────────────────────────────────────
+        function ativarModoApresentacao() {
+            // 0. Garantir que a página está no topo antes de entrar no fullscreen
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // 1. Fullscreen real (= F11)
+            const el = document.documentElement;
+            const req = el.requestFullscreen || el.webkitRequestFullscreen
+                     || el.mozRequestFullScreen || el.msRequestFullscreen;
+            if (req) req.call(el).catch(() => {});
+
+            // 2. Ativar modo apresentação
+            document.body.classList.add('modo-apresentacao');
+            const btn = document.getElementById('btnSairApresentacao');
+            if (btn) btn.style.display = 'flex';
+            const floatBar = document.getElementById('autoRefreshFloat');
+            if (floatBar) floatBar.style.display = 'flex';
+
+            // 3. Calcular zoom para caber tudo na tela após fullscreen
+            setTimeout(() => {
+                _ajustarZoomApresentacao();
+                reorganizeCompactLayout();
+                applyAllFilters();
+            }, 200);
+        }
+
+        function _ajustarZoomApresentacao() {
+            // Calcula o zoom necessário para o conteúdo caber na altura da tela
+            const container = document.querySelector('.container');
+            if (!container) return;
+            // Reset zoom para medir tamanho real
+            document.documentElement.style.setProperty('--apres-zoom', '1');
+            const alturaDisponivel = window.screen.height;
+            const larguraDisponivel = window.screen.width;
+            // Altura do conteúdo: header + stats + grid + padding
+            const header = document.querySelector('.header');
+            const stats  = document.querySelector('.stats');
+            const grid   = document.getElementById('systemsGrid');
+            if (!stats || !grid) return;
+            const alturaConteudo = (header ? header.offsetHeight : 0)
+                                 + (stats.offsetHeight || 80)
+                                 + (grid.scrollHeight || 600)
+                                 + 30; // padding container
+            const zoomAltura  = alturaDisponivel / alturaConteudo;
+            const zoomLargura = larguraDisponivel / (container.scrollWidth || larguraDisponivel);
+            const zoom = Math.min(zoomAltura, zoomLargura, 1); // nunca ampliar, só reduzir
+            document.documentElement.style.setProperty('--apres-zoom', zoom.toFixed(3));
+        }
+
+        function sairModoApresentacao() {
+            // 1. Sair do fullscreen
+            const exitFn = document.exitFullscreen || document.webkitExitFullscreen
+                        || document.mozCancelFullScreen || document.msExitFullscreen;
+            if (exitFn && (document.fullscreenElement || document.webkitFullscreenElement)) {
+                exitFn.call(document);
+            }
+            // 2. Restaurar layout normal
+            document.body.classList.remove('modo-apresentacao');
+            document.documentElement.style.setProperty('--apres-zoom', '1');
+            const btn = document.getElementById('btnSairApresentacao');
+            if (btn) btn.style.display = 'none';
+            const floatBar2 = document.getElementById('autoRefreshFloat');
+            if (floatBar2) floatBar2.style.display = 'none';
+            setTimeout(() => {
+                setViewMode('compact');
+                applyAllFilters();
+            }, 80);
+        }
+
+        // ESC nativo do navegador ao sair do fullscreen também restaura o layout
+        function _onFullscreenChange() {
+            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement
+                || document.mozFullScreenElement || document.msFullscreenElement);
+            if (!isFullscreen && document.body.classList.contains('modo-apresentacao')) {
+                sairModoApresentacao();
+            }
+        }
+        document.addEventListener('fullscreenchange',       _onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', _onFullscreenChange);
+        document.addEventListener('mozfullscreenchange',    _onFullscreenChange);
+        document.addEventListener('MSFullscreenChange',     _onFullscreenChange);
+        // ─────────────────────────────────────────────────────────────────
+
         // Inicializar
         initDadosCompletos();
         renderShipList();
@@ -4249,6 +4654,128 @@
         setTimeout(() => {
             carregarDadosReais();
         }, 500);
+
+        // ── ATUALIZAÇÃO AUTOMÁTICA ───────────────────────────────────────
+        const INTERVALO_ATUALIZACAO = 3600; // segundos (1 hora)
+
+        // Versão silenciosa: busca dados sem mexer no overlay ou no modo de visualização
+        // Helper: reseta um navio para estado cinza/vazio
+        function resetarNavioCinza(nomeNavio) {
+            const cinza = { cor: 'cinza', obs: '' };
+            statusDetalhesNavios[nomeNavio] = {
+                equipamentos: {
+                    'Motor principal': {...cinza}, 'MCAs': {...cinza}, 'Grupo destilatório': {...cinza},
+                    'Equip. fundeio, amarração e guindastes': {...cinza}, 'Caldeira auxiliar': {...cinza},
+                    'DGE E BBA incêndio emergência': {...cinza}, 'Sistema de carga e descarga': {...cinza},
+                    'Máquina do leme': {...cinza}, 'Purificadores': {...cinza},
+                    'Sistemas de navegação': {...cinza}, 'Estado geral convés': {...cinza},
+                    'Estado geral PM': {...cinza}
+                },
+                pessoal: {
+                    'Trifix %': {...cinza}, 'Tripulantes vencidos': {...cinza},
+                    'Crew Matrix': {...cinza}, 'Certificação de Tripulante': {...cinza}
+                },
+                certificacao: {
+                    'Pendência de Documentação Navio': {...cinza},
+                    'Condição de classe': {...cinza}, 'Obs Vetting': {...cinza}
+                }
+            };
+            dadosIndicadores[nomeNavio] = { idoSD: 0, reqsOutstanding: 0, srsOutstanding: 0 };
+            tripulacaoNavios[nomeNavio]  = { CMT: '---', CMT_MAT: '', CFM: '---', CFM_MAT: '', IMT: '---', IMT_MAT: '' };
+        }
+
+        async function recarregarDadosSilencioso() {
+            const dados = await buscarDadosSharePoint();
+            if (!dados || dados.length === 0) return false;
+
+            // Selecionar dado mais recente por navio
+            const novosDados = {};
+            const datasMap   = {};
+            dados.forEach(item => {
+                const nomeNavio = (item.NomeNavio && typeof item.NomeNavio === 'object')
+                    ? item.NomeNavio.Value : item.NomeNavio;
+                if (!nomeNavio) return;
+                const dataAtual = item.DataPreenchimento ? new Date(item.DataPreenchimento) : new Date(0);
+                if (!novosDados[nomeNavio] || dataAtual > datasMap[nomeNavio]) {
+                    novosDados[nomeNavio] = item;
+                    datasMap[nomeNavio]   = dataAtual;
+                }
+            });
+
+            // Passo 1: zerar TODOS os 26 navios antes de reaplicar
+            // Garante que navios removidos do list voltam ao cinza
+            naviosReais.forEach(navio => resetarNavioCinza(navio.nome));
+
+            // Passo 2: limpar dadosSharePoint e reconstruir do zero
+            dadosSharePoint = {};
+
+            // Passo 3: aplicar apenas os navios que vieram no fetch
+            Object.entries(novosDados).forEach(([nome, item]) => {
+                dadosSharePoint[nome] = item;
+                atualizarDetalhesNavio(nome, item);
+                atualizarNSENavio(nome, item);
+                atualizarTripulacaoNavio(nome, item);
+            });
+
+            // Passo 4: re-renderizar preservando modo e filtros
+            renderSystemsGrid();
+            atualizarContadoresClasses();
+            setTimeout(() => {
+                setViewMode(currentMode);
+                setTimeout(() => applyAllFilters(), 150);
+            }, 50);
+            return true;
+        }
+
+        function iniciarContadorAtualizacao() {
+            const dot   = document.getElementById('refreshDot');
+            const label = document.getElementById('refreshLabel');
+            if (!dot || !label) return;
+
+            let seg = INTERVALO_ATUALIZACAO;
+
+            const tick = setInterval(() => {
+                seg--;
+                if (seg <= 0) {
+                    clearInterval(tick);
+                    dot.classList.add('atualizando');
+                    label.textContent = 'Atualizando dados...';
+                    const dotF = document.getElementById('refreshDotFloat');
+                    const lblF = document.getElementById('refreshLabelFloat');
+                    if (dotF) dotF.classList.add('atualizando');
+                    if (lblF) lblF.textContent = 'Atualizando dados...';
+                    recarregarDadosSilencioso()
+                        .then(ok => {
+                            dot.classList.remove('atualizando');
+                            const msg = ok ? 'Dados atualizados ✓' : 'Falha na atualização';
+                            label.textContent = msg;
+                            const dotF2 = document.getElementById('refreshDotFloat');
+                            const lblF2 = document.getElementById('refreshLabelFloat');
+                            if (dotF2) dotF2.classList.remove('atualizando');
+                            if (lblF2) lblF2.textContent = msg;
+                            setTimeout(() => iniciarContadorAtualizacao(), 2000);
+                        })
+                        .catch(() => {
+                            dot.classList.remove('atualizando');
+                            label.textContent = 'Erro na atualização';
+                            setTimeout(() => iniciarContadorAtualizacao(), 5000);
+                        });
+                } else {
+                    const min = Math.floor(seg / 60);
+                    const s   = seg % 60;
+                    const txt = min > 0
+                        ? `Próxima atualização em ${min}m ${s.toString().padStart(2,'0')}s`
+                        : `Próxima atualização em ${s}s`;
+                    label.textContent = txt;
+                    const lf = document.getElementById('refreshLabelFloat');
+                    if (lf) lf.textContent = txt;
+                }
+            }, 1000);
+        }
+
+        // Iniciar após o primeiro carregamento
+        setTimeout(() => iniciarContadorAtualizacao(), 2000);
+        // ─────────────────────────────────────────────────────────────────
 
         // Iniciar no modo compacto
         setTimeout(() => {
@@ -4445,6 +4972,11 @@
                         <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
                         <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
                         <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
+                        <div class="compact-header-indicators">
+                            <div class="compact-header-bolinha" title="Equipamentos"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.74-.07-1.08l2.32-1.82c.21-.16.27-.46.13-.7l-2.2-3.81a.534.534 0 0 0-.65-.22l-2.73 1.1c-.57-.44-1.18-.8-1.86-1.07l-.42-2.9A.54.54 0 0 0 14 2h-4a.54.54 0 0 0-.53.46l-.42 2.9c-.68.27-1.29.63-1.86 1.07L4.46 5.33a.533.533 0 0 0-.65.22L1.61 9.36c-.14.24-.08.54.13.7l2.32 1.82c-.04.34-.07.69-.07 1.08 0 .39.03.74.07 1.08L1.74 15.86c-.21.16-.27.46-.13.7l2.2 3.81c.14.23.43.3.65.22l2.73-1.1c.57.44 1.18.8 1.86 1.07l.42 2.9c.09.47.5.46.53.46h4c.25 0 .47-.19.53-.46l.42-2.9c.68-.27 1.29-.63 1.86-1.07l2.73 1.1c.22.08.51.01.65-.22l2.2-3.81c.14-.24.08-.54-.13-.7l-2.32-1.82Z"/></svg></div>
+                            <div class="compact-header-bolinha" title="Pessoal"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1c0-3.31 3.58-6 8-6s8 2.69 8 6v1H4z"/></svg></div>
+                            <div class="compact-header-bolinha" title="Certificação"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 3.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/><line x1="8" y1="13" x2="13" y2="13" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="16" x2="16" y2="16" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><path d="M15 14l1.5 1.5L19 13" stroke="rgba(255,255,255,.9)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        </div>
                         <span class="classe-filter-badge"></span>
                     `;
                 }
@@ -4907,11 +5439,15 @@
 
             container.innerHTML = '';
 
-            for (let i = 0; i < naviosReais.length; i++) {
-                const navio = naviosReais[i];
+            // Criar lista indexada e ordenar alfabeticamente (A→Z) pelo nome
+            const naviosOrdenados = naviosReais
+                .map((navio, index) => ({ navio, index }))
+                .sort((a, b) => a.navio.nome.localeCompare(b.navio.nome, 'pt-BR'));
+
+            naviosOrdenados.forEach(({ navio, index }) => {
                 const item = document.createElement('div');
                 item.className = 'navio-item';
-                item.setAttribute('data-index', i);
+                item.setAttribute('data-index', index);
 
                 const nomeDiv = document.createElement('div');
                 nomeDiv.className = 'navio-item-nome';
@@ -4924,21 +5460,21 @@
                 item.appendChild(nomeDiv);
                 item.appendChild(classeDiv);
 
-                (function (index) {
-                    item.onclick = function () {
-                        selecionarNavio(index);
-                    };
-                })(i);
+                item.onclick = function () {
+                    selecionarNavio(index);
+                };
 
                 container.appendChild(item);
-            }
+            });
         }
 
         function selecionarNavio(index) {
             navioSelecionado = index;
 
-            document.querySelectorAll('.navio-item').forEach((item, i) => {
-                if (i === index) {
+            // Usar data-index para o match correto (lista está em ordem alfabética,
+            // não na ordem original do array naviosReais)
+            document.querySelectorAll('.navio-item').forEach((item) => {
+                if (parseInt(item.getAttribute('data-index')) === index) {
                     item.classList.add('selected');
                 } else {
                     item.classList.remove('selected');
@@ -4986,6 +5522,12 @@
 
             painel.innerHTML = `
                 <div class="detalhes-header">
+                    <button class="btn-voltar-perfil" onclick="voltarParaHome()" title="Voltar à tabela principal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                        Voltar
+                    </button>
                     <div class="navio-titulo-box">${navio.nome}</div>
                     <div class="ido-circle">
                         <div class="ido-label">IDO-SD</div>
@@ -5024,7 +5566,16 @@
                 </div>
             `;
 
-            setTimeout(configurarTooltips, 50);
+            setTimeout(() => {
+                configurarTooltips();
+                // Casar altura da lista lateral com a altura do painel renderizado
+                const painelEl = document.getElementById('painelDetalhes');
+                const listaEl = document.querySelector('.lista-lateral');
+                if (painelEl && listaEl) {
+                    const alturaPanel = painelEl.offsetHeight;
+                    document.documentElement.style.setProperty('--lista-lateral-height', alturaPanel + 'px');
+                }
+            }, 50);
         }
 
         function reorganizeNormalLayout() {
@@ -5090,6 +5641,11 @@
                 <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
                 <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
                 <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
+                <div class="compact-header-indicators">
+                    <div class="compact-header-bolinha" title="Equipamentos"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.74-.07-1.08l2.32-1.82c.21-.16.27-.46.13-.7l-2.2-3.81a.534.534 0 0 0-.65-.22l-2.73 1.1c-.57-.44-1.18-.8-1.86-1.07l-.42-2.9A.54.54 0 0 0 14 2h-4a.54.54 0 0 0-.53.46l-.42 2.9c-.68.27-1.29.63-1.86 1.07L4.46 5.33a.533.533 0 0 0-.65.22L1.61 9.36c-.14.24-.08.54.13.7l2.32 1.82c-.04.34-.07.69-.07 1.08 0 .39.03.74.07 1.08L1.74 15.86c-.21.16-.27.46-.13.7l2.2 3.81c.14.23.43.3.65.22l2.73-1.1c.57.44 1.18.8 1.86 1.07l.42 2.9c.09.47.5.46.53.46h4c.25 0 .47-.19.53-.46l.42-2.9c.68-.27 1.29-.63 1.86-1.07l2.73 1.1c.22.08.51.01.65-.22l2.2-3.81c.14-.24.08-.54-.13-.7l-2.32-1.82Z"/></svg></div>
+                    <div class="compact-header-bolinha" title="Pessoal"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1c0-3.31 3.58-6 8-6s8 2.69 8 6v1H4z"/></svg></div>
+                    <div class="compact-header-bolinha" title="Certificação"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 3.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/><line x1="8" y1="13" x2="13" y2="13" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="16" x2="16" y2="16" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><path d="M15 14l1.5 1.5L19 13" stroke="rgba(255,255,255,.9)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                </div>
                 <span class="classe-filter-badge"></span>
             `;
             leftColumn.appendChild(leftHeader);
@@ -5108,6 +5664,11 @@
                 <div class="compact-header-section crew-header-section" title="Chefe de Máquinas">CFM</div>
                 <div class="compact-header-section crew-header-section" title="Imediato">IMT</div>
                 <div class="compact-header-section compact-header-idade" title="Idade da Embarcação">IDADE</div>
+                <div class="compact-header-indicators">
+                    <div class="compact-header-bolinha" title="Equipamentos"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.74-.07-1.08l2.32-1.82c.21-.16.27-.46.13-.7l-2.2-3.81a.534.534 0 0 0-.65-.22l-2.73 1.1c-.57-.44-1.18-.8-1.86-1.07l-.42-2.9A.54.54 0 0 0 14 2h-4a.54.54 0 0 0-.53.46l-.42 2.9c-.68.27-1.29.63-1.86 1.07L4.46 5.33a.533.533 0 0 0-.65.22L1.61 9.36c-.14.24-.08.54.13.7l2.32 1.82c-.04.34-.07.69-.07 1.08 0 .39.03.74.07 1.08L1.74 15.86c-.21.16-.27.46-.13.7l2.2 3.81c.14.23.43.3.65.22l2.73-1.1c.57.44 1.18.8 1.86 1.07l.42 2.9c.09.47.5.46.53.46h4c.25 0 .47-.19.53-.46l.42-2.9c.68-.27 1.29-.63 1.86-1.07l2.73 1.1c.22.08.51.01.65-.22l2.2-3.81c.14-.24.08-.54-.13-.7l-2.32-1.82Z"/></svg></div>
+                    <div class="compact-header-bolinha" title="Pessoal"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1c0-3.31 3.58-6 8-6s8 2.69 8 6v1H4z"/></svg></div>
+                    <div class="compact-header-bolinha" title="Certificação"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 3.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/><line x1="8" y1="13" x2="13" y2="13" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="16" x2="16" y2="16" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/><path d="M15 14l1.5 1.5L19 13" stroke="rgba(255,255,255,.9)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                </div>
                 <span class="classe-filter-badge"></span>
             `;
             rightColumn.appendChild(rightHeader);
@@ -5475,6 +6036,17 @@
         })();
 
     </script>
+
+    <div id="autoRefreshFloat">
+        <div class="refresh-dot" id="refreshDotFloat"></div>
+        <span id="refreshLabelFloat">...</span>
+    </div>
+    <button id="btnSairApresentacao" onclick="sairModoApresentacao()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+        ESC — Sair
+    </button>
 </body>
 
 </html>
