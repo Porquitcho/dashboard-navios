@@ -5922,7 +5922,10 @@
             }
 
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', inicializar);
+                document.addEventListener('DOMContentLoaded', function() {
+                    inicializar();
+                    setTimeout(ajustarZoomContainer, 500);
+                });
             } else {
                 inicializar();
             }
